@@ -9,49 +9,82 @@
 <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
   body { background:white; }
-  header { display:flex; flex-direction:column; align-items:center; padding:15px 20px 12px; border-bottom:1px solid #eee; position:sticky; top:0; background:white; z-index:10; }
- .logo { display:flex; justify-content:center; width:100%; font-weight:900; letter-spacing:2px; font-size:18px; }
- .right { display:flex; gap:10px; align-items:center; width:100%; justify-content:flex-end; margin-top:12px; }
+  header { display:flex; flex-direction:column; align-items:center; background:white; z-index:10; position:sticky; top:0; }
+ .logo-top { display:flex; justify-content:center; width:100%; padding:20px 20px 15px; }
+ .logo-top img { height:95px; width:auto; display:block; }
+ .nav-bar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:12px 20px; border-top:1px solid #eee; border-bottom:1px solid #eee; background:white; }
+ .nav-left { display:flex; align-items:center; gap:25px; }
+ .nav-menu { display:flex; align-items:center; gap:20px; list-style:none; }
+ .nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; }
+ .nav-right { display:flex; gap:12px; align-items:center; }
+ .icon { width:20px; height:20px; cursor:pointer; }
  .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
  .btn-outline { border:1px solid black; color:black; background:white; }
  .btn-black { background:black; color:white; border:1px solid black; }
+ .lang-select { padding:6px 10px; border-radius:20px; border:1px solid #ddd; font-size:13px; font-weight:bold; background:white; cursor:pointer; }
  .hero { padding:60px 20px; text-align:center; }
  .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
  .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
  .shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
  .card { background:#f5f5f5; border-radius:12px; height:220px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
- .lang-select { padding:6px 10px; border-radius:20px; border:1px solid #ddd; font-size:13px; font-weight:bold; background:white; cursor:pointer; }
+  @media(max-width:768px){.nav-menu { gap:10px; flex-wrap:wrap; }.nav-menu a{font-size:11px;}.logo-top img{height:70px;} }
 </style>
 </head>
 <body>
 <header>
-  <div class="logo"><img src="logo.png" alt="POP THE LOOK" style="height:52px; width:auto; display:block;"></div>
-  <div class="right" id="authArea">
-    <select id="language" class="lang-select" onchange="changeLang()">
-      <option value="en">🇬🇧 English</option>
-      <option value="tr">🇹🇷 Türkçe</option>
-      <option value="de">🇩🇪 Deutsch</option>
-      <option value="fr">🇫🇷 Français</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="ar">🇸🇦 العربية</option>
-      <option value="it">🇮🇹 Italiano</option>
-      <option value="nl">🇳🇱 Nederlands</option>
-      <option value="pl">🇵🇱 Polski</option>
-      <option value="pt">🇵🇹 Português</option>
-      <option value="el">🇬🇷 Ελληνικά</option>
-      <option value="sv">🇸🇪 Svenska</option>
-      <option value="ro">🇷🇴 Română</option>
-      <option value="hu">🇭🇺 Magyar</option>
-      <option value="cs">🇨🇿 Čeština</option>
-      <option value="bg">🇧🇬 Български</option>
-      <option value="hr">🇭🇷 Hrvatski</option>
-      <option value="id">🇮🇩 Indonesia</option>
-      <option value="zh">🇨🇳 中文</option>
-    </select>
-    <a id="signinBtn" class="btn btn-outline" href="signin.html">Sign In</a>
-    <a id="signupBtn" class="btn btn-black" href="signup.html">Sign Up</a>
-    <button id="signoutBtn" class="btn btn-black" style="display:none;" onclick="handleSignout()">Sign Out</button>
+  <!-- TOP: Crown logo centered -->
+  <div class="logo-top">
+    <img src="logo.png" alt="POP THE LOOK">
+  </div>
+
+  <!-- BOTTOM BAR: EN full left side + Shop menu + icons right -->
+  <div class="nav-bar">
+    <div class="nav-left">
+      <select id="language" class="lang-select" onchange="changeLang()">
+        <option value="en">EN ⌄</option>
+        <option value="tr">TR</option>
+        <option value="de">DE</option>
+        <option value="fr">FR</option>
+        <option value="es">ES</option>
+        <option value="ar">AR</option>
+        <option value="it">IT</option>
+        <option value="nl">NL</option>
+        <option value="pl">PL</option>
+        <option value="pt">PT</option>
+        <option value="el">EL</option>
+        <option value="sv">SV</option>
+        <option value="ro">RO</option>
+        <option value="hu">HU</option>
+        <option value="cs">CS</option>
+        <option value="bg">BG</option>
+        <option value="hr">HR</option>
+        <option value="id">ID</option>
+        <option value="zh">ZH</option>
+      </select>
+
+      <nav class="nav-menu">
+        <a href="shop.html">Shop</a>
+        <a href="shop.html">New Arrivals</a>
+        <a href="shop.html">Dresses</a>
+        <a href="shop.html">Tops</a>
+        <a href="shop.html">Accessories</a>
+        <a href="shop.html">Sale</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+
+    <div class="nav-right" id="authArea">
+      <!-- Search / User / Bag icons -->
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+
+      <!-- YOUR IMPORTANT BUTTONS - KEPT SAFE -->
+      <a id="signinBtn" class="btn btn-outline" href="signin.html">Sign In</a>
+      <a id="signupBtn" class="btn btn-black" href="signup.html">Sign Up</a>
+      <button id="signoutBtn" class="btn btn-black" style="display:none;" onclick="handleSignout()">Sign Out</button>
+    </div>
   </div>
 </header>
 
@@ -107,7 +140,7 @@ function changeLang(){
   document.documentElement.lang = lang;
 }
 
-const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzbOwwzk1whjPFmmME8G2kuvAc4b72mI");
 
 async function checkUser(){
   const { data } = await supabaseClient.auth.getSession();
