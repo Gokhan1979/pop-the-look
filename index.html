@@ -7,121 +7,91 @@
 <title>POP THE LOOK</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-    * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-  body { background:white; overflow-x:hidden; }
-  header { display:flex; flex-direction:column; align-items:center; background:white; position:sticky; top:0; z-index:50; width:100%; }
-.logo-top { display:flex; justify-content:center; width:100%; padding:22px 10px 18px; background:white; }
-.logo-top img { height:110px; width:auto; max-width:92vw; object-fit:contain; display:block; }
-.nav-bar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:5px 18px; border-top:1px solid #e5e5e5; border-bottom:1px solid #e5e5e5; background:white; gap:10px; flex-wrap:nowrap; overflow:hidden; margin-top:-16px; }
-.nav-left { display:flex; align-items:center; gap:18px; flex:1; flex-wrap:nowrap; min-width:0; }
-.nav-menu { display:flex; align-items:center; gap:16px; flex-wrap:nowrap; white-space:nowrap; overflow-x:auto; scrollbar-width:none; }
-.nav-menu::-webkit-scrollbar{ display:none; }
-.nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; white-space:nowrap; }
-.nav-right { display:flex; gap:16px; align-items:center; flex-shrink:0; margin-left:10px; }
-.lang-select { padding:6px 14px; border-radius:999px; border:1.5px solid #ddd; font-size:13px; font-weight:700; background:white; cursor:pointer; flex-shrink:0; }
-.icon-btn { background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; }
-.icon { width:20px; height:20px; stroke-width:1.8; stroke:black; fill:none; }
-.profile-wrap { position:relative; }
-.dropdown { position:absolute; right:0; top:36px; background:white; border:1px solid #ddd; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.15); padding:8px; min-width:170px; display:none; z-index:999; }
-.dropdown.show { display:block!important; }
-.dropdown a,.dropdown button { display:block; width:100%; text-align:left; padding:12px 12px; border-radius:8px; border:none; background:white; text-decoration:none; color:black; font-size:13px; font-weight:600; cursor:pointer; }
-.dropdown a:hover,.dropdown button:hover { background:#f5f5f5; }
-.hero { padding:50px 20px; text-align:center; }
-.hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
-.hero p { color:#777; margin:15px 0 25px; font-size:14px; }
-.shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
-.card { background:#f5f5f5; border-radius:12px; height:200px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}body{background:white;overflow-x:hidden}header{display:flex;flex-direction:column;align-items:center;background:white;position:sticky;top:0;z-index:50;width:100%}.logo-top{display:flex;justify-content:center;width:100%;padding:22px 10px 18px;background:white}.logo-top img{height:110px;width:auto;max-width:92vw;object-fit:contain;display:block}.nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 18px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;background:white;gap:10px;flex-wrap:nowrap;overflow:hidden;margin-top:-16px}.nav-left{display:flex;align-items:center;gap:18px;flex:1;flex-wrap:nowrap;min-width:0}.nav-menu{display:flex;align-items:center;gap:16px;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;scrollbar-width:none}.nav-menu::-webkit-scrollbar{display:none}.nav-menu a{text-decoration:none;color:black;font-size:13px;font-weight:600;white-space:nowrap}.nav-right{display:flex;gap:16px;align-items:center;flex-shrink:0;margin-left:10px}.lang-select{padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;font-size:13px;font-weight:700;background:white;cursor:pointer;flex-shrink:0}.icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center}.icon{width:22px;height:22px;stroke-width:1.8;stroke:black;fill:none}.profile-wrap{position:relative}.dropdown{position:absolute;right:0;top:38px;background:white;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);padding:8px;min-width:170px;display:none;z-index:9999}.dropdown.show{display:block!important}.dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 12px;border-radius:8px;border:none;background:white;text-decoration:none;color:black;font-size:13px;font-weight:600;cursor:pointer}.hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
 </style>
 </head>
 <body>
 <header>
-  <div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
-  <div class="nav-bar">
-    <div class="nav-left">
-      <select id="language" class="lang-select" onchange="changeLang()"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="ar">AR</option><option value="it">IT</option><option value="nl">NL</option><option value="pl">PL</option><option value="pt">PT</option><option value="el">EL</option><option value="sv">SV</option><option value="ro">RO</option><option value="hu">HU</option><option value="cs">CS</option><option value="bg">BG</option><option value="hr">HR</option><option value="id">ID</option><option value="zh">ZH</option></select>
-      <nav class="nav-menu"><a href="shop.html">Shop</a><a href="#">New Arrivals</a><a href="#">Dresses</a><a href="#">Tops</a><a href="#">Accessories</a><a href="#">Sale</a><a href="#">About</a></nav>
-    </div>
-    <div class="nav-right">
-      <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
-      <div class="profile-wrap">
-        <button class="icon-btn" id="profileBtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg></button>
-        <div class="dropdown" id="profileDropdown">
-          <a id="signinLink" href="signin.html">Sign In</a>
-          <a id="signupLink" href="signup.html">Sign Up</a>
-          <button id="signoutLink" onclick="handleSignout()">Sign Out</button>
-        </div>
-      </div>
-      <button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
-    </div>
-  </div>
+<div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
+<div class="nav-bar">
+<div class="nav-left">
+<select id="language" class="lang-select" onchange="changeLang()"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="ar">AR</option><option value="it">IT</option><option value="nl">NL</option><option value="pl">PL</option><option value="pt">PT</option><option value="el">EL</option><option value="sv">SV</option><option value="ro">RO</option><option value="hu">HU</option><option value="cs">CS</option><option value="bg">BG</option><option value="hr">HR</option><option value="id">ID</option><option value="zh">ZH</option></select>
+<nav class="nav-menu">
+<a id="navShop" href="shop.html">Shop</a>
+<a id="navNew" href="#">New Arrivals</a>
+<a id="navDresses" href="#">Dresses</a>
+<a id="navTops" href="#">Tops</a>
+<a id="navAcc" href="#">Accessories</a>
+<a id="navSale" href="#">Sale</a>
+<a id="navAbout" href="#">About</a>
+</nav>
+</div>
+<div class="nav-right">
+<button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
+<div class="profile-wrap">
+<button class="icon-btn" onclick="event.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show');"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg></button>
+<div class="dropdown" id="profileDropdown">
+<a id="signinLink" href="signin.html">Sign In</a>
+<a id="signupLink" href="signup.html">Sign Up</a>
+<button id="signoutLink" onclick="handleSignout()">Sign Out</button>
+</div>
+</div>
+<button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
+</div>
+</div>
 </header>
 <div class="hero"><h1 id="heroTitle">NEW<br>DROP</h1><p id="heroText">Curated looks. Tap to shop the full fit.</p><a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a></div>
 <div class="grid"><div class="card" id="cat1">HOODIES</div><div class="card" id="cat2">CARGO</div><div class="card" id="cat3">TEES</div><div class="card" id="cat4">ACCESSORIES</div></div>
 <script>
-const translations = {
-  en: { heroTitle:"NEW<br>DROP", heroText:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", cat1:"HOODIES", cat2:"CARGO", cat3:"TEES", cat4:"ACCESSORIES", signin:"Sign In", signup:"Sign Up", signout:"Sign Out" },
-  tr: { heroTitle:"YENİ<br>KOLEKSİYON", heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.", shopBtn:"ŞİMDİ AL", cat1:"KAPÜŞONLU", cat2:"KARGO", cat3:"TİŞÖRT", cat4:"AKSESUAR", signin:"Giriş Yap", signup:"Kayıt Ol", signout:"Çıkış Yap" },
-  de: { heroTitle:"NEUER<br>DROP", heroText:"Kuratierte Looks. Tippe um den kompletten Fit zu shoppen.", shopBtn:"JETZT SHOPPEN", cat1:"HOODIES", cat2:"CARGO", cat3:"SHIRTS", cat4:"ACCESSOIRES", signin:"Anmelden", signup:"Registrieren", signout:"Abmelden" },
-  fr: { heroTitle:"NOUVELLE<br>COLLECTION", heroText:"Looks soignés. Appuyez pour acheter le look complet.", shopBtn:"ACHETER", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOIRES", signin:"Connexion", signup:"S'inscrire", signout:"Déconnexion" },
-  es: { heroTitle:"NUEVA<br>COLECCIÓN", heroText:"Looks seleccionados. Toca para comprar el conjunto completo.", shopBtn:"COMPRAR AHORA", cat1:"SUDADERAS", cat2:"CARGO", cat3:"CAMISETAS", cat4:"ACCESORIOS", signin:"Iniciar", signup:"Registrarse", signout:"Salir" },
-  ar: { heroTitle:"تشكيلة<br>جديدة", heroText:"إطلالات مختارة. اضغط لتسوق المظهر الكامل.", shopBtn:"تسوق الآن", cat1:"هوديز", cat2:"كارغو", cat3:"تيشيرت", cat4:"إكسسوارات", signin:"تسجيل دخول", signup:"اشتراك", signout:"خروج" },
-  it: { heroTitle:"NUOVA<br>COLLEZIONE", heroText:"Look curati. Tocca per acquistare.", shopBtn:"ACQUISTA ORA", cat1:"FELPE", cat2:"CARGO", cat3:"T-SHIRT", cat4:"ACCESSORI", signin:"Accedi", signup:"Registrati", signout:"Esci" },
-  nl: { heroTitle:"NIEUWE<br>DROP", heroText:"Gecureerde looks. Tik om te shoppen.", shopBtn:"SHOP NU", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOIRES", signin:"Inloggen", signup:"Registreren", signout:"Uitloggen" },
-  pl: { heroTitle:"NOWA<br>KOLEKCJA", heroText:"Wybrane stylizacje.", shopBtn:"KUP TERAZ", cat1:"BLUZY", cat2:"CARGO", cat3:"T-SHIRTY", cat4:"AKCESORIA", signin:"Zaloguj", signup:"Zarejestruj", signout:"Wyloguj" },
-  pt: { heroTitle:"NOVA<br>COLEÇÃO", heroText:"Looks selecionados.", shopBtn:"COMPRAR AGORA", cat1:"MOLETONS", cat2:"CARGO", cat3:"CAMISETAS", cat4:"ACESSÓRIOS", signin:"Entrar", signup:"Registrar", signout:"Sair" },
-  el: { heroTitle:"ΝΕΑ<br>ΣΥΛΛΟΓΗ", heroText:"Επιμελημένες εμφανίσεις.", shopBtn:"ΑΓΟΡΑ ΤΩΡΑ", cat1:"HOODIES", cat2:"CARGO", cat3:"TEES", cat4:"ΑΞΕΣΟΥΑΡ", signin:"Σύνδεση", signup:"Εγγραφή", signout:"Αποσύνδεση" },
-  sv: { heroTitle:"NY<br>KOLLEKTION", heroText:"Utvalda looks.", shopBtn:"SHOPPA NU", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOARER", signin:"Logga in", signup:"Registrera", signout:"Logga ut" },
-  ro: { heroTitle:"COLECȚIE<br>NOUĂ", heroText:"Look-uri alese.", shopBtn:"CUMPĂRĂ ACUM", cat1:"HANORACE", cat2:"CARGO", cat3:"TRICOURI", cat4:"ACCESORII", signin:"Autentificare", signup:"Înregistrare", signout:"Deconectare" },
-  hu: { heroTitle:"ÚJ<br>KOLLEKCIÓ", heroText:"Válogatott szettek.", shopBtn:"VÁSÁRLÁS MOST", cat1:"PULÓVEREK", cat2:"CARGO", cat3:"PÓLÓK", cat4:"KIEGÉSZÍTŐK", signin:"Bejelentkezés", signup:"Regisztráció", signout:"Kijelentkezés" },
-  cs: { heroTitle:"NOVÁ<br>KOLEKCE", heroText:"Vybrané looky.", shopBtn:"KOUPIT TEĎ", cat1:"MIKINY", cat2:"CARGO", cat3:"TRIČKA", cat4:"DOPLŇKY", signin:"Přihlásit", signup:"Registrovat", signout:"Odhlásit" },
-  bg: { heroTitle:"НОВА<br>КОЛЕКЦИЯ", heroText:"Подбрани визии.", shopBtn:"ПАЗАРУВАЙ СЕГА", cat1:"СУИТЧЪРИ", cat2:"КАРГО", cat3:"ТЕНИСКИ", cat4:"АКСЕСОАРИ", signin:"Вход", signup:"Регистрация", signout:"Изход" },
-  hr: { heroTitle:"NOVA<br>KOLEKCIJA", heroText:"Odabrani lookovi.", shopBtn:"KUPI SADA", cat1:"HOODICE", cat2:"CARGO", cat3:"MAJICE", cat4:"DODACI", signin:"Prijava", signup:"Registracija", signout:"Odjava" },
-  id: { heroTitle:"KOLEKSI<br>BARU", heroText:"Tampilan pilihan. Ketuk untuk belanja.", shopBtn:"BELANJA SEKARANG", cat1:"HOODIE", cat2:"CARGO", cat3:"KAOS", cat4:"AKSESORIS", signin:"Masuk", signup:"Daftar", signout:"Keluar" },
-  zh: { heroTitle:"全新<br>系列", heroText:"精选穿搭。点击购买整套。", shopBtn:"立即购买", cat1:"连帽衫", cat2:"工装裤", cat3:"T恤", cat4:"配饰", signin:"登录", signup:"注册", signout:"退出" }
+const translations={
+en:{heroTitle:"NEW<br>DROP",heroText:"Curated looks. Tap to shop the full fit.",shopBtn:"SHOP NOW",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ACCESSORIES",signin:"Sign In",signup:"Sign Up",signout:"Sign Out",navShop:"Shop",navNew:"New Arrivals",navDresses:"Dresses",navTops:"Tops",navAcc:"Accessories",navSale:"Sale",navAbout:"About"},
+tr:{heroTitle:"YENİ<br>KOLEKSİYON",heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.",shopBtn:"ŞİMDİ AL",cat1:"KAPÜŞONLU",cat2:"KARGO",cat3:"TİŞÖRT",cat4:"AKSESUAR",signin:"Giriş Yap",signup:"Kayıt Ol",signout:"Çıkış Yap",navShop:"Mağaza",navNew:"Yeni Gelenler",navDresses:"Elbiseler",navTops:"Üstler",navAcc:"Aksesuarlar",navSale:"İndirim",navAbout:"Hakkımızda"},
+de:{heroTitle:"NEUER<br>DROP",heroText:"Kuratierte Looks.",shopBtn:"JETZT SHOPPEN",cat1:"HOODIES",cat2:"CARGO",cat3:"SHIRTS",cat4:"ACCESSOIRES",signin:"Anmelden",signup:"Registrieren",signout:"Abmelden",navShop:"Shop",navNew:"Neuheiten",navDresses:"Kleider",navTops:"Tops",navAcc:"Accessoires",navSale:"Sale",navAbout:"Über uns"},
+fr:{heroTitle:"NOUVELLE<br>COLLECTION",heroText:"Looks soignés.",shopBtn:"ACHETER",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOIRES",signin:"Connexion",signup:"S'inscrire",signout:"Déconnexion",navShop:"Boutique",navNew:"Nouveautés",navDresses:"Robes",navTops:"Hauts",navAcc:"Accessoires",navSale:"Soldes",navAbout:"À propos"},
+es:{heroTitle:"NUEVA<br>COLECCIÓN",heroText:"Looks seleccionados.",shopBtn:"COMPRAR AHORA",cat1:"SUDADERAS",cat2:"CARGO",cat3:"CAMISETAS",cat4:"ACCESORIOS",signin:"Iniciar",signup:"Registrarse",signout:"Salir",navShop:"Tienda",navNew:"Novedades",navDresses:"Vestidos",navTops:"Tops",navAcc:"Accesorios",navSale:"Ofertas",navAbout:"Sobre"},
+ar:{heroTitle:"تشكيلة<br>جديدة",heroText:"إطلالات مختارة.",shopBtn:"تسوق الآن",cat1:"هوديز",cat2:"كارغو",cat3:"تيشيرت",cat4:"إكسسوارات",signin:"دخول",signup:"اشتراك",signout:"خروج",navShop:"المتجر",navNew:"وصل حديثاً",navDresses:"فساتين",navTops:"بلايز",navAcc:"إكسسوارات",navSale:"تخفيضات",navAbout:"من نحن"},
+it:{heroTitle:"NUOVA<br>COLLEZIONE",heroText:"Look curati.",shopBtn:"ACQUISTA ORA",cat1:"FELPE",cat2:"CARGO",cat3:"T-SHIRT",cat4:"ACCESSORI",signin:"Accedi",signup:"Registrati",signout:"Esci",navShop:"Shop",navNew:"Novità",navDresses:"Vestiti",navTops:"Top",navAcc:"Accessori",navSale:"Saldi",navAbout:"Chi siamo"},
+nl:{heroTitle:"NIEUWE<br>DROP",heroText:"Gecureerde looks.",shopBtn:"SHOP NU",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOIRES",signin:"Inloggen",signup:"Registreren",signout:"Uitloggen",navShop:"Winkel",navNew:"Nieuw",navDresses:"Jurken",navTops:"Tops",navAcc:"Accessoires",navSale:"Sale",navAbout:"Over"},
+pl:{heroTitle:"NOWA<br>KOLEKCJA",heroText:"Wybrane stylizacje.",shopBtn:"KUP TERAZ",cat1:"BLUZY",cat2:"CARGO",cat3:"T-SHIRTY",cat4:"AKCESORIA",signin:"Zaloguj",signup:"Zarejestruj",signout:"Wyloguj",navShop:"Sklep",navNew:"Nowości",navDresses:"Sukienki",navTops:"Topy",navAcc:"Akcesoria",navSale:"Wyprzedaż",navAbout:"O nas"},
+pt:{heroTitle:"NOVA<br>COLEÇÃO",heroText:"Looks selecionados.",shopBtn:"COMPRAR AGORA",cat1:"MOLETONS",cat2:"CARGO",cat3:"CAMISETAS",cat4:"ACESSÓRIOS",signin:"Entrar",signup:"Registrar",signout:"Sair",navShop:"Loja",navNew:"Novidades",navDresses:"Vestidos",navTops:"Tops",navAcc:"Acessórios",navSale:"Promoção",navAbout:"Sobre"},
+el:{heroTitle:"ΝΕΑ<br>ΣΥΛΛΟΓΗ",heroText:"Επιμελημένες.",shopBtn:"ΑΓΟΡΑ ΤΩΡΑ",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ΑΞΕΣΟΥΑΡ",signin:"Σύνδεση",signup:"Εγγραφή",signout:"Αποσύνδεση",navShop:"Κατάστημα",navNew:"Νέες Αφίξεις",navDresses:"Φορέματα",navTops:"Τοπ",navAcc:"Αξεσουάρ",navSale:"Εκπτώσεις",navAbout:"Σχετικά"},
+sv:{heroTitle:"NY<br>KOLLEKTION",heroText:"Utvalda looks.",shopBtn:"SHOPPA NU",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOARER",signin:"Logga in",signup:"Registrera",signout:"Logga ut",navShop:"Butik",navNew:"Nyheter",navDresses:"Klänningar",navTops:"Toppar",navAcc:"Accessoarer",navSale:"Rea",navAbout:"Om oss"},
+ro:{heroTitle:"COLECȚIE<br>NOUĂ",heroText:"Look-uri alese.",shopBtn:"CUMPĂRĂ ACUM",cat1:"HANORACE",cat2:"CARGO",cat3:"TRICOURI",cat4:"ACCESORII",signin:"Autentificare",signup:"Înregistrare",signout:"Deconectare",navShop:"Magazin",navNew:"Noutăți",navDresses:"Rochii",navTops:"Topuri",navAcc:"Accesorii",navSale:"Reduceri",navAbout:"Despre"},
+hu:{heroTitle:"ÚJ<br>KOLLEKCIÓ",heroText:"Válogatott szettek.",shopBtn:"VÁSÁRLÁS MOST",cat1:"PULÓVEREK",cat2:"CARGO",cat3:"PÓLÓK",cat4:"KIEGÉSZÍTŐK",signin:"Bejelentkezés",signup:"Regisztráció",signout:"Kijelentkezés",navShop:"Bolt",navNew:"Újdonságok",navDresses:"Ruhák",navTops:"Felsők",navAcc:"Kiegészítők",navSale:"Akció",navAbout:"Rólunk"},
+cs:{heroTitle:"NOVÁ<br>KOLEKCE",heroText:"Vybrané looky.",shopBtn:"KOUPIT TEĎ",cat1:"MIKINY",cat2:"CARGO",cat3:"TRIČKA",cat4:"DOPLŇKY",signin:"Přihlásit",signup:"Registrovat",signout:"Odhlásit",navShop:"Obchod",navNew:"Novinky",navDresses:"Šaty",navTops:"Topy",navAcc:"Doplňky",navSale:"Výprodej",navAbout:"O nás"},
+bg:{heroTitle:"НОВА<br>КОЛЕКЦИЯ",heroText:"Подбрани визии.",shopBtn:"ПАЗАРУВАЙ СЕГА",cat1:"СУИТЧЪРИ",cat2:"КАРГО",cat3:"ТЕНИСКИ",cat4:"АКСЕСОАРИ",signin:"Вход",signup:"Регистрация",signout:"Изход",navShop:"Магазин",navNew:"Нови",navDresses:"Рокли",navTops:"Топове",navAcc:"Аксесоари",navSale:"Разпродажба",navAbout:"За нас"},
+hr:{heroTitle:"NOVA<br>KOLEKCIJA",heroText:"Odabrani lookovi.",shopBtn:"KUPI SADA",cat1:"HOODICE",cat2:"CARGO",cat3:"MAJICE",cat4:"DODACI",signin:"Prijava",signup:"Registracija",signout:"Odjava",navShop:"Trgovina",navNew:"Novo",navDresses:"Haljine",navTops:"Topovi",navAcc:"Dodaci",navSale:"Sniženje",navAbout:"O nama"},
+id:{heroTitle:"KOLEKSI<br>BARU",heroText:"Tampilan pilihan.",shopBtn:"BELANJA SEKARANG",cat1:"HOODIE",cat2:"CARGO",cat3:"KAOS",cat4:"AKSESORIS",signin:"Masuk",signup:"Daftar",signout:"Keluar",navShop:"Toko",navNew:"Baru",navDresses:"Gaun",navTops:"Atasan",navAcc:"Aksesori",navSale:"Diskon",navAbout:"Tentang"},
+zh:{heroTitle:"全新<br>系列",heroText:"精选穿搭。",shopBtn:"立即购买",cat1:"连帽衫",cat2:"工装裤",cat3:"T恤",cat4:"配饰",signin:"登录",signup:"注册",signout:"退出",navShop:"商店",navNew:"新品",navDresses:"连衣裙",navTops:"上衣",navAcc:"配饰",navSale:"特卖",navAbout:"关于"}
 };
 function changeLang(){
-  const lang=document.getElementById('language').value;
-  localStorage.setItem('siteLang',lang);
-  document.getElementById('heroTitle').innerHTML=translations[lang].heroTitle;
-  document.getElementById('heroText').innerText=translations[lang].heroText;
-  document.getElementById('shopBtn').innerText=translations[lang].shopBtn;
-  document.getElementById('cat1').innerText=translations[lang].cat1;
-  document.getElementById('cat2').innerText=translations[lang].cat2;
-  document.getElementById('cat3').innerText=translations[lang].cat3;
-  document.getElementById('cat4').innerText=translations[lang].cat4;
-  const si=document.getElementById('signinLink'), su=document.getElementById('signupLink'), so=document.getElementById('signoutLink');
-  if(si) si.innerText=translations[lang].signin;
-  if(su) su.innerText=translations[lang].signup;
-  if(so) so.innerText=translations[lang].signout;
-  document.documentElement.lang=lang;
+const lang=document.getElementById('language').value;
+localStorage.setItem('siteLang',lang);
+const t=translations[lang];
+document.getElementById('heroTitle').innerHTML=t.heroTitle;
+document.getElementById('heroText').innerText=t.heroText;
+document.getElementById('shopBtn').innerText=t.shopBtn;
+document.getElementById('cat1').innerText=t.cat1;
+document.getElementById('cat2').innerText=t.cat2;
+document.getElementById('cat3').innerText=t.cat3;
+document.getElementById('cat4').innerText=t.cat4;
+document.getElementById('signinLink').innerText=t.signin;
+document.getElementById('signupLink').innerText=t.signup;
+document.getElementById('signoutLink').innerText=t.signout;
+document.getElementById('navShop').innerText=t.navShop;
+document.getElementById('navNew').innerText=t.navNew;
+document.getElementById('navDresses').innerText=t.navDresses;
+document.getElementById('navTops').innerText=t.navTops;
+document.getElementById('navAcc').innerText=t.navAcc;
+document.getElementById('navSale').innerText=t.navSale;
+document.getElementById('navAbout').innerText=t.navAbout;
+document.documentElement.lang=lang;
 }
-// FIXED DROPDOWN CLICK
-const profileBtn=document.getElementById('profileBtn');
-const dropdown=document.getElementById('profileDropdown');
-profileBtn.addEventListener('click', function(e){
-  e.stopPropagation();
-  dropdown.classList.toggle('show');
-});
-document.addEventListener('click', function(){
-  dropdown.classList.remove('show');
-});
-const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
-async function checkUser(){
-  const { data } = await supabaseClient.auth.getSession();
-  const isLoggedIn =!!data.session;
-  document.getElementById('signinLink').style.display = isLoggedIn? 'none' : 'block';
-  document.getElementById('signupLink').style.display = isLoggedIn? 'none' : 'block';
-  document.getElementById('signoutLink').style.display = isLoggedIn? 'block' : 'none';
-}
-async function handleSignout(){
-  await supabaseClient.auth.signOut();
-  location.href='signin.html';
-}
-const savedLang=localStorage.getItem('siteLang')||'en';
-document.getElementById('language').value=savedLang;
-changeLang();
-checkUser();
+document.addEventListener('click',function(){const dd=document.getElementById('profileDropdown');if(dd) dd.classList.remove('show')});
+const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+async function checkUser(){const{data}=await supabaseClient.auth.getSession();const isLoggedIn=!!data.session;document.getElementById('signinLink').style.display=isLoggedIn?'none':'block';document.getElementById('signupLink').style.display=isLoggedIn?'none':'block';document.getElementById('signoutLink').style.display=isLoggedIn?'block':'none'}
+async function handleSignout(){await supabaseClient.auth.signOut();location.href='signin.html'}
+const savedLang=localStorage.getItem('siteLang')||'en';document.getElementById('language').value=savedLang;changeLang();checkUser();
 </script>
 </body>
 </html>
