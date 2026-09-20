@@ -27,24 +27,25 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 .icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center}
 .icon{width:22px;height:22px;stroke-width:1.8;stroke:black;fill:none}
 .profile-wrap{position:relative}
-.dropdown{position:absolute;right:0;top:38px;background:white;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);padding:8px;min-width:180px;display:none;z-index:9999}
+/* BIG DROPDOWN - FIXED TINY ISSUE */
+.dropdown{position:absolute;right:0;top:42px;background:white;border:1.5px solid #ddd;border-radius:18px;box-shadow:0 14px 35px rgba(0,0,0,0.20);padding:14px;min-width:250px;display:none;z-index:9999}
 .dropdown.show{display:block!important}
-.dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 12px;border-radius:8px;border:none;background:white;text-decoration:none;color:black;font-size:13px;font-weight:600;cursor:pointer}
-.dropdown a:hover{background:#f5f5f5}
-/* STYLISH PERSONAL INFO FORM */
-.pi-modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px}
+.dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:16px 16px;border-radius:12px;border:none;background:white;text-decoration:none;color:black;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:4px}
+.dropdown a:hover,.dropdown button:hover{background:#f2f2f2}
+/* PERSONAL INFO MODAL - STYLISH BIG */
+.pi-modal{position:fixed;inset:0;background:rgba(0,0,0,0.50);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px}
 .pi-modal.show{display:flex}
-.pi-box{background:white;width:100%;max-width:440px;border-radius:22px;padding:24px 20px;box-shadow:0 20px 60px rgba(0,0,0,0.25)}
-.pi-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.pi-head h2{font-size:18px;font-weight:900;letter-spacing:-0.5px}
-.pi-close{background:#f2f2f2;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-weight:700}
-.pi-form{display:flex;flex-direction:column;gap:12px}
-.pi-row{display:flex;gap:10px}
-.pi-field{flex:1;display:flex;flex-direction:column;gap:5px}
-.pi-field label{font-size:10px;font-weight:800;letter-spacing:0.6px;color:#888;text-transform:uppercase}
-.pi-field input{padding:12px 13px;border:1.5px solid #e6e6e6;border-radius:11px;font-size:13px;outline:none}
-.pi-field input:focus{border-color:black}
-.pi-save{margin-top:6px;background:black;color:white;border:none;padding:13px;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer}
+.pi-box{background:white;width:100%;max-width:460px;border-radius:24px;padding:28px 22px;box-shadow:0 25px 70px rgba(0,0,0,0.30)}
+.pi-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.pi-head h2{font-size:20px;font-weight:900;letter-spacing:-0.5px}
+.pi-close{background:#f1f1f1;border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;font-weight:800;font-size:16px}
+.pi-form{display:flex;flex-direction:column;gap:14px}
+.pi-row{display:flex;gap:12px}
+.pi-field{flex:1;display:flex;flex-direction:column;gap:6px}
+.pi-field label{font-size:11px;font-weight:800;letter-spacing:0.7px;color:#888;text-transform:uppercase}
+.pi-field input{padding:14px 14px;border:1.8px solid #e5e5e5;border-radius:13px;font-size:14px;font-weight:500;outline:none}
+.pi-field input:focus{border-color:black;background:#fafafa}
+.pi-save{margin-top:8px;background:black;color:white;border:none;padding:15px;border-radius:14px;font-weight:900;font-size:14px;cursor:pointer;letter-spacing:0.3px}
 .hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
 .overlay{position:fixed;inset:0;background:transparent;display:none;z-index:1000}
 .overlay.show{display:block}
@@ -109,7 +110,6 @@ function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('p
 function openPI(){ document.getElementById('profileDropdown').classList.remove('show'); const s=JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(s.firstName) document.getElementById('firstName').value=s.firstName; if(s.lastName) document.getElementById('lastName').value=s.lastName; if(s.address) document.getElementById('address').value=s.address; if(s.email) document.getElementById('email').value=s.email; if(s.phone) document.getElementById('phone').value=s.phone; document.getElementById('piModal').classList.add('show'); }
 function closePI(){ document.getElementById('piModal').classList.remove('show'); }
 function savePI(){ const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,address:document.getElementById('address').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value}; localStorage.setItem('personalInfo',JSON.stringify(data)); document.getElementById('piSave').innerText='✓ SAVED!'; setTimeout(()=>{document.getElementById('piSave').innerText=translations[document.getElementById('language').value].piSave; closePI();},800); }
-
 const translations={
 en:{heroTitle:"NEW<br>DROP",heroText:"Curated looks. Tap to shop the full fit.",shopBtn:"SHOP NOW",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ACCESSORIES",signin:"Sign In",signup:"Sign Up",signout:"Sign Out",navShop:"Shop",navNew:"New Arrivals",navDresses:"Dresses",navTops:"Tops",navAcc:"Accessories",navSale:"Sale",navAbout:"About",piTitle:"Personal Information",piSave:"SAVE CHANGES",lFirst:"First Name",lLast:"Last Name",lAddress:"Address",lEmail:"Email",lPhone:"Phone Number",piLink:"Personal Information"},
 tr:{heroTitle:"YENİ<br>KOLEKSİYON",heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.",shopBtn:"ŞİMDİ AL",cat1:"KAPÜŞONLU",cat2:"KARGO",cat3:"TİŞÖRT",cat4:"AKSESUAR",signin:"Giriş Yap",signup:"Kayıt Ol",signout:"Çıkış Yap",navShop:"Mağaza",navNew:"Yeni Gelenler",navDresses:"Elbiseler",navTops:"Üstler",navAcc:"Aksesuarlar",navSale:"İndirim",navAbout:"Hakkımızda",piTitle:"Kişisel Bilgiler",piSave:"KAYDET",lFirst:"Ad",lLast:"Soyad",lAddress:"Adres",lEmail:"E-posta",lPhone:"Telefon Numarası",piLink:"Kişisel Bilgiler"},
