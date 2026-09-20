@@ -7,21 +7,44 @@
 <title>POP THE LOOK</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}body{background:white;overflow-x:hidden}header{display:flex;flex-direction:column;align-items:center;background:white;position:sticky;top:0;z-index:50;width:100%}.logo-top{display:flex;justify-content:center;width:100%;padding:22px 10px 18px;background:white}.logo-top img{height:110px;width:auto;max-width:92vw;object-fit:contain;display:block}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}body{background:white;overflow-x:hidden}
+header{display:flex;flex-direction:column;align-items:center;background:white;position:sticky;top:0;z-index:50;width:100%}
+.logo-top{display:flex;justify-content:center;width:100%;padding:22px 10px 18px;background:white}
+.logo-top img{height:110px;width:auto;max-width:92vw;object-fit:contain;display:block}
 .signout-row{position:absolute;right:18px;top:105px;z-index:60}
 .signout-top{background:black;color:white;border:none;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer}
-.nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 18px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;background:white;gap:10px;flex-wrap:nowrap;overflow:hidden;margin-top:-16px}
-.nav-left{display:flex;align-items:center;gap:18px;flex:1;flex-wrap:nowrap;min-width:0}.nav-menu{display:flex;align-items:center;gap:16px;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;scrollbar-width:none}.nav-menu::-webkit-scrollbar{display:none}.nav-menu a{text-decoration:none;color:black;font-size:13px;font-weight:600;white-space:nowrap}.nav-right{display:flex;gap:16px;align-items:center;flex-shrink:0;margin-left:10px}.lang-select{padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;font-size:13px;font-weight:700;background:white;cursor:pointer;flex-shrink:0}.icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center}.icon{width:22px;height:22px;stroke-width:1.8;stroke:black;fill:none}.profile-wrap{position:relative}.dropdown{position:absolute;right:0;top:38px;background:white;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);padding:8px;min-width:170px;display:none;z-index:9999}.dropdown.show{display:block!important}.dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 12px;border-radius:8px;border:none;background:white;text-decoration:none;color:black;font-size:13px;font-weight:600;cursor:pointer}.hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 18px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;background:white;gap:10px;flex-wrap:nowrap;overflow:hidden;margin-top:-16px;position:relative}
+.nav-left{display:flex;align-items:center;gap:12px;flex:1;flex-wrap:nowrap;min-width:0}
+.burger-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:4px}
+.burger-btn span{width:20px;height:2.5px;background:black;display:block;border-radius:2px}
+.burger-drawer{position:absolute;left:0;top:100%;width:260px;background:white;border-right:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;box-shadow:4px 8px 20px rgba(0,0,0,0.12);padding:12px 0;display:none;flex-direction:column;z-index:999}
+.burger-drawer.show{display:flex}
+.burger-drawer a{text-decoration:none;color:black;font-size:14px;font-weight:600;padding:14px 18px;border-bottom:1px solid #f2f2f2}
+.burger-drawer a:last-child{border-bottom:none}
+.burger-drawer a:hover{background:#f5f5f5}
+.nav-right{display:flex;gap:16px;align-items:center;flex-shrink:0;margin-left:10px}
+.lang-select{padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;font-size:13px;font-weight:700;background:white;cursor:pointer;flex-shrink:0}
+.icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center}
+.icon{width:22px;height:22px;stroke-width:1.8;stroke:black;fill:none}
+.profile-wrap{position:relative}
+.dropdown{position:absolute;right:0;top:38px;background:white;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);padding:8px;min-width:170px;display:none;z-index:9999}
+.dropdown.show{display:block!important}
+.dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 12px;border-radius:8px;border:none;background:white;text-decoration:none;color:black;font-size:13px;font-weight:600;cursor:pointer}
+.hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;z-index:40}
+.overlay.show{display:block}
 </style>
 </head>
 <body>
+<div class="overlay" id="overlay" onclick="toggleBurger()"></div>
 <header style="position:relative;">
 <div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
 <div class="signout-row"><button id="signoutTop" class="signout-top" style="display:none;" onclick="handleSignout()">Sign Out</button></div>
 <div class="nav-bar">
 <div class="nav-left">
+<button class="burger-btn" onclick="event.stopPropagation(); toggleBurger()"><span></span><span></span><span></span></button>
 <select id="language" class="lang-select" onchange="changeLang()"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="ar">AR</option><option value="it">IT</option><option value="nl">NL</option><option value="pl">PL</option><option value="pt">PT</option><option value="el">EL</option><option value="sv">SV</option><option value="ro">RO</option><option value="hu">HU</option><option value="cs">CS</option><option value="bg">BG</option><option value="hr">HR</option><option value="id">ID</option><option value="zh">ZH</option></select>
-<nav class="nav-menu">
+<div class="burger-drawer" id="burgerDrawer">
 <a id="navShop" href="shop.html">Shop</a>
 <a id="navNew" href="#">New Arrivals</a>
 <a id="navDresses" href="#">Dresses</a>
@@ -29,7 +52,7 @@
 <a id="navAcc" href="#">Accessories</a>
 <a id="navSale" href="#">Sale</a>
 <a id="navAbout" href="#">About</a>
-</nav>
+</div>
 </div>
 <div class="nav-right">
 <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
@@ -47,6 +70,12 @@
 <div class="hero"><h1 id="heroTitle">NEW<br>DROP</h1><p id="heroText">Curated looks. Tap to shop the full fit.</p><a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a></div>
 <div class="grid"><div class="card" id="cat1">HOODIES</div><div class="card" id="cat2">CARGO</div><div class="card" id="cat3">TEES</div><div class="card" id="cat4">ACCESSORIES</div></div>
 <script>
+function toggleBurger(){
+const d=document.getElementById('burgerDrawer');
+const o=document.getElementById('overlay');
+d.classList.toggle('show');
+o.classList.toggle('show');
+}
 const translations={
 en:{heroTitle:"NEW<br>DROP",heroText:"Curated looks. Tap to shop the full fit.",shopBtn:"SHOP NOW",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ACCESSORIES",signin:"Sign In",signup:"Sign Up",signout:"Sign Out",navShop:"Shop",navNew:"New Arrivals",navDresses:"Dresses",navTops:"Tops",navAcc:"Accessories",navSale:"Sale",navAbout:"About"},
 tr:{heroTitle:"YENİ<br>KOLEKSİYON",heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.",shopBtn:"ŞİMDİ AL",cat1:"KAPÜŞONLU",cat2:"KARGO",cat3:"TİŞÖRT",cat4:"AKSESUAR",signin:"Giriş Yap",signup:"Kayıt Ol",signout:"Çıkış Yap",navShop:"Mağaza",navNew:"Yeni Gelenler",navDresses:"Elbiseler",navTops:"Üstler",navAcc:"Aksesuarlar",navSale:"İndirim",navAbout:"Hakkımızda"},
@@ -91,7 +120,14 @@ document.getElementById('navSale').innerText=t.navSale;
 document.getElementById('navAbout').innerText=t.navAbout;
 document.documentElement.lang=lang;
 }
-document.addEventListener('click',function(){const dd=document.getElementById('profileDropdown');if(dd) dd.classList.remove('show')});
+document.addEventListener('click',function(){
+const dd=document.getElementById('profileDropdown');
+const bd=document.getElementById('burgerDrawer');
+const ov=document.getElementById('overlay');
+if(dd) dd.classList.remove('show');
+if(bd) bd.classList.remove('show');
+if(ov) ov.classList.remove('show');
+});
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 async function checkUser(){
 const{data}=await supabaseClient.auth.getSession();
