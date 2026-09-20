@@ -9,19 +9,21 @@
 <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
   body { background:white; overflow-x:hidden; }
-  header { display:flex; flex-direction:column; align-items:center; background:white; position:sticky; top:0; z-index:10; width:100%; }
-.logo-top { display:flex; justify-content:center; width:100%; padding:18px 10px 12px; background:white; }
-.logo-top img { height:85px; width:auto; max-width:90vw; object-fit:contain; display:block; }
-.nav-bar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; background:white; flex-wrap:wrap; gap:8px; }
-.nav-left { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
-.nav-menu { display:flex; align-items:center; gap:14px; }
-.nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; }
-.nav-right { display:flex; gap:10px; align-items:center; margin-left:auto; }
+  /* ===== HEADER FIXED - EXACTLY IMAGE 2 ===== */
+  header { display:flex; flex-direction:column; align-items:center; background:white; position:sticky; top:0; z-index:50; width:100%; }
+.logo-top { display:flex; justify-content:center; width:100%; padding:22px 10px 18px; background:white; }
+.logo-top img { height:110px; width:auto; max-width:92vw; object-fit:contain; display:block; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 18px; border-top:1px solid #e5e5e5; border-bottom:1px solid #e5e5e5; background:white; gap:10px; flex-wrap:nowrap; overflow:hidden; }
+.nav-left { display:flex; align-items:center; gap:18px; flex:1; flex-wrap:nowrap; min-width:0; }
+.nav-menu { display:flex; align-items:center; gap:16px; flex-wrap:nowrap; white-space:nowrap; overflow-x:auto; scrollbar-width:none; }
+.nav-menu::-webkit-scrollbar{ display:none; }
+.nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; white-space:nowrap; }
+.nav-right { display:flex; gap:8px; align-items:center; flex-shrink:0; margin-left:10px; }
+.lang-select { padding:6px 14px; border-radius:999px; border:1.5px solid #ddd; font-size:13px; font-weight:700; background:white; cursor:pointer; flex-shrink:0; }
 .icon { width:18px; height:18px; stroke-width:2; }
 .btn { padding:7px 14px; border-radius:20px; font-size:12px; font-weight:bold; text-decoration:none; cursor:pointer; white-space:nowrap; }
 .btn-outline { border:1px solid black; color:black; background:white; }
 .btn-black { background:black; color:white; border:1px solid black; }
-.lang-select { padding:5px 8px; border-radius:16px; border:1px solid #ddd; font-size:12px; font-weight:bold; background:white; cursor:pointer; }
 .hero { padding:50px 20px; text-align:center; }
 .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
 .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
