@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>POP THE LOOK</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
   body { background:white; }
   header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid #eee; position:sticky; top:0; background:white; z-index:10; }
   .logo { font-weight:900; letter-spacing:2px; font-size:18px; }
-  .right { display:flex; gap:10px; }
-  .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; }
+  .right { display:flex; gap:10px; align-items:center; }
+  .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
   .btn-outline { border:1px solid black; color:black; background:white; }
   .btn-black { background:black; color:white; border:1px solid black; }
   .hero { padding:60px 20px; text-align:center; }
@@ -24,9 +25,10 @@
 <body>
 <header>
   <div class="logo">POP THE LOOK</div>
-  <div class="right">
-    <a class="btn btn-outline" href="signin.html">Sign In</a>
-    <a class="btn btn-black" href="signup.html">Sign Up</a>
+  <div class="right" id="authArea">
+    <a id="signinBtn" class="btn btn-outline" href="signin.html">Sign In</a>
+    <a id="signupBtn" class="btn btn-black" href="signup.html">Sign Up</a>
+    <button id="signoutBtn" class="btn btn-black" style="display:none;" onclick="handleSignout()">Sign Out</button>
   </div>
 </header>
 
@@ -42,5 +44,24 @@
   <div class="card">TEES</div>
   <div class="card">ACCESSORIES</div>
 </div>
+
+<script>
+const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
+async function checkUser(){
+  const { data } = await supabaseClient.auth.getSession();
+  const isLoggedIn = !!data.session;
+  document.getElementById('signinBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
+  document.getElementById('signupBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
+  document.getElementById('signoutBtn').style.display = isLoggedIn ? 'inline-block' : 'none';
+}
+
+async function handleSignout(){
+  await supabaseClient.auth.signOut();
+  location.href = 'signin.html';
+}
+
+checkUser();
+</script>
 </body>
 </html>
