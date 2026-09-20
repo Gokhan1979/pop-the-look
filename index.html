@@ -17,18 +17,15 @@
 .nav-menu { display:flex; align-items:center; gap:16px; flex-wrap:nowrap; white-space:nowrap; overflow-x:auto; scrollbar-width:none; }
 .nav-menu::-webkit-scrollbar{ display:none; }
 .nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; white-space:nowrap; }
-.nav-right { display:flex; gap:16px; align-items:center; flex-shrink:0; margin-left:10px; position:relative; }
+.nav-right { display:flex; gap:16px; align-items:center; flex-shrink:0; margin-left:10px; }
 .lang-select { padding:6px 14px; border-radius:999px; border:1.5px solid #ddd; font-size:13px; font-weight:700; background:white; cursor:pointer; flex-shrink:0; }
 .icon-btn { background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; }
 .icon { width:20px; height:20px; stroke-width:1.8; stroke:black; fill:none; }
 .profile-wrap { position:relative; }
-.dropdown { position:absolute; right:0; top:32px; background:white; border:1px solid #eee; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.1); padding:8px; min-width:160px; display:none; z-index:100; }
-.dropdown.show { display:block; }
-.dropdown a,.dropdown button { display:block; width:100%; text-align:left; padding:10px 12px; border-radius:8px; border:none; background:white; text-decoration:none; color:black; font-size:13px; font-weight:600; cursor:pointer; }
+.dropdown { position:absolute; right:0; top:36px; background:white; border:1px solid #ddd; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.15); padding:8px; min-width:170px; display:none; z-index:999; }
+.dropdown.show { display:block!important; }
+.dropdown a,.dropdown button { display:block; width:100%; text-align:left; padding:12px 12px; border-radius:8px; border:none; background:white; text-decoration:none; color:black; font-size:13px; font-weight:600; cursor:pointer; }
 .dropdown a:hover,.dropdown button:hover { background:#f5f5f5; }
-.btn { padding:7px 14px; border-radius:20px; font-size:12px; font-weight:bold; text-decoration:none; cursor:pointer; white-space:nowrap; }
-.btn-outline { border:1px solid black; color:black; background:white; }
-.btn-black { background:black; color:white; border:1px solid black; }
 .hero { padding:50px 20px; text-align:center; }
 .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
 .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
@@ -39,48 +36,28 @@
 </head>
 <body>
 <header>
-  <div class="logo-top">
-    <img src="logo.png" alt="POP THE LOOK">
-  </div>
+  <div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
   <div class="nav-bar">
     <div class="nav-left">
-      <select id="language" class="lang-select" onchange="changeLang()">
-        <option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="ar">AR</option><option value="it">IT</option><option value="nl">NL</option><option value="pl">PL</option><option value="pt">PT</option><option value="el">EL</option><option value="sv">SV</option><option value="ro">RO</option><option value="hu">HU</option><option value="cs">CS</option><option value="bg">BG</option><option value="hr">HR</option><option value="id">ID</option><option value="zh">ZH</option>
-      </select>
-      <nav class="nav-menu">
-        <a href="shop.html">Shop</a><a href="#">New Arrivals</a><a href="#">Dresses</a><a href="#">Tops</a><a href="#">Accessories</a><a href="#">Sale</a><a href="#">About</a>
-      </nav>
+      <select id="language" class="lang-select" onchange="changeLang()"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="ar">AR</option><option value="it">IT</option><option value="nl">NL</option><option value="pl">PL</option><option value="pt">PT</option><option value="el">EL</option><option value="sv">SV</option><option value="ro">RO</option><option value="hu">HU</option><option value="cs">CS</option><option value="bg">BG</option><option value="hr">HR</option><option value="id">ID</option><option value="zh">ZH</option></select>
+      <nav class="nav-menu"><a href="shop.html">Shop</a><a href="#">New Arrivals</a><a href="#">Dresses</a><a href="#">Tops</a><a href="#">Accessories</a><a href="#">Sale</a><a href="#">About</a></nav>
     </div>
     <div class="nav-right">
-      <button class="icon-btn" onclick="location.href='shop.html'" aria-label="Search">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-      </button>
+      <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
       <div class="profile-wrap">
-        <button class="icon-btn" id="profileBtn" onclick="toggleProfile()" aria-label="Account">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg>
-        </button>
+        <button class="icon-btn" id="profileBtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg></button>
         <div class="dropdown" id="profileDropdown">
           <a id="signinLink" href="signin.html">Sign In</a>
           <a id="signupLink" href="signup.html">Sign Up</a>
-          <button id="signoutLink" style="display:none;" onclick="handleSignout()">Sign Out</button>
+          <button id="signoutLink" onclick="handleSignout()">Sign Out</button>
         </div>
       </div>
-      <button class="icon-btn" onclick="location.href='cart.html'" aria-label="Cart">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
-      </button>
+      <button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
     </div>
   </div>
 </header>
-
-<div class="hero">
-  <h1 id="heroTitle">NEW<br>DROP</h1>
-  <p id="heroText">Curated looks. Tap to shop the full fit.</p>
-  <a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a>
-</div>
-<div class="grid">
-  <div class="card" id="cat1">HOODIES</div><div class="card" id="cat2">CARGO</div><div class="card" id="cat3">TEES</div><div class="card" id="cat4">ACCESSORIES</div>
-</div>
-
+<div class="hero"><h1 id="heroTitle">NEW<br>DROP</h1><p id="heroText">Curated looks. Tap to shop the full fit.</p><a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a></div>
+<div class="grid"><div class="card" id="cat1">HOODIES</div><div class="card" id="cat2">CARGO</div><div class="card" id="cat3">TEES</div><div class="card" id="cat4">ACCESSORIES</div></div>
 <script>
 const translations = {
   en: { heroTitle:"NEW<br>DROP", heroText:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", cat1:"HOODIES", cat2:"CARGO", cat3:"TEES", cat4:"ACCESSORIES", signin:"Sign In", signup:"Sign Up", signout:"Sign Out" },
@@ -104,27 +81,30 @@ const translations = {
   zh: { heroTitle:"全新<br>系列", heroText:"精选穿搭。点击购买整套。", shopBtn:"立即购买", cat1:"连帽衫", cat2:"工装裤", cat3:"T恤", cat4:"配饰", signin:"登录", signup:"注册", signout:"退出" }
 };
 function changeLang(){
-  const lang = document.getElementById('language').value;
-  localStorage.setItem('siteLang', lang);
-  document.getElementById('heroTitle').innerHTML = translations[lang].heroTitle;
-  document.getElementById('heroText').innerText = translations[lang].heroText;
-  document.getElementById('shopBtn').innerText = translations[lang].shopBtn;
-  document.getElementById('cat1').innerText = translations[lang].cat1;
-  document.getElementById('cat2').innerText = translations[lang].cat2;
-  document.getElementById('cat3').innerText = translations[lang].cat3;
-  document.getElementById('cat4').innerText = translations[lang].cat4;
-  document.getElementById('signinLink').innerText = translations[lang].signin;
-  document.getElementById('signupLink').innerText = translations[lang].signup;
-  document.getElementById('signoutLink').innerText = translations[lang].signout;
-  document.documentElement.lang = lang;
+  const lang=document.getElementById('language').value;
+  localStorage.setItem('siteLang',lang);
+  document.getElementById('heroTitle').innerHTML=translations[lang].heroTitle;
+  document.getElementById('heroText').innerText=translations[lang].heroText;
+  document.getElementById('shopBtn').innerText=translations[lang].shopBtn;
+  document.getElementById('cat1').innerText=translations[lang].cat1;
+  document.getElementById('cat2').innerText=translations[lang].cat2;
+  document.getElementById('cat3').innerText=translations[lang].cat3;
+  document.getElementById('cat4').innerText=translations[lang].cat4;
+  const si=document.getElementById('signinLink'), su=document.getElementById('signupLink'), so=document.getElementById('signoutLink');
+  if(si) si.innerText=translations[lang].signin;
+  if(su) su.innerText=translations[lang].signup;
+  if(so) so.innerText=translations[lang].signout;
+  document.documentElement.lang=lang;
 }
-function toggleProfile(){
-  document.getElementById('profileDropdown').classList.toggle('show');
-}
-window.addEventListener('click', function(e){
-  if(!e.target.closest('.profile-wrap')){
-    document.getElementById('profileDropdown').classList.remove('show');
-  }
+// FIXED DROPDOWN CLICK
+const profileBtn=document.getElementById('profileBtn');
+const dropdown=document.getElementById('profileDropdown');
+profileBtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  dropdown.classList.toggle('show');
+});
+document.addEventListener('click', function(){
+  dropdown.classList.remove('show');
 });
 const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 async function checkUser(){
@@ -136,10 +116,10 @@ async function checkUser(){
 }
 async function handleSignout(){
   await supabaseClient.auth.signOut();
-  location.href = 'signin.html';
+  location.href='signin.html';
 }
-const savedLang = localStorage.getItem('siteLang') || 'en';
-document.getElementById('language').value = savedLang;
+const savedLang=localStorage.getItem('siteLang')||'en';
+document.getElementById('language').value=savedLang;
 changeLang();
 checkUser();
 </script>
