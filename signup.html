@@ -22,14 +22,29 @@ button{width:100%;padding:14px;background:black;color:white;border:none;border-r
 <div class="logo">POP THE LOOK</div><p class="sub">CREATE ACCOUNT</p>
 <input id="fullname" placeholder="Full name">
 <input id="email" type="email" placeholder="Email address">
-<input id="pass" type="password" placeholder="Password">
-<input id="cpass" type="password" placeholder="Confirm password">
+
+<div style="position:relative; margin:8px 0">
+  <input id="pass" type="password" placeholder="Password" style="margin:0; padding-right:45px;">
+  <span onclick="toggleEye(this)" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:18px; user-select:none;">👁️</span>
+</div>
+
+<div style="position:relative; margin:8px 0">
+  <input id="cpass" type="password" placeholder="Confirm password" style="margin:0; padding-right:45px;">
+  <span onclick="toggleEye(this)" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:18px; user-select:none;">👁️</span>
+</div>
+
 <button id="btn">CREATE ACCOUNT</button>
 <div id="msg"></div>
 <div class="link">Already have account? <a href="signin.html">Sign In</a></div>
 </div>
 
 <script>
+function toggleEye(el){
+  const input = el.previousElementSibling;
+  if(input.type === 'password'){ input.type='text'; el.textContent='🙈'; }
+  else { input.type='password'; el.textContent='👁️'; }
+}
+
 const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 
 document.getElementById('btn').onclick = async () => {
@@ -46,7 +61,7 @@ document.getElementById('btn').onclick = async () => {
   btn.innerText = "Sending email..."; btn.disabled = true;
   const { error } = await supabaseClient.auth.signUp({
     email, password: pass,
-    options:{ emailRedirectTo: "https://popthelook.tiiny.site/signin.html" }
+    options:{ emailRedirectTo: "https://gokhan1979.github.io/pop-the-look/signin.html" }
   });
   
   msg.style.display="block";
