@@ -102,9 +102,43 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <script>
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
-function openPI(){ document.getElementById('profileDropdown').classList.remove('show'); const s=JSON.parse(localStorage.getItem('personalInfo')||'{}'); document.getElementById('firstName').value=s.firstName||''; document.getElementById('lastName').value=s.lastName||''; document.getElementById('street').value=s.street||''; document.getElementById('city').value=s.city||''; document.getElementById('country').value=s.country||'United Kingdom'; document.getElementById('postcode').value=s.postcode||''; document.getElementById('email').value=s.email||''; document.getElementById('phone').value=s.phone||''; document.getElementById('piModal').classList.add('show'); }
+
+// ONLY THIS FUNCTION CHANGED - AUTO-FILL FROM SIGNUP
+async function openPI(){
+  document.getElementById('profileDropdown').classList.remove('show');
+  const s=JSON.parse(localStorage.getItem('personalInfo')||'{}');
+
+  // Get user info from Supabase signup
+  let supaFirst='', supaLast='', supaEmail='';
+  try{
+    const {data:{session}} = await supabaseClient.auth.getSession();
+    if(session && session.user){
+      supaEmail = session.user.email || '';
+      const meta = session.user.user_metadata || {};
+      supaFirst = meta.first_name || meta.firstName || '';
+      supaLast = meta.last_name || meta.lastName || '';
+      // If you saved full_name only, split it
+      if(!supaFirst && meta.full_name){
+        const parts = meta.full_name.trim().split(' ');
+        supaFirst = parts[0] || '';
+        supaLast = parts.slice(1).join(' ') || '';
+      }
+    }
+  }catch(err){ console.log('no supa session'); }
+
+  document.getElementById('firstName').value = s.firstName || supaFirst || '';
+  document.getElementById('lastName').value = s.lastName || supaLast || '';
+  document.getElementById('street').value = s.street || '';
+  document.getElementById('city').value = s.city || '';
+  document.getElementById('country').value = s.country || 'United Kingdom';
+  document.getElementById('postcode').value = s.postcode || '';
+  document.getElementById('email').value = s.email || supaEmail || '';
+  document.getElementById('phone').value = s.phone || '';
+  document.getElementById('piModal').classList.add('show');
+}
+
 function closePI(){ document.getElementById('piModal').classList.remove('show'); }
-function savePI(){ const data={firstName:firstName.value,lastName:lastName.value,street:street.value,city:city.value,country:country.value,postcode:postcode.value,email:email.value,phone:phone.value}; localStorage.setItem('personalInfo',JSON.stringify(data)); alert('Saved! UK Address: '+data.street+', '+data.city+', '+data.postcode); closePI(); }
+function savePI(){ const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value}; localStorage.setItem('personalInfo',JSON.stringify(data)); alert('Saved! UK Address: '+data.street+', '+data.city+', '+data.postcode); closePI(); }
 document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ document.getElementById('burgerDrawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ document.getElementById('profileDropdown').classList.remove('show'); } });
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 async function checkUser(){ const{data}=await supabaseClient.auth.getSession(); const isLoggedIn=!!data.session; document.getElementById('signinLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signupLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signoutTop').style.display=isLoggedIn?'block':'none'; }
