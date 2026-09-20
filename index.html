@@ -4,29 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="logo.png">
-   <title>POP THE LOOK</title>
+<title>POP THE LOOK</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
   body { background:white; }
   header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid #eee; position:sticky; top:0; background:white; z-index:10; }
-  .logo { font-weight:900; letter-spacing:2px; font-size:18px; }
-  .right { display:flex; gap:10px; align-items:center; }
-  .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
-  .btn-outline { border:1px solid black; color:black; background:white; }
-  .btn-black { background:black; color:white; border:1px solid black; }
-  .hero { padding:60px 20px; text-align:center; }
-  .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
-  .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
-  .shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
-  .card { background:#f5f5f5; border-radius:12px; height:220px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
+ .logo { font-weight:900; letter-spacing:2px; font-size:18px; }
+ .right { display:flex; gap:10px; align-items:center; }
+ .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
+ .btn-outline { border:1px solid black; color:black; background:white; }
+ .btn-black { background:black; color:white; border:1px solid black; }
+ .hero { padding:60px 20px; text-align:center; }
+ .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
+ .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
+ .shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
+ .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
+ .card { background:#f5f5f5; border-radius:12px; height:220px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
+ .lang-select { padding:6px 10px; border-radius:20px; border:1px solid #ddd; font-size:13px; font-weight:bold; background:white; cursor:pointer; }
 </style>
 </head>
 <body>
 <header>
   <div class="logo"><img src="logo.png" alt="POP THE LOOK" style="height:45px; width:auto; display:block;"></div>
   <div class="right" id="authArea">
+    <select id="language" class="lang-select" onchange="changeLang()">
+      <option value="en">🇬🇧 English</option>
+      <option value="tr">🇹🇷 Türkçe</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="ar">🇸🇦 العربية</option>
+    </select>
     <a id="signinBtn" class="btn btn-outline" href="signin.html">Sign In</a>
     <a id="signupBtn" class="btn btn-black" href="signup.html">Sign Up</a>
     <button id="signoutBtn" class="btn btn-black" style="display:none;" onclick="handleSignout()">Sign Out</button>
@@ -34,33 +43,63 @@
 </header>
 
 <div class="hero">
-  <h1>NEW<br>DROP</h1>
-  <p>Curated looks. Tap to shop the full fit.</p>
-  <a class="shop-btn" href="shop.html">SHOP NOW</a>
+  <h1 id="heroTitle">NEW<br>DROP</h1>
+  <p id="heroText">Curated looks. Tap to shop the full fit.</p>
+  <a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a>
 </div>
 
 <div class="grid">
-  <div class="card">HOODIES</div>
-  <div class="card">CARGO</div>
-  <div class="card">TEES</div>
-  <div class="card">ACCESSORIES</div>
+  <div class="card" id="cat1">HOODIES</div>
+  <div class="card" id="cat2">CARGO</div>
+  <div class="card" id="cat3">TEES</div>
+  <div class="card" id="cat4">ACCESSORIES</div>
 </div>
 
 <script>
+const translations = {
+  en: { heroTitle:"NEW<br>DROP", heroText:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", cat1:"HOODIES", cat2:"CARGO", cat3:"TEES", cat4:"ACCESSORIES", signin:"Sign In", signup:"Sign Up", signout:"Sign Out" },
+  tr: { heroTitle:"YENİ<br>KOLEKSİYON", heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.", shopBtn:"ŞİMDİ AL", cat1:"KAPÜŞONLU", cat2:"KARGO", cat3:"TİŞÖRT", cat4:"AKSESUAR", signin:"Giriş Yap", signup:"Kayıt Ol", signout:"Çıkış Yap" },
+  de: { heroTitle:"NEUER<br>DROP", heroText:"Kuratierte Looks. Tippe um den kompletten Fit zu shoppen.", shopBtn:"JETZT SHOPPEN", cat1:"HOODIES", cat2:"CARGO", cat3:"SHIRTS", cat4:"ACCESSOIRES", signin:"Anmelden", signup:"Registrieren", signout:"Abmelden" },
+  fr: { heroTitle:"NOUVELLE<br>COLLECTION", heroText:"Looks soignés. Appuyez pour acheter le look complet.", shopBtn:"ACHETER", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOIRES", signin:"Connexion", signup:"S'inscrire", signout:"Déconnexion" },
+  es: { heroTitle:"NUEVA<br>COLECCIÓN", heroText:"Looks seleccionados. Toca para comprar el conjunto completo.", shopBtn:"COMPRAR AHORA", cat1:"SUDADERAS", cat2:"CARGO", cat3:"CAMISETAS", cat4:"ACCESORIOS", signin:"Iniciar", signup:"Registrarse", signout:"Salir" },
+  ar: { heroTitle:"تشكيلة<br>جديدة", heroText:"إطلالات مختارة. اضغط لتسوق المظهر الكامل.", shopBtn:"تسوق الآن", cat1:"هوديز", cat2:"كارغو", cat3:"تيشيرت", cat4:"إكسسوارات", signin:"تسجيل دخول", signup:"اشتراك", signout:"خروج" }
+};
+
+function changeLang(){
+  const lang = document.getElementById('language').value;
+  localStorage.setItem('siteLang', lang);
+  document.getElementById('heroTitle').innerHTML = translations[lang].heroTitle;
+  document.getElementById('heroText').innerText = translations[lang].heroText;
+  document.getElementById('shopBtn').innerText = translations[lang].shopBtn;
+  document.getElementById('cat1').innerText = translations[lang].cat1;
+  document.getElementById('cat2').innerText = translations[lang].cat2;
+  document.getElementById('cat3').innerText = translations[lang].cat3;
+  document.getElementById('cat4').innerText = translations[lang].cat4;
+  document.getElementById('signinBtn').innerText = translations[lang].signin;
+  document.getElementById('signupBtn').innerText = translations[lang].signup;
+  document.getElementById('signoutBtn').innerText = translations[lang].signout;
+  document.documentElement.lang = lang;
+}
+
 const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 
 async function checkUser(){
   const { data } = await supabaseClient.auth.getSession();
-  const isLoggedIn = !!data.session;
-  document.getElementById('signinBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
-  document.getElementById('signupBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
-  document.getElementById('signoutBtn').style.display = isLoggedIn ? 'inline-block' : 'none';
+  const isLoggedIn =!!data.session;
+  document.getElementById('signinBtn').style.display = isLoggedIn? 'none' : 'inline-block';
+  document.getElementById('signupBtn').style.display = isLoggedIn? 'none' : 'inline-block';
+  document.getElementById('signoutBtn').style.display = isLoggedIn? 'inline-block' : 'none';
 }
 
 async function handleSignout(){
   await supabaseClient.auth.signOut();
   location.href = 'signin.html';
 }
+
+// Load saved language automatically
+const savedLang = localStorage.getItem('siteLang') || 'en';
+document.getElementById('language').value = savedLang;
+changeLang();
 
 checkUser();
 </script>
