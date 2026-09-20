@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account - POP THE LOOK</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;font-family:Arial}body{margin:0;background:#f8f8f8;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.card{background:white;padding:30px;border-radius:15px;width:100%;max-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.1);text-align:center}
+.logo{font-weight:900;letter-spacing:2px;font-size:18px}.sub{color:#888;font-size:11px;margin:5px 0 20px;letter-spacing:1px}
+input{width:100%;padding:14px;margin:8px 0;border:1px solid #ddd;border-radius:8px;font-size:14px}
+button{width:100%;padding:14px;background:black;color:white;border:none;border-radius:8px;margin-top:15px;font-weight:bold;cursor:pointer}
+#msg{margin-top:15px;font-size:13px;display:none;padding:12px;border-radius:8px}
+.success{background:#e8f5e9;color:#2e7d32}.error{background:#ffebee;color:#c62828}
+.back{color:#888;font-size:13px;text-decoration:none;display:block;text-align:left;margin-bottom:10px}
+.link{margin-top:18px;font-size:13px;color:#666}.link a{color:black;font-weight:bold;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="card">
+<a class="back" href="index.html">← Back to Home</a>
+<div class="logo">POP THE LOOK</div><p class="sub">CREATE ACCOUNT</p>
+<input id="fullname" placeholder="Full name">
+<input id="email" type="email" placeholder="Email address">
+<input id="pass" type="password" placeholder="Password">
+<input id="cpass" type="password" placeholder="Confirm password">
+<button id="btn">CREATE ACCOUNT</button>
+<div id="msg"></div>
+<div class="link">Already have account? <a href="signin.html">Sign In</a></div>
+</div>
+
+<script>
+const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
+document.getElementById('btn').onclick = async () => {
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('pass').value;
+  const cpass = document.getElementById('cpass').value;
+  const btn = document.getElementById('btn');
+  const msg = document.getElementById('msg');
+
+  if(!email || !pass){ alert("Fill all fields"); return; }
+  if(pass !== cpass){ alert("Passwords don't match"); return; }
+  if(pass.length < 6){ alert("Password must be 6+ characters"); return; }
+
+  btn.innerText = "Sending email..."; btn.disabled = true;
+  const { error } = await supabaseClient.auth.signUp({
+    email, password: pass,
+    options:{ emailRedirectTo: "https://popthelook.tiiny.site/signin.html" }
+  });
+  
+  msg.style.display="block";
+  if(error){
+    msg.className="error"; msg.innerText="❌ "+error.message;
+    btn.innerText="CREATE ACCOUNT"; btn.disabled=false;
+  } else {
+    msg.className="success";
+    msg.innerHTML="✅ Email sent to <b>"+email+"</b><br><br>Check your inbox (and spam folder). Click the confirmation link, then you'll be taken to Sign In page.";
+    btn.innerText="Email Sent! Check Inbox";
+  }
+}
+</script>
+</body>
+</html>
