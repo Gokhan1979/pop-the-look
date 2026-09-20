@@ -13,11 +13,11 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 .logo-top img{height:110px;width:auto;max-width:92vw;object-fit:contain;display:block}
 .signout-row{position:absolute;right:18px;top:105px;z-index:60}
 .signout-top{background:black;color:white;border:none;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer}
-.nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 18px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;background:white;gap:10px;flex-wrap:nowrap;overflow:hidden;margin-top:-16px;position:relative}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 18px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;background:white;gap:10px;flex-wrap:nowrap;margin-top:-16px;position:relative;overflow:visible}
 .nav-left{display:flex;align-items:center;gap:12px;flex:1;flex-wrap:nowrap;min-width:0}
-.burger-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:4px}
+.burger-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:4px;z-index:1001}
 .burger-btn span{width:20px;height:2.5px;background:black;display:block;border-radius:2px}
-.burger-drawer{position:absolute;left:0;top:100%;width:260px;background:white;border-right:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;box-shadow:4px 8px 20px rgba(0,0,0,0.12);padding:12px 0;display:none;flex-direction:column;z-index:999}
+.burger-drawer{position:fixed;left:0;top:154px;width:260px;background:white;border-right:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;box-shadow:4px 8px 20px rgba(0,0,0,0.15);padding:12px 0;display:none;flex-direction:column;z-index:1001}
 .burger-drawer.show{display:flex}
 .burger-drawer a{text-decoration:none;color:black;font-size:14px;font-weight:600;padding:14px 18px;border-bottom:1px solid #f2f2f2}
 .burger-drawer a:last-child{border-bottom:none}
@@ -31,7 +31,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 .dropdown.show{display:block!important}
 .dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 12px;border-radius:8px;border:none;background:white;text-decoration:none;color:black;font-size:13px;font-weight:600;cursor:pointer}
 .hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;z-index:40}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.25);display:none;z-index:1000}
 .overlay.show{display:block}
 </style>
 </head>
@@ -44,15 +44,6 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="nav-left">
 <button class="burger-btn" onclick="toggleBurger(event)"><span></span><span></span><span></span></button>
 <select id="language" class="lang-select" onchange="changeLang()"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="ar">AR</option><option value="it">IT</option><option value="nl">NL</option><option value="pl">PL</option><option value="pt">PT</option><option value="el">EL</option><option value="sv">SV</option><option value="ro">RO</option><option value="hu">HU</option><option value="cs">CS</option><option value="bg">BG</option><option value="hr">HR</option><option value="id">ID</option><option value="zh">ZH</option></select>
-<div class="burger-drawer" id="burgerDrawer">
-<a id="navShop" href="shop.html">Shop</a>
-<a id="navNew" href="#">New Arrivals</a>
-<a id="navDresses" href="#">Dresses</a>
-<a id="navTops" href="#">Tops</a>
-<a id="navAcc" href="#">Accessories</a>
-<a id="navSale" href="#">Sale</a>
-<a id="navAbout" href="#">About</a>
-</div>
 </div>
 <div class="nav-right">
 <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
@@ -65,6 +56,15 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 </div>
 <button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
 </div>
+</div>
+<div class="burger-drawer" id="burgerDrawer">
+<a id="navShop" href="shop.html">Shop</a>
+<a id="navNew" href="#">New Arrivals</a>
+<a id="navDresses" href="#">Dresses</a>
+<a id="navTops" href="#">Tops</a>
+<a id="navAcc" href="#">Accessories</a>
+<a id="navSale" href="#">Sale</a>
+<a id="navAbout" href="#">About</a>
 </div>
 </header>
 <div class="hero"><h1 id="heroTitle">NEW<br>DROP</h1><p id="heroText">Curated looks. Tap to shop the full fit.</p><a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a></div>
