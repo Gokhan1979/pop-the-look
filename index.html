@@ -27,16 +27,49 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 .icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center}
 .icon{width:22px;height:22px;stroke-width:1.8;stroke:black;fill:none}
 .profile-wrap{position:relative}
-.dropdown{position:absolute;right:0;top:38px;background:white;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);padding:8px;min-width:170px;display:none;z-index:9999}
+.dropdown{position:absolute;right:0;top:38px;background:white;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.15);padding:8px;min-width:180px;display:none;z-index:9999}
 .dropdown.show{display:block!important}
 .dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 12px;border-radius:8px;border:none;background:white;text-decoration:none;color:black;font-size:13px;font-weight:600;cursor:pointer}
+.dropdown a:hover{background:#f5f5f5}
+/* STYLISH PERSONAL INFO FORM */
+.pi-modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px}
+.pi-modal.show{display:flex}
+.pi-box{background:white;width:100%;max-width:440px;border-radius:22px;padding:24px 20px;box-shadow:0 20px 60px rgba(0,0,0,0.25)}
+.pi-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.pi-head h2{font-size:18px;font-weight:900;letter-spacing:-0.5px}
+.pi-close{background:#f2f2f2;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-weight:700}
+.pi-form{display:flex;flex-direction:column;gap:12px}
+.pi-row{display:flex;gap:10px}
+.pi-field{flex:1;display:flex;flex-direction:column;gap:5px}
+.pi-field label{font-size:10px;font-weight:800;letter-spacing:0.6px;color:#888;text-transform:uppercase}
+.pi-field input{padding:12px 13px;border:1.5px solid #e6e6e6;border-radius:11px;font-size:13px;outline:none}
+.pi-field input:focus{border-color:black}
+.pi-save{margin-top:6px;background:black;color:white;border:none;padding:13px;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer}
 .hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.25);display:none;z-index:1000}
+.overlay{position:fixed;inset:0;background:transparent;display:none;z-index:1000}
 .overlay.show{display:block}
 </style>
 </head>
 <body>
 <div class="overlay" id="overlay" onclick="toggleBurger(event)"></div>
+
+<!-- PERSONAL INFO MODAL -->
+<div class="pi-modal" id="piModal" onclick="if(event.target===this) closePI()">
+<div class="pi-box">
+<div class="pi-head"><h2 id="piTitle">Personal Information</h2><button class="pi-close" onclick="closePI()">✕</button></div>
+<div class="pi-form">
+<div class="pi-row">
+<div class="pi-field"><label id="lFirst">First Name</label><input id="firstName" placeholder="Jane"></div>
+<div class="pi-field"><label id="lLast">Last Name</label><input id="lastName" placeholder="Doe"></div>
+</div>
+<div class="pi-field"><label id="lAddress">Address</label><input id="address" placeholder="123 Street, City"></div>
+<div class="pi-field"><label id="lEmail">Email</label><input id="email" type="email" placeholder="jane@email.com"></div>
+<div class="pi-field"><label id="lPhone">Phone Number</label><input id="phone" placeholder="+90 500 000 00 00"></div>
+<button class="pi-save" id="piSave" onclick="savePI()">SAVE CHANGES</button>
+</div>
+</div>
+</div>
+
 <header style="position:relative;">
 <div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
 <div class="signout-row"><button id="signoutTop" class="signout-top" style="display:none;" onclick="handleSignout()">Sign Out</button></div>
@@ -50,6 +83,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="profile-wrap">
 <button class="icon-btn" onclick="toggleProfile(event)"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg></button>
 <div class="dropdown" id="profileDropdown">
+<a id="piLink" href="#" onclick="event.preventDefault(); openPI();">Personal Information</a>
 <a id="signinLink" href="signin.html">Sign In</a>
 <a id="signupLink" href="signup.html">Sign Up</a>
 </div>
@@ -70,37 +104,32 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="hero"><h1 id="heroTitle">NEW<br>DROP</h1><p id="heroText">Curated looks. Tap to shop the full fit.</p><a id="shopBtn" class="shop-btn" href="shop.html">SHOP NOW</a></div>
 <div class="grid"><div class="card" id="cat1">HOODIES</div><div class="card" id="cat2">CARGO</div><div class="card" id="cat3">TEES</div><div class="card" id="cat4">ACCESSORIES</div></div>
 <script>
-function toggleBurger(e){
-if(e) e.stopPropagation();
-const d=document.getElementById('burgerDrawer');
-const o=document.getElementById('overlay');
-d.classList.toggle('show');
-o.classList.toggle('show');
-}
-function toggleProfile(e){
-if(e) e.stopPropagation();
-document.getElementById('profileDropdown').classList.toggle('show');
-}
+function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
+function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
+function openPI(){ document.getElementById('profileDropdown').classList.remove('show'); const s=JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(s.firstName) document.getElementById('firstName').value=s.firstName; if(s.lastName) document.getElementById('lastName').value=s.lastName; if(s.address) document.getElementById('address').value=s.address; if(s.email) document.getElementById('email').value=s.email; if(s.phone) document.getElementById('phone').value=s.phone; document.getElementById('piModal').classList.add('show'); }
+function closePI(){ document.getElementById('piModal').classList.remove('show'); }
+function savePI(){ const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,address:document.getElementById('address').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value}; localStorage.setItem('personalInfo',JSON.stringify(data)); document.getElementById('piSave').innerText='✓ SAVED!'; setTimeout(()=>{document.getElementById('piSave').innerText=translations[document.getElementById('language').value].piSave; closePI();},800); }
+
 const translations={
-en:{heroTitle:"NEW<br>DROP",heroText:"Curated looks. Tap to shop the full fit.",shopBtn:"SHOP NOW",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ACCESSORIES",signin:"Sign In",signup:"Sign Up",signout:"Sign Out",navShop:"Shop",navNew:"New Arrivals",navDresses:"Dresses",navTops:"Tops",navAcc:"Accessories",navSale:"Sale",navAbout:"About"},
-tr:{heroTitle:"YENİ<br>KOLEKSİYON",heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.",shopBtn:"ŞİMDİ AL",cat1:"KAPÜŞONLU",cat2:"KARGO",cat3:"TİŞÖRT",cat4:"AKSESUAR",signin:"Giriş Yap",signup:"Kayıt Ol",signout:"Çıkış Yap",navShop:"Mağaza",navNew:"Yeni Gelenler",navDresses:"Elbiseler",navTops:"Üstler",navAcc:"Aksesuarlar",navSale:"İndirim",navAbout:"Hakkımızda"},
-de:{heroTitle:"NEUER<br>DROP",heroText:"Kuratierte Looks.",shopBtn:"JETZT SHOPPEN",cat1:"HOODIES",cat2:"CARGO",cat3:"SHIRTS",cat4:"ACCESSOIRES",signin:"Anmelden",signup:"Registrieren",signout:"Abmelden",navShop:"Shop",navNew:"Neuheiten",navDresses:"Kleider",navTops:"Tops",navAcc:"Accessoires",navSale:"Sale",navAbout:"Über uns"},
-fr:{heroTitle:"NOUVELLE<br>COLLECTION",heroText:"Looks soignés.",shopBtn:"ACHETER",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOIRES",signin:"Connexion",signup:"S'inscrire",signout:"Déconnexion",navShop:"Boutique",navNew:"Nouveautés",navDresses:"Robes",navTops:"Hauts",navAcc:"Accessoires",navSale:"Soldes",navAbout:"À propos"},
-es:{heroTitle:"NUEVA<br>COLECCIÓN",heroText:"Looks seleccionados.",shopBtn:"COMPRAR AHORA",cat1:"SUDADERAS",cat2:"CARGO",cat3:"CAMISETAS",cat4:"ACCESORIOS",signin:"Iniciar",signup:"Registrarse",signout:"Salir",navShop:"Tienda",navNew:"Novedades",navDresses:"Vestidos",navTops:"Tops",navAcc:"Accesorios",navSale:"Ofertas",navAbout:"Sobre"},
-ar:{heroTitle:"تشكيلة<br>جديدة",heroText:"إطلالات مختارة.",shopBtn:"تسوق الآن",cat1:"هوديز",cat2:"كارغو",cat3:"تيشيرت",cat4:"إكسسوارات",signin:"دخول",signup:"اشتراك",signout:"خروج",navShop:"المتجر",navNew:"وصل حديثاً",navDresses:"فساتين",navTops:"بلايز",navAcc:"إكسسوارات",navSale:"تخفيضات",navAbout:"من نحن"},
-it:{heroTitle:"NUOVA<br>COLLEZIONE",heroText:"Look curati.",shopBtn:"ACQUISTA ORA",cat1:"FELPE",cat2:"CARGO",cat3:"T-SHIRT",cat4:"ACCESSORI",signin:"Accedi",signup:"Registrati",signout:"Esci",navShop:"Shop",navNew:"Novità",navDresses:"Vestiti",navTops:"Top",navAcc:"Accessori",navSale:"Saldi",navAbout:"Chi siamo"},
-nl:{heroTitle:"NIEUWE<br>DROP",heroText:"Gecureerde looks.",shopBtn:"SHOP NU",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOIRES",signin:"Inloggen",signup:"Registreren",signout:"Uitloggen",navShop:"Winkel",navNew:"Nieuw",navDresses:"Jurken",navTops:"Tops",navAcc:"Accessoires",navSale:"Sale",navAbout:"Over"},
-pl:{heroTitle:"NOWA<br>KOLEKCJA",heroText:"Wybrane stylizacje.",shopBtn:"KUP TERAZ",cat1:"BLUZY",cat2:"CARGO",cat3:"T-SHIRTY",cat4:"AKCESORIA",signin:"Zaloguj",signup:"Zarejestruj",signout:"Wyloguj",navShop:"Sklep",navNew:"Nowości",navDresses:"Sukienki",navTops:"Topy",navAcc:"Akcesoria",navSale:"Wyprzedaż",navAbout:"O nas"},
-pt:{heroTitle:"NOVA<br>COLEÇÃO",heroText:"Looks selecionados.",shopBtn:"COMPRAR AGORA",cat1:"MOLETONS",cat2:"CARGO",cat3:"CAMISETAS",cat4:"ACESSÓRIOS",signin:"Entrar",signup:"Registrar",signout:"Sair",navShop:"Loja",navNew:"Novidades",navDresses:"Vestidos",navTops:"Tops",navAcc:"Acessórios",navSale:"Promoção",navAbout:"Sobre"},
-el:{heroTitle:"ΝΕΑ<br>ΣΥΛΛΟΓΗ",heroText:"Επιμελημένες.",shopBtn:"ΑΓΟΡΑ ΤΩΡΑ",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ΑΞΕΣΟΥΑΡ",signin:"Σύνδεση",signup:"Εγγραφή",signout:"Αποσύνδεση",navShop:"Κατάστημα",navNew:"Νέες Αφίξεις",navDresses:"Φορέματα",navTops:"Τοπ",navAcc:"Αξεσουάρ",navSale:"Εκπτώσεις",navAbout:"Σχετικά"},
-sv:{heroTitle:"NY<br>KOLLEKTION",heroText:"Utvalda looks.",shopBtn:"SHOPPA NU",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOARER",signin:"Logga in",signup:"Registrera",signout:"Logga ut",navShop:"Butik",navNew:"Nyheter",navDresses:"Klänningar",navTops:"Toppar",navAcc:"Accessoarer",navSale:"Rea",navAbout:"Om oss"},
-ro:{heroTitle:"COLECȚIE<br>NOUĂ",heroText:"Look-uri alese.",shopBtn:"CUMPĂRĂ ACUM",cat1:"HANORACE",cat2:"CARGO",cat3:"TRICOURI",cat4:"ACCESORII",signin:"Autentificare",signup:"Înregistrare",signout:"Deconectare",navShop:"Magazin",navNew:"Noutăți",navDresses:"Rochii",navTops:"Topuri",navAcc:"Accesorii",navSale:"Reduceri",navAbout:"Despre"},
-hu:{heroTitle:"ÚJ<br>KOLLEKCIÓ",heroText:"Válogatott szettek.",shopBtn:"VÁSÁRLÁS MOST",cat1:"PULÓVEREK",cat2:"CARGO",cat3:"PÓLÓK",cat4:"KIEGÉSZÍTŐK",signin:"Bejelentkezés",signup:"Regisztráció",signout:"Kijelentkezés",navShop:"Bolt",navNew:"Újdonságok",navDresses:"Ruhák",navTops:"Felsők",navAcc:"Kiegészítők",navSale:"Akció",navAbout:"Rólunk"},
-cs:{heroTitle:"NOVÁ<br>KOLEKCE",heroText:"Vybrané looky.",shopBtn:"KOUPIT TEĎ",cat1:"MIKINY",cat2:"CARGO",cat3:"TRIČKA",cat4:"DOPLŇKY",signin:"Přihlásit",signup:"Registrovat",signout:"Odhlásit",navShop:"Obchod",navNew:"Novinky",navDresses:"Šaty",navTops:"Topy",navAcc:"Doplňky",navSale:"Výprodej",navAbout:"O nás"},
-bg:{heroTitle:"НОВА<br>КОЛЕКЦИЯ",heroText:"Подбрани визии.",shopBtn:"ПАЗАРУВАЙ СЕГА",cat1:"СУИТЧЪРИ",cat2:"КАРГО",cat3:"ТЕНИСКИ",cat4:"АКСЕСОАРИ",signin:"Вход",signup:"Регистрация",signout:"Изход",navShop:"Магазин",navNew:"Нови",navDresses:"Рокли",navTops:"Топове",navAcc:"Аксесоари",navSale:"Разпродажба",navAbout:"За нас"},
-hr:{heroTitle:"NOVA<br>KOLEKCIJA",heroText:"Odabrani lookovi.",shopBtn:"KUPI SADA",cat1:"HOODICE",cat2:"CARGO",cat3:"MAJICE",cat4:"DODACI",signin:"Prijava",signup:"Registracija",signout:"Odjava",navShop:"Trgovina",navNew:"Novo",navDresses:"Haljine",navTops:"Topovi",navAcc:"Dodaci",navSale:"Sniženje",navAbout:"O nama"},
-id:{heroTitle:"KOLEKSI<br>BARU",heroText:"Tampilan pilihan.",shopBtn:"BELANJA SEKARANG",cat1:"HOODIE",cat2:"CARGO",cat3:"KAOS",cat4:"AKSESORIS",signin:"Masuk",signup:"Daftar",signout:"Keluar",navShop:"Toko",navNew:"Baru",navDresses:"Gaun",navTops:"Atasan",navAcc:"Aksesori",navSale:"Diskon",navAbout:"Tentang"},
-zh:{heroTitle:"全新<br>系列",heroText:"精选穿搭。",shopBtn:"立即购买",cat1:"连帽衫",cat2:"工装裤",cat3:"T恤",cat4:"配饰",signin:"登录",signup:"注册",signout:"退出",navShop:"商店",navNew:"新品",navDresses:"连衣裙",navTops:"上衣",navAcc:"配饰",navSale:"特卖",navAbout:"关于"}
+en:{heroTitle:"NEW<br>DROP",heroText:"Curated looks. Tap to shop the full fit.",shopBtn:"SHOP NOW",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ACCESSORIES",signin:"Sign In",signup:"Sign Up",signout:"Sign Out",navShop:"Shop",navNew:"New Arrivals",navDresses:"Dresses",navTops:"Tops",navAcc:"Accessories",navSale:"Sale",navAbout:"About",piTitle:"Personal Information",piSave:"SAVE CHANGES",lFirst:"First Name",lLast:"Last Name",lAddress:"Address",lEmail:"Email",lPhone:"Phone Number",piLink:"Personal Information"},
+tr:{heroTitle:"YENİ<br>KOLEKSİYON",heroText:"Seçilmiş kombinler. Tam kombini görmek için tıkla.",shopBtn:"ŞİMDİ AL",cat1:"KAPÜŞONLU",cat2:"KARGO",cat3:"TİŞÖRT",cat4:"AKSESUAR",signin:"Giriş Yap",signup:"Kayıt Ol",signout:"Çıkış Yap",navShop:"Mağaza",navNew:"Yeni Gelenler",navDresses:"Elbiseler",navTops:"Üstler",navAcc:"Aksesuarlar",navSale:"İndirim",navAbout:"Hakkımızda",piTitle:"Kişisel Bilgiler",piSave:"KAYDET",lFirst:"Ad",lLast:"Soyad",lAddress:"Adres",lEmail:"E-posta",lPhone:"Telefon Numarası",piLink:"Kişisel Bilgiler"},
+de:{heroTitle:"NEUER<br>DROP",heroText:"Kuratierte Looks.",shopBtn:"JETZT SHOPPEN",cat1:"HOODIES",cat2:"CARGO",cat3:"SHIRTS",cat4:"ACCESSOIRES",signin:"Anmelden",signup:"Registrieren",signout:"Abmelden",navShop:"Shop",navNew:"Neuheiten",navDresses:"Kleider",navTops:"Tops",navAcc:"Accessoires",navSale:"Sale",navAbout:"Über uns",piTitle:"Persönliche Daten",piSave:"SPEICHERN",lFirst:"Vorname",lLast:"Nachname",lAddress:"Adresse",lEmail:"E-Mail",lPhone:"Telefonnummer",piLink:"Persönliche Daten"},
+fr:{heroTitle:"NOUVELLE<br>COLLECTION",heroText:"Looks soignés.",shopBtn:"ACHETER",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOIRES",signin:"Connexion",signup:"S'inscrire",signout:"Déconnexion",navShop:"Boutique",navNew:"Nouveautés",navDresses:"Robes",navTops:"Hauts",navAcc:"Accessoires",navSale:"Soldes",navAbout:"À propos",piTitle:"Informations Personnelles",piSave:"ENREGISTRER",lFirst:"Prénom",lLast:"Nom",lAddress:"Adresse",lEmail:"Email",lPhone:"Téléphone",piLink:"Informations Personnelles"},
+es:{heroTitle:"NUEVA<br>COLECCIÓN",heroText:"Looks seleccionados.",shopBtn:"COMPRAR AHORA",cat1:"SUDADERAS",cat2:"CARGO",cat3:"CAMISETAS",cat4:"ACCESORIOS",signin:"Iniciar",signup:"Registrarse",signout:"Salir",navShop:"Tienda",navNew:"Novedades",navDresses:"Vestidos",navTops:"Tops",navAcc:"Accesorios",navSale:"Ofertas",navAbout:"Sobre",piTitle:"Información Personal",piSave:"GUARDAR",lFirst:"Nombre",lLast:"Apellido",lAddress:"Dirección",lEmail:"Correo",lPhone:"Teléfono",piLink:"Información Personal"},
+ar:{heroTitle:"تشكيلة<br>جديدة",heroText:"إطلالات مختارة.",shopBtn:"تسوق الآن",cat1:"هوديز",cat2:"كارغو",cat3:"تيشيرت",cat4:"إكسسوارات",signin:"دخول",signup:"اشتراك",signout:"خروج",navShop:"المتجر",navNew:"وصل حديثاً",navDresses:"فساتين",navTops:"بلايز",navAcc:"إكسسوارات",navSale:"تخفيضات",navAbout:"من نحن",piTitle:"المعلومات الشخصية",piSave:"حفظ",lFirst:"الاسم الأول",lLast:"اسم العائلة",lAddress:"العنوان",lEmail:"البريد",lPhone:"رقم الهاتف",piLink:"المعلومات الشخصية"},
+it:{heroTitle:"NUOVA<br>COLLEZIONE",heroText:"Look curati.",shopBtn:"ACQUISTA ORA",cat1:"FELPE",cat2:"CARGO",cat3:"T-SHIRT",cat4:"ACCESSORI",signin:"Accedi",signup:"Registrati",signout:"Esci",navShop:"Shop",navNew:"Novità",navDresses:"Vestiti",navTops:"Top",navAcc:"Accessori",navSale:"Saldi",navAbout:"Chi siamo",piTitle:"Informazioni Personali",piSave:"SALVA",lFirst:"Nome",lLast:"Cognome",lAddress:"Indirizzo",lEmail:"Email",lPhone:"Telefono",piLink:"Informazioni Personali"},
+nl:{heroTitle:"NIEUWE<br>DROP",heroText:"Gecureerde looks.",shopBtn:"SHOP NU",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOIRES",signin:"Inloggen",signup:"Registreren",signout:"Uitloggen",navShop:"Winkel",navNew:"Nieuw",navDresses:"Jurken",navTops:"Tops",navAcc:"Accessoires",navSale:"Sale",navAbout:"Over",piTitle:"Persoonlijke Gegevens",piSave:"OPSLAAN",lFirst:"Voornaam",lLast:"Achternaam",lAddress:"Adres",lEmail:"E-mail",lPhone:"Telefoon",piLink:"Persoonlijke Gegevens"},
+pl:{heroTitle:"NOWA<br>KOLEKCJA",heroText:"Wybrane stylizacje.",shopBtn:"KUP TERAZ",cat1:"BLUZY",cat2:"CARGO",cat3:"T-SHIRTY",cat4:"AKCESORIA",signin:"Zaloguj",signup:"Zarejestruj",signout:"Wyloguj",navShop:"Sklep",navNew:"Nowości",navDresses:"Sukienki",navTops:"Topy",navAcc:"Akcesoria",navSale:"Wyprzedaż",navAbout:"O nas",piTitle:"Dane Osobowe",piSave:"ZAPISZ",lFirst:"Imię",lLast:"Nazwisko",lAddress:"Adres",lEmail:"Email",lPhone:"Telefon",piLink:"Dane Osobowe"},
+pt:{heroTitle:"NOVA<br>COLEÇÃO",heroText:"Looks selecionados.",shopBtn:"COMPRAR AGORA",cat1:"MOLETONS",cat2:"CARGO",cat3:"CAMISETAS",cat4:"ACESSÓRIOS",signin:"Entrar",signup:"Registrar",signout:"Sair",navShop:"Loja",navNew:"Novidades",navDresses:"Vestidos",navTops:"Tops",navAcc:"Acessórios",navSale:"Promoção",navAbout:"Sobre",piTitle:"Informações Pessoais",piSave:"SALVAR",lFirst:"Nome",lLast:"Sobrenome",lAddress:"Endereço",lEmail:"Email",lPhone:"Telefone",piLink:"Informações Pessoais"},
+el:{heroTitle:"ΝΕΑ<br>ΣΥΛΛΟΓΗ",heroText:"Επιμελημένες.",shopBtn:"ΑΓΟΡΑ ΤΩΡΑ",cat1:"HOODIES",cat2:"CARGO",cat3:"TEES",cat4:"ΑΞΕΣΟΥΑΡ",signin:"Σύνδεση",signup:"Εγγραφή",signout:"Αποσύνδεση",navShop:"Κατάστημα",navNew:"Νέες Αφίξεις",navDresses:"Φορέματα",navTops:"Τοπ",navAcc:"Αξεσουάρ",navSale:"Εκπτώσεις",navAbout:"Σχετικά",piTitle:"Προσωπικές Πληροφορίες",piSave:"ΑΠΟΘΗΚΕΥΣΗ",lFirst:"Όνομα",lLast:"Επώνυμο",lAddress:"Διεύθυνση",lEmail:"Email",lPhone:"Τηλέφωνο",piLink:"Προσωπικές Πληροφορίες"},
+sv:{heroTitle:"NY<br>KOLLEKTION",heroText:"Utvalda looks.",shopBtn:"SHOPPA NU",cat1:"HOODIES",cat2:"CARGO",cat3:"T-SHIRTS",cat4:"ACCESSOARER",signin:"Logga in",signup:"Registrera",signout:"Logga ut",navShop:"Butik",navNew:"Nyheter",navDresses:"Klänningar",navTops:"Toppar",navAcc:"Accessoarer",navSale:"Rea",navAbout:"Om oss",piTitle:"Personlig Info",piSave:"SPARA",lFirst:"Förnamn",lLast:"Efternamn",lAddress:"Adress",lEmail:"E-post",lPhone:"Telefon",piLink:"Personlig Info"},
+ro:{heroTitle:"COLECȚIE<br>NOUĂ",heroText:"Look-uri alese.",shopBtn:"CUMPĂRĂ ACUM",cat1:"HANORACE",cat2:"CARGO",cat3:"TRICOURI",cat4:"ACCESORII",signin:"Autentificare",signup:"Înregistrare",signout:"Deconectare",navShop:"Magazin",navNew:"Noutăți",navDresses:"Rochii",navTops:"Topuri",navAcc:"Accesorii",navSale:"Reduceri",navAbout:"Despre",piTitle:"Informații Personale",piSave:"SALVEAZĂ",lFirst:"Prenume",lLast:"Nume",lAddress:"Adresă",lEmail:"Email",lPhone:"Telefon",piLink:"Informații Personale"},
+hu:{heroTitle:"ÚJ<br>KOLLEKCIÓ",heroText:"Válogatott szettek.",shopBtn:"VÁSÁRLÁS MOST",cat1:"PULÓVEREK",cat2:"CARGO",cat3:"PÓLÓK",cat4:"KIEGÉSZÍTŐK",signin:"Bejelentkezés",signup:"Regisztráció",signout:"Kijelentkezés",navShop:"Bolt",navNew:"Újdonságok",navDresses:"Ruhák",navTops:"Felsők",navAcc:"Kiegészítők",navSale:"Akció",navAbout:"Rólunk",piTitle:"Személyes Adatok",piSave:"MENTÉS",lFirst:"Keresztnév",lLast:"Vezetéknév",lAddress:"Cím",lEmail:"Email",lPhone:"Telefon",piLink:"Személyes Adatok"},
+cs:{heroTitle:"NOVÁ<br>KOLEKCE",heroText:"Vybrané looky.",shopBtn:"KOUPIT TEĎ",cat1:"MIKINY",cat2:"CARGO",cat3:"TRIČKA",cat4:"DOPLŇKY",signin:"Přihlásit",signup:"Registrovat",signout:"Odhlásit",navShop:"Obchod",navNew:"Novinky",navDresses:"Šaty",navTops:"Topy",navAcc:"Doplňky",navSale:"Výprodej",navAbout:"O nás",piTitle:"Osobní Údaje",piSave:"ULOŽIT",lFirst:"Jméno",lLast:"Příjmení",lAddress:"Adresa",lEmail:"Email",lPhone:"Telefon",piLink:"Osobní Údaje"},
+bg:{heroTitle:"НОВА<br>КОЛЕКЦИЯ",heroText:"Подбрани визии.",shopBtn:"ПАЗАРУВАЙ СЕГА",cat1:"СУИТЧЪРИ",cat2:"КАРГО",cat3:"ТЕНИСКИ",cat4:"АКСЕСОАРИ",signin:"Вход",signup:"Регистрация",signout:"Изход",navShop:"Магазин",navNew:"Нови",navDresses:"Рокли",navTops:"Топове",navAcc:"Аксесоари",navSale:"Разпродажба",navAbout:"За нас",piTitle:"Лични Данни",piSave:"ЗАПАЗИ",lFirst:"Име",lLast:"Фамилия",lAddress:"Адрес",lEmail:"Имейл",lPhone:"Телефон",piLink:"Лични Данни"},
+hr:{heroTitle:"NOVA<br>KOLEKCIJA",heroText:"Odabrani lookovi.",shopBtn:"KUPI SADA",cat1:"HOODICE",cat2:"CARGO",cat3:"MAJICE",cat4:"DODACI",signin:"Prijava",signup:"Registracija",signout:"Odjava",navShop:"Trgovina",navNew:"Novo",navDresses:"Haljine",navTops:"Topovi",navAcc:"Dodaci",navSale:"Sniženje",navAbout:"O nama",piTitle:"Osobni Podaci",piSave:"SPREMI",lFirst:"Ime",lLast:"Prezime",lAddress:"Adresa",lEmail:"Email",lPhone:"Telefon",piLink:"Osobni Podaci"},
+id:{heroTitle:"KOLEKSI<br>BARU",heroText:"Tampilan pilihan.",shopBtn:"BELANJA SEKARANG",cat1:"HOODIE",cat2:"CARGO",cat3:"KAOS",cat4:"AKSESORIS",signin:"Masuk",signup:"Daftar",signout:"Keluar",navShop:"Toko",navNew:"Baru",navDresses:"Gaun",navTops:"Atasan",navAcc:"Aksesori",navSale:"Diskon",navAbout:"Tentang",piTitle:"Info Pribadi",piSave:"SIMPAN",lFirst:"Nama Depan",lLast:"Nama Belakang",lAddress:"Alamat",lEmail:"Email",lPhone:"Telepon",piLink:"Info Pribadi"},
+zh:{heroTitle:"全新<br>系列",heroText:"精选穿搭。",shopBtn:"立即购买",cat1:"连帽衫",cat2:"工装裤",cat3:"T恤",cat4:"配饰",signin:"登录",signup:"注册",signout:"退出",navShop:"商店",navNew:"新品",navDresses:"连衣裙",navTops:"上衣",navAcc:"配饰",navSale:"特卖",navAbout:"关于",piTitle:"个人信息",piSave:"保存",lFirst:"名字",lLast:"姓氏",lAddress:"地址",lEmail:"邮箱",lPhone:"电话",piLink:"个人信息"}
 };
 function changeLang(){
 const lang=document.getElementById('language').value;
@@ -123,6 +152,14 @@ document.getElementById('navTops').innerText=t.navTops;
 document.getElementById('navAcc').innerText=t.navAcc;
 document.getElementById('navSale').innerText=t.navSale;
 document.getElementById('navAbout').innerText=t.navAbout;
+document.getElementById('piTitle').innerText=t.piTitle;
+document.getElementById('piSave').innerText=t.piSave;
+document.getElementById('lFirst').innerText=t.lFirst;
+document.getElementById('lLast').innerText=t.lLast;
+document.getElementById('lAddress').innerText=t.lAddress;
+document.getElementById('lEmail').innerText=t.lEmail;
+document.getElementById('lPhone').innerText=t.lPhone;
+document.getElementById('piLink').innerText=t.piLink;
 document.documentElement.lang=lang;
 }
 document.addEventListener('click',function(e){
@@ -143,6 +180,7 @@ const{data}=await supabaseClient.auth.getSession();
 const isLoggedIn=!!data.session;
 document.getElementById('signinLink').style.display=isLoggedIn?'none':'block';
 document.getElementById('signupLink').style.display=isLoggedIn?'none':'block';
+document.getElementById('piLink').style.display=isLoggedIn?'block':'none';
 document.getElementById('signoutTop').style.display=isLoggedIn?'block':'none';
 }
 async function handleSignout(){await supabaseClient.auth.signOut();location.href='signin.html'}
