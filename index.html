@@ -24,10 +24,16 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 .lang-select{padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;font-size:13px;font-weight:700;background:white;cursor:pointer}
 .icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center}
 .icon{width:22px;height:22px;stroke-width:1.8;stroke:black;fill:none}
-.profile-wrap{position:relative}
-.dropdown{position:absolute;right:0;top:42px;background:white;border:1.5px solid #ddd;border-radius:18px;box-shadow:0 14px 35px rgba(0,0,0,0.20);padding:14px;min-width:260px;display:none;z-index:9999}
+.profile-wrap{position:relative;display:flex;align-items:center;gap:6px}
+.profile-name{font-size:13px;font-weight:800;display:none;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avatar-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1.5px solid #ddd}
+.dropdown{position:absolute;right:0;top:42px;background:white;border:1.5px solid #ddd;border-radius:18px;box-shadow:0 14px 35px rgba(0,0,0,0.20);padding:14px;min-width:280px;display:none;z-index:9999}
 .dropdown.show{display:block!important}
 .dropdown a{display:block;width:100%;text-align:left;padding:16px 16px;border-radius:12px;background:white;text-decoration:none;color:black;font-size:15px;font-weight:700;margin-bottom:4px}
+.profile-photo-box{display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0 16px;border-bottom:1px solid #f0f0f0;margin-bottom:10px}
+.profile-photo-box img{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#f5f5f5;border:2px solid #eee}
+.profile-photo-box input{display:none}
+.upload-btn{background:black;color:white;border:none;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer}
 .pi-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px;overflow-y:auto}
 .pi-modal.show{display:flex}
 .pi-box{background:white;width:100%;max-width:480px;border-radius:24px;padding:28px 22px;box-shadow:0 25px 70px rgba(0,0,0,0.35);margin:auto}
@@ -82,8 +88,17 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="nav-right">
 <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
 <div class="profile-wrap">
-<button class="icon-btn" onclick="toggleProfile(event)"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg></button>
+<button class="icon-btn" id="profileBtn" onclick="toggleProfile(event)">
+<svg id="headIcon" class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg>
+<img id="headAvatar" class="avatar-img" style="display:none;" src="">
+</button>
+<span id="profileName" class="profile-name"></span>
 <div class="dropdown" id="profileDropdown">
+<div class="profile-photo-box">
+<img id="dropdownAvatar" src="https://via.placeholder.com/100?text=Photo" alt="Profile">
+<input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(event)">
+<button class="upload-btn" onclick="document.getElementById('photoInput').click()">Upload Photo</button>
+</div>
 <a href="#" onclick="event.preventDefault(); openPI();">Personal Information</a>
 <a id="signinLink" href="signin.html">Sign In</a>
 <a id="signupLink" href="signup.html">Sign Up</a>
@@ -103,12 +118,9 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
 
-// ONLY THIS FUNCTION CHANGED - AUTO-FILL FROM SIGNUP
 async function openPI(){
   document.getElementById('profileDropdown').classList.remove('show');
   const s=JSON.parse(localStorage.getItem('personalInfo')||'{}');
-
-  // Get user info from Supabase signup
   let supaFirst='', supaLast='', supaEmail='';
   try{
     const {data:{session}} = await supabaseClient.auth.getSession();
@@ -117,15 +129,9 @@ async function openPI(){
       const meta = session.user.user_metadata || {};
       supaFirst = meta.first_name || meta.firstName || '';
       supaLast = meta.last_name || meta.lastName || '';
-      // If you saved full_name only, split it
-      if(!supaFirst && meta.full_name){
-        const parts = meta.full_name.trim().split(' ');
-        supaFirst = parts[0] || '';
-        supaLast = parts.slice(1).join(' ') || '';
-      }
+      if(!supaFirst && meta.full_name){ const p=meta.full_name.trim().split(' '); supaFirst=p[0]||''; supaLast=p.slice(1).join(' ')||''; }
     }
-  }catch(err){ console.log('no supa session'); }
-
+  }catch(err){}
   document.getElementById('firstName').value = s.firstName || supaFirst || '';
   document.getElementById('lastName').value = s.lastName || supaLast || '';
   document.getElementById('street').value = s.street || '';
@@ -136,13 +142,61 @@ async function openPI(){
   document.getElementById('phone').value = s.phone || '';
   document.getElementById('piModal').classList.add('show');
 }
-
 function closePI(){ document.getElementById('piModal').classList.remove('show'); }
-function savePI(){ const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value}; localStorage.setItem('personalInfo',JSON.stringify(data)); alert('Saved! UK Address: '+data.street+', '+data.city+', '+data.postcode); closePI(); }
+async function savePI(){
+  const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value};
+  const old = JSON.parse(localStorage.getItem('personalInfo')||'{}');
+  if(old.profilePhoto) data.profilePhoto = old.profilePhoto;
+  localStorage.setItem('personalInfo',JSON.stringify(data));
+  try{ await supabaseClient.auth.updateUser({ data:{ first_name:data.firstName, last_name:data.lastName, full_name:data.firstName+' '+data.lastName } }); }catch(e){}
+  updateHeaderUI();
+  alert('Saved! UK Address updated');
+  closePI();
+}
+function uploadPhoto(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const base64 = ev.target.result;
+    const s = JSON.parse(localStorage.getItem('personalInfo')||'{}');
+    s.profilePhoto = base64;
+    localStorage.setItem('personalInfo', JSON.stringify(s));
+    updateHeaderUI();
+  };
+  reader.readAsDataURL(file);
+}
+function updateHeaderUI(){
+  const s = JSON.parse(localStorage.getItem('personalInfo')||'{}');
+  const nameEl = document.getElementById('profileName');
+  const headIcon = document.getElementById('headIcon');
+  const headAvatar = document.getElementById('headAvatar');
+  const dropAvatar = document.getElementById('dropdownAvatar');
+  if(s.profilePhoto){
+    dropAvatar.src = s.profilePhoto;
+    headAvatar.src = s.profilePhoto;
+    headAvatar.style.display='block';
+    headIcon.style.display='none';
+  } else {
+    headAvatar.style.display='none';
+    headIcon.style.display='block';
+  }
+  if(s.firstName){
+    nameEl.textContent = s.firstName;
+    nameEl.style.display='block';
+  } else {
+    // try supabase name if no local firstName yet
+    supabaseClient.auth.getSession().then(({data})=>{
+      const meta = data.session?.user?.user_metadata || {};
+      const fn = s.firstName || meta.first_name || meta.full_name?.split(' ')[0] || '';
+      if(fn){ nameEl.textContent=fn; nameEl.style.display='block'; }
+    });
+  }
+}
 document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ document.getElementById('burgerDrawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ document.getElementById('profileDropdown').classList.remove('show'); } });
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
-async function checkUser(){ const{data}=await supabaseClient.auth.getSession(); const isLoggedIn=!!data.session; document.getElementById('signinLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signupLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signoutTop').style.display=isLoggedIn?'block':'none'; }
-async function handleSignout(){await supabaseClient.auth.signOut();location.href='signin.html'} checkUser();
+async function checkUser(){ const{data}=await supabaseClient.auth.getSession(); const isLoggedIn=!!data.session; document.getElementById('signinLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signupLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signoutTop').style.display=isLoggedIn?'block':'none'; if(isLoggedIn){ document.getElementById('profileName').style.display='block'; } updateHeaderUI(); }
+async function handleSignout(){await supabaseClient.auth.signOut(); localStorage.removeItem('personalInfo'); location.href='signin.html'} checkUser();
 </script>
 </body>
 </html>
