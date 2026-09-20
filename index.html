@@ -83,7 +83,17 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="nav-bar">
 <div class="nav-left">
 <button class="burger-btn" onclick="toggleBurger(event)"><span></span><span></span><span></span></button>
-<select id="language" class="lang-select"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option></select>
+<select id="language" class="lang-select">
+<option value="en">EN</option>
+<option value="tr">TR</option>
+<option value="de">DE</option>
+<option value="fr">FR</option>
+<option value="es">ES</option>
+<option value="it">IT</option>
+<option value="nl">NL</option>
+<option value="id">ID</option>
+<option value="zh">中文</option>
+</select>
 </div>
 <div class="nav-right">
 <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
@@ -185,7 +195,6 @@ function updateHeaderUI(){
     nameEl.textContent = s.firstName;
     nameEl.style.display='block';
   } else {
-    // try supabase name if no local firstName yet
     supabaseClient.auth.getSession().then(({data})=>{
       const meta = data.session?.user?.user_metadata || {};
       const fn = s.firstName || meta.first_name || meta.full_name?.split(' ')[0] || '';
@@ -197,6 +206,40 @@ document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDraw
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 async function checkUser(){ const{data}=await supabaseClient.auth.getSession(); const isLoggedIn=!!data.session; document.getElementById('signinLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signupLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signoutTop').style.display=isLoggedIn?'block':'none'; if(isLoggedIn){ document.getElementById('profileName').style.display='block'; } updateHeaderUI(); }
 async function handleSignout(){await supabaseClient.auth.signOut(); localStorage.removeItem('personalInfo'); location.href='signin.html'} checkUser();
+
+/* ===== ONLY ADDED LANGUAGE SYSTEM - NOTHING DELETED ===== */
+const translations = {
+  en: { menu:["Shop","New Arrivals","Dresses","Tops","Accessories","Sale","About"], hero1:"NEW<br>DROP", hero2:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", pi:"Personal Information", signin:"Sign In", signup:"Sign Up", signout:"Sign Out", cards:["HOODIES","CARGO","TEES","ACCESSORIES"] },
+  tr: { menu:["Mağaza","Yeni Gelenler","Elbiseler","Üstler","Aksesuarlar","İndirim","Hakkımızda"], hero1:"YENİ<br>SEZON", hero2:"Özenle seçilmiş kombinler.", shopBtn:"ALIŞVERİŞ YAP", pi:"Kişisel Bilgiler", signin:"Giriş Yap", signup:"Kayıt Ol", signout:"Çıkış Yap", cards:["KAPÜŞONLU","KARGO","TİŞÖRT","AKSESUAR"] },
+  de: { menu:["Shop","Neuheiten","Kleider","Tops","Accessoires","Sale","Über uns"], hero1:"NEUE<br>KOLLEKTION", hero2:"Kuratierte Looks.", shopBtn:"JETZT KAUFEN", pi:"Persönliche Daten", signin:"Anmelden", signup:"Registrieren", signout:"Abmelden", cards:["HOODIES","CARGO","T-SHIRTS","ACCESSOIRES"] },
+  fr: { menu:["Boutique","Nouveautés","Robes","Hauts","Accessoires","Soldes","À propos"], hero1:"NOUVELLE<br>COLLECTION", hero2:"Looks sélectionnés.", shopBtn:"ACHETER", pi:"Informations Personnelles", signin:"Se Connecter", signup:"S'inscrire", signout:"Déconnexion", cards:["HOODIES","CARGO","T-SHIRTS","ACCESSOIRES"] },
+  es: { menu:["Tienda","Novedades","Vestidos","Tops","Accesorios","Ofertas","Sobre"], hero1:"NUEVA<br>COLECCIÓN", hero2:"Looks seleccionados.", shopBtn:"COMPRAR", pi:"Información Personal", signin:"Iniciar Sesión", signup:"Registrarse", signout:"Cerrar Sesión", cards:["SUDADERAS","CARGO","CAMISETAS","ACCESORIOS"] },
+  it: { menu:["Negozio","Novità","Vestiti","Top","Accessori","Saldi","Chi Siamo"], hero1:"NUOVA<br>COLLEZIONE", hero2:"Look curati.", shopBtn:"ACQUISTA ORA", pi:"Informazioni Personali", signin:"Accedi", signup:"Registrati", signout:"Esci", cards:["FELPE","CARGO","T-SHIRT","ACCESSORI"] },
+  nl: { menu:["Winkel","Nieuw","Jurken","Tops","Accessoires","Sale","Over Ons"], hero1:"NIEUWE<br>DROP", hero2:"Gecureerde looks.", shopBtn:"SHOP NU", pi:"Persoonlijke Info", signin:"Inloggen", signup:"Registreren", signout:"Uitloggen", cards:["HOODIES","CARGO","T-SHIRTS","ACCESSOIRES"] },
+  id: { menu:["Toko","Baru","Gaun","Atasan","Aksesori","Obral","Tentang"], hero1:"KOLEKSI<br>BARU", hero2:"Tampilan pilihan.", shopBtn:"BELANJA", pi:"Informasi Pribadi", signin:"Masuk", signup:"Daftar", signout:"Keluar", cards:["HOODIE","KARGO","KAOS","AKSESORI"] },
+  zh: { menu:["商店","新品","连衣裙","上衣","配饰","特卖","关于"], hero1:"全新<br>系列", hero2:"精选穿搭。", shopBtn:"立即购买", pi:"个人信息", signin:"登录", signup:"注册", signout:"退出", cards:["连帽衫","工装裤","T恤","配饰"] }
+};
+function applyLanguage(lang){
+  const t = translations[lang] || translations.en;
+  const drawerLinks = document.querySelectorAll('#burgerDrawer a');
+  drawerLinks.forEach((a,i)=>{ if(t.menu[i]) a.textContent = t.menu[i]; });
+  document.querySelector('.hero h1').innerHTML = t.hero1;
+  document.querySelector('.hero p').textContent = t.hero2;
+  document.querySelector('.shop-btn').textContent = t.shopBtn;
+  document.querySelectorAll('.grid.card').forEach((c,i)=>{ if(t.cards[i]) c.textContent = t.cards[i]; });
+  const piLink = document.querySelector('#profileDropdown a');
+  if(piLink) piLink.textContent = t.pi;
+  document.getElementById('signinLink').textContent = t.signin;
+  document.getElementById('signupLink').textContent = t.signup;
+  document.getElementById('signoutTop').textContent = t.signout;
+  document.querySelector('.pi-head h2').textContent = t.pi;
+  localStorage.setItem('lang', lang);
+}
+const langSel = document.getElementById('language');
+const saved = localStorage.getItem('lang') || 'en';
+langSel.value = saved;
+applyLanguage(saved);
+langSel.addEventListener('change', e=> applyLanguage(e.target.value));
 </script>
 </body>
-</html> 
+</html>
