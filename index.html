@@ -8,41 +8,37 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-  body { background:white; }
-  header { display:flex; flex-direction:column; align-items:center; background:white; z-index:10; position:sticky; top:0; }
- .logo-top { display:flex; justify-content:center; width:100%; padding:20px 20px 15px; }
- .logo-top img { height:95px; width:auto; display:block; }
- .nav-bar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:12px 20px; border-top:1px solid #eee; border-bottom:1px solid #eee; background:white; }
- .nav-left { display:flex; align-items:center; gap:25px; }
- .nav-menu { display:flex; align-items:center; gap:20px; list-style:none; }
- .nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; }
- .nav-right { display:flex; gap:12px; align-items:center; }
- .icon { width:20px; height:20px; cursor:pointer; }
- .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
- .btn-outline { border:1px solid black; color:black; background:white; }
- .btn-black { background:black; color:white; border:1px solid black; }
- .lang-select { padding:6px 10px; border-radius:20px; border:1px solid #ddd; font-size:13px; font-weight:bold; background:white; cursor:pointer; }
- .hero { padding:60px 20px; text-align:center; }
- .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
- .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
- .shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
- .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
- .card { background:#f5f5f5; border-radius:12px; height:220px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
-  @media(max-width:768px){.nav-menu { gap:10px; flex-wrap:wrap; }.nav-menu a{font-size:11px;}.logo-top img{height:70px;} }
+  body { background:white; overflow-x:hidden; }
+  header { display:flex; flex-direction:column; align-items:center; background:white; position:sticky; top:0; z-index:10; width:100%; }
+.logo-top { display:flex; justify-content:center; width:100%; padding:18px 10px 12px; background:white; }
+.logo-top img { height:85px; width:auto; max-width:90vw; object-fit:contain; display:block; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; background:white; flex-wrap:wrap; gap:8px; }
+.nav-left { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+.nav-menu { display:flex; align-items:center; gap:14px; }
+.nav-menu a { text-decoration:none; color:black; font-size:13px; font-weight:600; }
+.nav-right { display:flex; gap:10px; align-items:center; margin-left:auto; }
+.icon { width:18px; height:18px; stroke-width:2; }
+.btn { padding:7px 14px; border-radius:20px; font-size:12px; font-weight:bold; text-decoration:none; cursor:pointer; white-space:nowrap; }
+.btn-outline { border:1px solid black; color:black; background:white; }
+.btn-black { background:black; color:white; border:1px solid black; }
+.lang-select { padding:5px 8px; border-radius:16px; border:1px solid #ddd; font-size:12px; font-weight:bold; background:white; cursor:pointer; }
+.hero { padding:50px 20px; text-align:center; }
+.hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
+.hero p { color:#777; margin:15px 0 25px; font-size:14px; }
+.shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
+.card { background:#f5f5f5; border-radius:12px; height:200px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
 </style>
 </head>
 <body>
 <header>
-  <!-- TOP: Crown logo centered -->
   <div class="logo-top">
     <img src="logo.png" alt="POP THE LOOK">
   </div>
-
-  <!-- BOTTOM BAR: EN full left side + Shop menu + icons right -->
   <div class="nav-bar">
     <div class="nav-left">
       <select id="language" class="lang-select" onchange="changeLang()">
-        <option value="en">EN ⌄</option>
+        <option value="en">EN</option>
         <option value="tr">TR</option>
         <option value="de">DE</option>
         <option value="fr">FR</option>
@@ -62,25 +58,17 @@
         <option value="id">ID</option>
         <option value="zh">ZH</option>
       </select>
-
       <nav class="nav-menu">
         <a href="shop.html">Shop</a>
-        <a href="shop.html">New Arrivals</a>
-        <a href="shop.html">Dresses</a>
-        <a href="shop.html">Tops</a>
-        <a href="shop.html">Accessories</a>
-        <a href="shop.html">Sale</a>
-        <a href="about.html">About</a>
+        <a href="#">New Arrivals</a>
+        <a href="#">Dresses</a>
+        <a href="#">Tops</a>
+        <a href="#">Accessories</a>
+        <a href="#">Sale</a>
+        <a href="#">About</a>
       </nav>
     </div>
-
     <div class="nav-right" id="authArea">
-      <!-- Search / User / Bag icons -->
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-
-      <!-- YOUR IMPORTANT BUTTONS - KEPT SAFE -->
       <a id="signinBtn" class="btn btn-outline" href="signin.html">Sign In</a>
       <a id="signupBtn" class="btn btn-black" href="signup.html">Sign Up</a>
       <button id="signoutBtn" class="btn btn-black" style="display:none;" onclick="handleSignout()">Sign Out</button>
@@ -123,7 +111,6 @@ const translations = {
   id: { heroTitle:"KOLEKSI<br>BARU", heroText:"Tampilan pilihan. Ketuk untuk belanja.", shopBtn:"BELANJA SEKARANG", cat1:"HOODIE", cat2:"CARGO", cat3:"KAOS", cat4:"AKSESORIS", signin:"Masuk", signup:"Daftar", signout:"Keluar" },
   zh: { heroTitle:"全新<br>系列", heroText:"精选穿搭。点击购买整套。", shopBtn:"立即购买", cat1:"连帽衫", cat2:"工装裤", cat3:"T恤", cat4:"配饰", signin:"登录", signup:"注册", signout:"退出" }
 };
-
 function changeLang(){
   const lang = document.getElementById('language').value;
   localStorage.setItem('siteLang', lang);
@@ -139,9 +126,7 @@ function changeLang(){
   document.getElementById('signoutBtn').innerText = translations[lang].signout;
   document.documentElement.lang = lang;
 }
-
-const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzbOwwzk1whjPFmmME8G2kuvAc4b72mI");
-
+const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 async function checkUser(){
   const { data } = await supabaseClient.auth.getSession();
   const isLoggedIn =!!data.session;
@@ -149,12 +134,10 @@ async function checkUser(){
   document.getElementById('signupBtn').style.display = isLoggedIn? 'none' : 'inline-block';
   document.getElementById('signoutBtn').style.display = isLoggedIn? 'inline-block' : 'none';
 }
-
 async function handleSignout(){
   await supabaseClient.auth.signOut();
   location.href = 'signin.html';
 }
-
 const savedLang = localStorage.getItem('siteLang') || 'en';
 document.getElementById('language').value = savedLang;
 changeLang();
