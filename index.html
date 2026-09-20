@@ -10,18 +10,18 @@
     * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
   body { background:white; }
   header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid #eee; position:sticky; top:0; background:white; z-index:10; }
- .logo { font-weight:900; letter-spacing:2px; font-size:18px; }
- .right { display:flex; gap:10px; align-items:center; }
- .btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
- .btn-outline { border:1px solid black; color:black; background:white; }
- .btn-black { background:black; color:white; border:1px solid black; }
- .hero { padding:60px 20px; text-align:center; }
- .hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
- .hero p { color:#777; margin:15px 0 25px; font-size:14px; }
- .shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
- .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
- .card { background:#f5f5f5; border-radius:12px; height:220px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
- .lang-select { padding:6px 10px; border-radius:20px; border:1px solid #ddd; font-size:13px; font-weight:bold; background:white; cursor:pointer; }
+.logo { font-weight:900; letter-spacing:2px; font-size:18px; }
+.right { display:flex; gap:10px; align-items:center; }
+.btn { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:bold; text-decoration:none; cursor:pointer; }
+.btn-outline { border:1px solid black; color:black; background:white; }
+.btn-black { background:black; color:white; border:1px solid black; }
+.hero { padding:60px 20px; text-align:center; }
+.hero h1 { font-size:42px; font-weight:900; line-height:0.9; }
+.hero p { color:#777; margin:15px 0 25px; font-size:14px; }
+.shop-btn { background:black; color:white; padding:14px 28px; border-radius:25px; text-decoration:none; font-weight:bold; display:inline-block; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
+.card { background:#f5f5f5; border-radius:12px; height:220px; display:flex; align-items:flex-end; padding:12px; font-weight:bold; font-size:13px; }
+.lang-select { padding:6px 10px; border-radius:20px; border:1px solid #ddd; font-size:13px; font-weight:bold; background:white; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -35,6 +35,19 @@
       <option value="fr">🇫🇷 Français</option>
       <option value="es">🇪🇸 Español</option>
       <option value="ar">🇸🇦 العربية</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="nl">🇳🇱 Nederlands</option>
+      <option value="pl">🇵🇱 Polski</option>
+      <option value="pt">🇵🇹 Português</option>
+      <option value="el">🇬🇷 Ελληνικά</option>
+      <option value="sv">🇸🇪 Svenska</option>
+      <option value="ro">🇷🇴 Română</option>
+      <option value="hu">🇭🇺 Magyar</option>
+      <option value="cs">🇨🇿 Čeština</option>
+      <option value="bg">🇧🇬 Български</option>
+      <option value="hr">🇭🇷 Hrvatski</option>
+      <option value="id">🇮🇩 Indonesia</option>
+      <option value="zh">🇨🇳 中文</option>
     </select>
     <a id="signinBtn" class="btn btn-outline" href="signin.html">Sign In</a>
     <a id="signupBtn" class="btn btn-black" href="signup.html">Sign Up</a>
@@ -62,7 +75,20 @@ const translations = {
   de: { heroTitle:"NEUER<br>DROP", heroText:"Kuratierte Looks. Tippe um den kompletten Fit zu shoppen.", shopBtn:"JETZT SHOPPEN", cat1:"HOODIES", cat2:"CARGO", cat3:"SHIRTS", cat4:"ACCESSOIRES", signin:"Anmelden", signup:"Registrieren", signout:"Abmelden" },
   fr: { heroTitle:"NOUVELLE<br>COLLECTION", heroText:"Looks soignés. Appuyez pour acheter le look complet.", shopBtn:"ACHETER", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOIRES", signin:"Connexion", signup:"S'inscrire", signout:"Déconnexion" },
   es: { heroTitle:"NUEVA<br>COLECCIÓN", heroText:"Looks seleccionados. Toca para comprar el conjunto completo.", shopBtn:"COMPRAR AHORA", cat1:"SUDADERAS", cat2:"CARGO", cat3:"CAMISETAS", cat4:"ACCESORIOS", signin:"Iniciar", signup:"Registrarse", signout:"Salir" },
-  ar: { heroTitle:"تشكيلة<br>جديدة", heroText:"إطلالات مختارة. اضغط لتسوق المظهر الكامل.", shopBtn:"تسوق الآن", cat1:"هوديز", cat2:"كارغو", cat3:"تيشيرت", cat4:"إكسسوارات", signin:"تسجيل دخول", signup:"اشتراك", signout:"خروج" }
+  ar: { heroTitle:"تشكيلة<br>جديدة", heroText:"إطلالات مختارة. اضغط لتسوق المظهر الكامل.", shopBtn:"تسوق الآن", cat1:"هوديز", cat2:"كارغو", cat3:"تيشيرت", cat4:"إكسسوارات", signin:"تسجيل دخول", signup:"اشتراك", signout:"خروج" },
+  it: { heroTitle:"NUOVA<br>COLLEZIONE", heroText:"Look curati. Tocca per acquistare.", shopBtn:"ACQUISTA ORA", cat1:"FELPE", cat2:"CARGO", cat3:"T-SHIRT", cat4:"ACCESSORI", signin:"Accedi", signup:"Registrati", signout:"Esci" },
+  nl: { heroTitle:"NIEUWE<br>DROP", heroText:"Gecureerde looks. Tik om te shoppen.", shopBtn:"SHOP NU", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOIRES", signin:"Inloggen", signup:"Registreren", signout:"Uitloggen" },
+  pl: { heroTitle:"NOWA<br>KOLEKCJA", heroText:"Wybrane stylizacje.", shopBtn:"KUP TERAZ", cat1:"BLUZY", cat2:"CARGO", cat3:"T-SHIRTY", cat4:"AKCESORIA", signin:"Zaloguj", signup:"Zarejestruj", signout:"Wyloguj" },
+  pt: { heroTitle:"NOVA<br>COLEÇÃO", heroText:"Looks selecionados.", shopBtn:"COMPRAR AGORA", cat1:"MOLETONS", cat2:"CARGO", cat3:"CAMISETAS", cat4:"ACESSÓRIOS", signin:"Entrar", signup:"Registrar", signout:"Sair" },
+  el: { heroTitle:"ΝΕΑ<br>ΣΥΛΛΟΓΗ", heroText:"Επιμελημένες εμφανίσεις.", shopBtn:"ΑΓΟΡΑ ΤΩΡΑ", cat1:"HOODIES", cat2:"CARGO", cat3:"TEES", cat4:"ΑΞΕΣΟΥΑΡ", signin:"Σύνδεση", signup:"Εγγραφή", signout:"Αποσύνδεση" },
+  sv: { heroTitle:"NY<br>KOLLEKTION", heroText:"Utvalda looks.", shopBtn:"SHOPPA NU", cat1:"HOODIES", cat2:"CARGO", cat3:"T-SHIRTS", cat4:"ACCESSOARER", signin:"Logga in", signup:"Registrera", signout:"Logga ut" },
+  ro: { heroTitle:"COLECȚIE<br>NOUĂ", heroText:"Look-uri alese.", shopBtn:"CUMPĂRĂ ACUM", cat1:"HANORACE", cat2:"CARGO", cat3:"TRICOURI", cat4:"ACCESORII", signin:"Autentificare", signup:"Înregistrare", signout:"Deconectare" },
+  hu: { heroTitle:"ÚJ<br>KOLLEKCIÓ", heroText:"Válogatott szettek.", shopBtn:"VÁSÁRLÁS MOST", cat1:"PULÓVEREK", cat2:"CARGO", cat3:"PÓLÓK", cat4:"KIEGÉSZÍTŐK", signin:"Bejelentkezés", signup:"Regisztráció", signout:"Kijelentkezés" },
+  cs: { heroTitle:"NOVÁ<br>KOLEKCE", heroText:"Vybrané looky.", shopBtn:"KOUPIT TEĎ", cat1:"MIKINY", cat2:"CARGO", cat3:"TRIČKA", cat4:"DOPLŇKY", signin:"Přihlásit", signup:"Registrovat", signout:"Odhlásit" },
+  bg: { heroTitle:"НОВА<br>КОЛЕКЦИЯ", heroText:"Подбрани визии.", shopBtn:"ПАЗАРУВАЙ СЕГА", cat1:"СУИТЧЪРИ", cat2:"КАРГО", cat3:"ТЕНИСКИ", cat4:"АКСЕСОАРИ", signin:"Вход", signup:"Регистрация", signout:"Изход" },
+  hr: { heroTitle:"NOVA<br>KOLEKCIJA", heroText:"Odabrani lookovi.", shopBtn:"KUPI SADA", cat1:"HOODICE", cat2:"CARGO", cat3:"MAJICE", cat4:"DODACI", signin:"Prijava", signup:"Registracija", signout:"Odjava" },
+  id: { heroTitle:"KOLEKSI<br>BARU", heroText:"Tampilan pilihan. Ketuk untuk belanja.", shopBtn:"BELANJA SEKARANG", cat1:"HOODIE", cat2:"CARGO", cat3:"KAOS", cat4:"AKSESORIS", signin:"Masuk", signup:"Daftar", signout:"Keluar" },
+  zh: { heroTitle:"全新<br>系列", heroText:"精选穿搭。点击购买整套。", shopBtn:"立即购买", cat1:"连帽衫", cat2:"工装裤", cat3:"T恤", cat4:"配饰", signin:"登录", signup:"注册", signout:"退出" }
 };
 
 function changeLang(){
