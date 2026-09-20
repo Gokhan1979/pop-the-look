@@ -22,12 +22,20 @@ button{width:100%;padding:14px;background:black;color:white;border:none;border-r
 <div class="logo">POP THE LOOK</div><p class="sub">WELCOME BACK</p>
 <div id="verified" style="display:none;background:#e8f5e9;color:#2e7d32;padding:12px;border-radius:8px;margin-bottom:15px;font-size:13px">✅ Email confirmed! Now sign in.</div>
 <input id="email" type="email" placeholder="Email address">
-<input id="pass" type="password" placeholder="Password">
+<div style="position:relative; margin:8px 0">
+  <input id="pass" type="password" placeholder="Password" style="margin:0; padding-right:45px;">
+  <span onclick="toggleEye(this)" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:18px; user-select:none;">👁️</span>
+</div>
 <button id="btn">SIGN IN</button>
 <div id="msg"></div>
 <div class="link">New here? <a href="signup.html">Create account</a></div>
 </div>
 <script>
+function toggleEye(el){
+  const input = el.previousElementSibling;
+  if(input.type === 'password'){ input.type='text'; el.textContent='🙈'; }
+  else { input.type='password'; el.textContent='👁️'; }
+}
 const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 if(window.location.hash.includes('access_token')||window.location.search.includes('verified')){document.getElementById('verified').style.display='block';}
 document.getElementById('btn').onclick=async()=>{
