@@ -53,15 +53,10 @@ header {
   min-width: 0; 
 }
 
-.lang-select { 
-  padding: 6px 14px; 
-  border-radius: 999px; 
-  border: 1.5px solid #ddd; 
-  font-size: 13px; 
-  font-weight: 700; 
-  background: white; 
-  cursor: pointer; 
-  flex-shrink: 0; 
+.lang-wrap{position:relative;display:flex;align-items:center}
+.lang-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;border:none;background:transparent;font-size:14px;font-weight:900;cursor:pointer;padding:0 16px 0 0;color:black}
+.lang-arrows{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;line-height:1;pointer-events:none;gap:1px}
+.lang-arrows span{font-size:7px;font-weight:900;color:black}
 }
 
 .nav-menu { 
