@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="logo.png">
 <title>POP THE LOOK</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,160 +14,66 @@
 <div class="pi-head"><h2 data-i18n="pi">Personal Information</h2><button class="pi-close" onclick="closePI()">✕</button></div>
 <div class="pi-form">
 <div class="pi-row">
-<div class="pi-field"><label data-i18n="firstName">First Name</label><input id="firstName" placeholder="James" autocomplete="off"></div>
-<div class="pi-field"><label data-i18n="lastName">Last Name</label><input id="lastName" placeholder="Smith" autocomplete="off"></div>
+<div class="pi-field"><label data-i18n="firstName">First Name</label><input id="firstName" placeholder="James"></div>
+<div class="pi-field"><label data-i18n="lastName">Last Name</label><input id="lastName" placeholder="Smith"></div>
 </div>
-<div class="pi-field"><label data-i18n="street">Street Name</label><input id="street" placeholder="221B Baker Street" autocomplete="off"></div>
+<div class="pi-field"><label data-i18n="street">Street Name</label><input id="street" placeholder="221B Baker Street"></div>
 <div class="pi-row">
-<div class="pi-field"><label data-i18n="city">City</label><input id="city" placeholder="London" autocomplete="off"></div>
+<div class="pi-field"><label data-i18n="city">City</label><input id="city" placeholder="London"></div>
 <div class="pi-field"><label data-i18n="country">Country</label>
 <select id="country" onchange="autoPhoneCode()">
-<option value="United Kingdom" selected>🇬🇧 United Kingdom</option><option value="Turkey">🇹🇷 Turkey</option><option value="Germany">🇩🇪 Germany</option><option value="France">🇫🇷 France</option><option value="Spain">🇪🇸 Spain</option><option value="Italy">🇮🇹 Italy</option><option value="Netherlands">🇳🇱 Netherlands</option><option value="Greece">🇬🇷 Greece</option><option value="Poland">🇵🇱 Poland</option><option value="Portugal">🇵🇹 Portugal</option><option value="Indonesia">🇮🇩 Indonesia</option><option value="China">🇨🇳 China</option><option value="United States">🇺🇸 United States</option><option value="Canada">🇨🇦 Canada</option><option value="Australia">🇦🇺 Australia</option><option value="Afghanistan">🇦🇫 Afghanistan</option><option value="Albania">🇦🇱 Albania</option><option value="Algeria">🇩🇿 Algeria</option><option value="Argentina">🇦🇷 Argentina</option><option value="Austria">🇦🇹 Austria</option><option value="Bangladesh">🇧🇩 Bangladesh</option><option value="Belgium">🇧🇪 Belgium</option><option value="Brazil">🇧🇷 Brazil</option><option value="Bulgaria">🇧🇬 Bulgaria</option><option value="Chile">🇨🇱 Chile</option><option value="Colombia">🇨🇴 Colombia</option><option value="Denmark">🇩🇰 Denmark</option><option value="Egypt">🇪🇬 Egypt</option><option value="Finland">🇫🇮 Finland</option><option value="India">🇮🇳 India</option><option value="Japan">🇯🇵 Japan</option><option value="Mexico">🇲🇽 Mexico</option><option value="Norway">🇳🇴 Norway</option><option value="Pakistan">🇵🇰 Pakistan</option><option value="Romania">🇷🇴 Romania</option><option value="Russia">🇷🇺 Russia</option><option value="Saudi Arabia">🇸🇦 Saudi Arabia</option><option value="Singapore">🇸🇬 Singapore</option><option value="South Africa">🇿🇦 South Africa</option><option value="Sweden">🇸🇪 Sweden</option><option value="Switzerland">🇨🇭 Switzerland</option><option value="Thailand">🇹🇭 Thailand</option><option value="Ukraine">🇺🇦 Ukraine</option><option value="UAE">🇦🇪 UAE</option>
+<option value="United Kingdom" selected>🇬🇧 United Kingdom</option><option value="Turkey">🇹🇷 Turkey</option><option value="Germany">🇩🇪 Germany</option><option value="France">🇫🇷 France</option><option value="Spain">🇪🇸 Spain</option><option value="Italy">🇮🇹 Italy</option><option value="Netherlands">🇳🇱 Netherlands</option><option value="Greece">🇬🇷 Greece</option><option value="Poland">🇵🇱 Poland</option><option value="Portugal">🇵🇹 Portugal</option><option value="Indonesia">🇮🇩 Indonesia</option><option value="China">🇨🇳 China</option><option value="United States">🇺🇸 United States</option>
 </select>
 </div>
 </div>
-<div class="pi-field"><label data-i18n="postcode">Postcode</label><input id="postcode" placeholder="W1U 6TJ" autocomplete="off"></div>
+<div class="pi-field"><label data-i18n="postcode">Postcode</label><input id="postcode" placeholder="W1U 6TJ"></div>
 <div class="pi-field"><label data-i18n="phone">Phone Number</label>
 <div class="phone-group">
-<select id="phoneCode" class="phone-code">
-<option value="+44" selected>🇬🇧 +44</option><option value="+90">🇹🇷 +90</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+30">🇬🇷 +30</option><option value="+48">🇵🇱 +48</option><option value="+351">🇵🇹 +351</option><option value="+62">🇮🇩 +62</option><option value="+86">🇨🇳 +86</option><option value="+1">🇺🇸 +1</option><option value="+61">🇦🇺 +61</option><option value="+91">🇮🇳 +91</option><option value="+81">🇯🇵 +81</option><option value="+971">🇦🇪 +971</option><option value="+27">🇿🇦 +27</option>
-</select>
-<input id="phone" class="phone-number" type="tel" placeholder="7123 456789" autocomplete="off">
+<select id="phoneCode" class="phone-code"><option value="+44" selected>🇬🇧 +44</option><option value="+90">🇹🇷 +90</option><option value="+49">🇩🇪 +49</option></select>
+<input id="phone" class="phone-number" type="tel" placeholder="7123 456789">
 </div>
 </div>
-<div class="pi-field"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="james@email.co.uk" autocomplete="off" readonly></div>
+<div class="pi-field"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="james@email.co.uk" readonly></div>
 <button class="pi-save" onclick="savePI()" data-i18n="save">SAVE CHANGES</button>
 </div>
 </div>
 </div>
-<header style="position:relative;">
+<header>
 <div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
 <div class="nav-bar">
 <div class="nav-left">
 <button class="burger-btn" onclick="toggleBurger(event)"><span></span><span></span><span></span></button>
-<div class="lang-wrap">
-<select id="language" class="lang-select">
-<option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="it">IT</option><option value="nl">NL</option><option value="el">GR</option><option value="pl">PL</option><option value="pt">PT</option><option value="id">ID</option><option value="zh">中文</option>
-</select>
-<div class="lang-arrows"><span>▲</span><span>▼</span></div>
-</div>
+<div class="lang-wrap"><select id="language" class="lang-select"><option value="en">EN</option><option value="tr">TR</option><option value="de">DE</option><option value="fr">FR</option><option value="es">ES</option><option value="it">IT</option></select></div>
 </div>
 <div class="nav-right">
 <button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
 <div class="profile-wrap">
-<button class="icon-btn" id="profileBtn" onclick="toggleProfile(event)" style="padding:2px;">
-<svg id="headIcon" class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg>
-<img id="headAvatar" class="avatar-img" style="display:none;" src="">
-</button>
+<button class="icon-btn" id="profileBtn" onclick="toggleProfile(event)"><svg id="headIcon" class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg><img id="headAvatar" class="avatar-img" style="display:none;" src=""></button>
 <span id="profileName" class="profile-name"></span>
 <div class="dropdown" id="profileDropdown">
-<div class="profile-photo-box">
-<img id="dropdownAvatar" src="https://via.placeholder.com/100?text=Photo" alt="Profile">
-<input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(event)">
-<button class="upload-btn" onclick="document.getElementById('photoInput').click()" data-i18n="upload">Upload Photo</button>
-</div>
-<a href="#" onclick="event.preventDefault(); openPI();" data-i18n="pi">Personal Information</a>
-<a href="order-history.html" data-i18n="orders">Order History</a>
-<a href="login-security.html" data-i18n="loginSec">Login & Security</a>
-<a id="signoutDropdown" href="#" onclick="event.preventDefault(); handleSignout();" data-i18n="signout" style="color:#ff0000!important;">Sign Out</a>
-<a id="signinLink" href="signin.html" data-i18n="signin" style="display:none;">Sign In</a>
-<a id="signupLink" href="signup.html" data-i18n="signup" style="display:none;">Sign Up</a>
+<div class="profile-photo-box"><img id="dropdownAvatar" src="https://via.placeholder.com/100?text=Photo"><input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(event)" hidden><button class="upload-btn" onclick="document.getElementById('photoInput').click()">Upload</button></div>
+<a href="#" onclick="event.preventDefault(); openPI();">Personal Information</a><a href="order-history.html">Order History</a><a href="#" onclick="event.preventDefault(); handleSignout();" style="color:#f00">Sign Out</a><a id="signinLink" href="signin.html">Sign In</a><a id="signupLink" href="signup.html">Sign Up</a>
 </div>
 </div>
 <button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
 </div>
 </div>
-<div class="burger-drawer" id="burgerDrawer">
-<a href="shop.html" data-i18n="shop">Shop</a><a href="#" data-i18n="new">New Arrivals</a><a href="#" data-i18n="dresses">Dresses</a><a href="#" data-i18n="tops">Tops</a><a href="#" data-i18n="accessories">Accessories</a><a href="#" data-i18n="sale">Sale</a><a href="#" data-i18n="about">About</a>
-</div>
+<div class="burger-drawer" id="burgerDrawer"><a href="shop.html">Shop</a><a href="#">New</a><a href="#">Dresses</a><a href="#">Tops</a></div>
 </header>
-<div class="hero"><h1 data-i18n="heroTitle">NEW<br>DROP</h1><p data-i18n="heroDesc">Curated looks. Tap to shop the full fit.</p><a class="shop-btn" href="shop.html" data-i18n="shopBtn">SHOP NOW</a></div>
-<div class="grid"><div class="card" data-i18n="hoodies">HOODIES</div><div class="card" data-i18n="cargo">CARGO</div><div class="card" data-i18n="tees">TEES</div><div class="card" data-i18n="accessories">ACCESSORIES</div></div>
+<div class="hero"><h1>NEW<br>DROP</h1><p>Curated looks. Tap to shop.</p><a class="shop-btn" href="shop.html">SHOP NOW</a></div>
+<div class="grid"><div class="card">HOODIES</div><div class="card">CARGO</div><div class="card">TEES</div><div class="card">ACCESSORIES</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script>
-// FIXED: supabaseClient MUST be first
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
-
-// === FIX FOR TOKEN LOOP ===
-// This handles the #access_token=... from email confirmation and removes it
-(async ()=>{
-  if(window.location.hash && window.location.hash.includes('access_token')){
-    console.log('Found access_token in URL, processing...');
-    // Supabase automatically detects it, we just need to clean URL after
-    const { data, error } = await supabaseClient.auth.getSession();
-    setTimeout(()=>{
-      // remove hash so it doesn't ask again
-      history.replaceState(null, null, window.location.pathname);
-      if(data.session){
-        console.log('Session restored!');
-        checkUser();
-      }
-    }, 800);
-  }
-})();
-
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
-const countryCodeMap = {"united kingdom":"+44","uk":"+44","england":"+44","turkey":"+90","türkiye":"+90","germany":"+49","deutschland":"+49","france":"+33","spain":"+34","españa":"+34","italy":"+39","italia":"+39","netherlands":"+31","holland":"+31","greece":"+30","poland":"+48","portugal":"+351","indonesia":"+62","china":"+86","usa":"+1","united states":"+1","canada":"+1","australia":"+61","india":"+91","japan":"+81"};
-function autoPhoneCode(){ const c=document.getElementById('country').value.toLowerCase().trim(); if(countryCodeMap[c]) document.getElementById('phoneCode').value=countryCodeMap[c]; }
-async function openPI(){
-  document.getElementById('profileDropdown').classList.remove('show');
-  const s=JSON.parse(localStorage.getItem('personalInfo')||'{}');
-  let supaFirst='', supaLast='', supaEmail='', supaPhone='', supaStreet='', supaCity='', supaCountry='', supaPostcode='', supaCode='+44';
-  try{ const {data:{session}} = await supabaseClient.auth.getSession(); if(session && session.user){ supaEmail = session.user.email || ''; const meta = session.user.user_metadata || {}; supaFirst = meta.first_name || meta.firstName || ''; supaLast = meta.last_name || meta.lastName || ''; supaPhone = meta.phone || ''; supaStreet = meta.street || ''; supaCity = meta.city || ''; supaCountry = meta.country || ''; supaPostcode = meta.postcode || ''; if(meta.phone_code) supaCode = meta.phone_code; if(!supaFirst && meta.full_name){ const p=meta.full_name.trim().split(' '); supaFirst=p[0]||''; supaLast=p.slice(1).join(' ')||''; } } }catch(err){}
-  document.getElementById('firstName').value = s.firstName || supaFirst || ''; document.getElementById('lastName').value = s.lastName || supaLast || ''; document.getElementById('street').value = s.street || supaStreet || ''; document.getElementById('city').value = s.city || supaCity || ''; document.getElementById('country').value = s.country || supaCountry || 'United Kingdom'; document.getElementById('postcode').value = s.postcode || supaPostcode || ''; document.getElementById('email').value = s.email || supaEmail || ''; document.getElementById('phoneCode').value = s.phoneCode || supaCode || '+44'; let ph = s.phone || supaPhone || ''; if(ph.startsWith('+')){ const m=ph.match(/^(\+\d{1,4})\s*(.*)$/); if(m){ document.getElementById('phoneCode').value=m[1]; ph=m[2]; } } document.getElementById('phone').value = ph; document.getElementById('piModal').classList.add('show');
-}
+function openPI(){ document.getElementById('piModal').classList.add('show'); }
 function closePI(){ document.getElementById('piModal').classList.remove('show'); }
-async function savePI(){
-  const phoneCode = document.getElementById('phoneCode').value; const phoneNum = document.getElementById('phone').value.trim(); const fullPhone = phoneCode + ' ' + phoneNum;
-  const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:document.getElementById('email').value,phone:fullPhone,phoneCode:phoneCode,phoneNumber:phoneNum};
-  const old = JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(old.profilePhoto) data.profilePhoto = old.profilePhoto;
-  localStorage.setItem('personalInfo',JSON.stringify(data));
-  try{ await supabaseClient.auth.updateUser({ data:{ first_name:data.firstName, last_name:data.lastName, full_name:data.firstName+' '+data.lastName, phone:fullPhone, phone_code:phoneCode, street:data.street, city:data.city, country:data.country, postcode:data.postcode } }); }catch(e){ console.log(e); }
-  updateHeaderUI(); alert('Saved!'); closePI();
-}
-function uploadPhoto(e){
-  const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
-  reader.onload = function(ev){ const base64 = ev.target.result; const s = JSON.parse(localStorage.getItem('personalInfo')||'{}'); s.profilePhoto = base64; localStorage.setItem('personalInfo', JSON.stringify(s)); try{ supabaseClient.auth.updateUser({ data:{ avatar_base64: base64 } }); }catch(err){} updateHeaderUI(); };
-  reader.readAsDataURL(file);
-}
-function updateHeaderUI(){
-  const s = JSON.parse(localStorage.getItem('personalInfo')||'{}'); const nameEl = document.getElementById('profileName'); const headIcon = document.getElementById('headIcon'); const headAvatar = document.getElementById('headAvatar'); const dropAvatar = document.getElementById('dropdownAvatar');
-  const photo = s.profilePhoto; if(photo){ dropAvatar.src = photo; headAvatar.src = photo; headAvatar.style.display='block'; headIcon.style.display='none'; }
-  else{ supabaseClient.auth.getSession().then(({data})=>{ const meta = data.session?.user?.user_metadata || {}; if(meta.avatar_base64){ dropAvatar.src = meta.avatar_base64; headAvatar.src = meta.avatar_base64; headAvatar.style.display='block'; headIcon.style.display='none'; s.profilePhoto = meta.avatar_base64; localStorage.setItem('personalInfo', JSON.stringify(s)); } else { headAvatar.style.display='none'; headIcon.style.display='block'; } }); }
-  if(s.firstName){ nameEl.textContent = s.firstName; nameEl.style.display='block'; }
-  else{ supabaseClient.auth.getSession().then(({data})=>{ const meta = data.session?.user?.user_metadata || {}; const fn = s.firstName || meta.first_name || meta.full_name?.split(' ')[0] || ''; if(fn){ nameEl.textContent=fn; nameEl.style.display='block'; } }); }
-}
+function savePI(){ localStorage.setItem('personalInfo', JSON.stringify({firstName:document.getElementById('firstName').value})); closePI(); }
+function uploadPhoto(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ localStorage.setItem('personalInfo', JSON.stringify({profilePhoto:ev.target.result})); document.getElementById('headAvatar').src=ev.target.result; document.getElementById('headAvatar').style.display='block'; document.getElementById('headIcon').style.display='none'; }; r.readAsDataURL(f); }
 document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ document.getElementById('burgerDrawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ document.getElementById('profileDropdown').classList.remove('show'); } });
-
-async function checkUser(){
-  const{data}=await supabaseClient.auth.getSession();
-  const isLoggedIn=!!data.session;
-  document.getElementById('signinLink').style.display='none';
-  document.getElementById('signupLink').style.display='none';
-  const so = document.getElementById('signoutDropdown');
-  if(so) so.style.display = isLoggedIn? 'block' : 'none';
-  if(isLoggedIn){ document.getElementById('profileName').style.display='block'; }
-  updateHeaderUI();
-}
+async function checkUser(){ try{ const{data}=await supabaseClient.auth.getSession(); document.getElementById('signinLink').style.display=data.session?'none':'block'; }catch(e){} } checkUser();
 async function handleSignout(){ await supabaseClient.auth.signOut(); location.href='signin.html'; }
-checkUser();
-
-const translations = {
-  en: { shop:"Shop", new:"New Arrivals", dresses:"Dresses", tops:"Tops", accessories:"Accessories", sale:"Sale", about:"About", hoodies:"HOODIES", cargo:"CARGO", tees:"TEES", heroTitle:"NEW<br>DROP", heroDesc:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", pi:"Personal Information", orders:"Order History", loginSec:"Login & Security", signin:"Sign In", signup:"Sign Up", signout:"Sign Out", firstName:"First Name", lastName:"Last Name", street:"Street Name", city:"City", country:"Country", postcode:"Postcode", phone:"Phone Number", email:"Email", save:"SAVE CHANGES", upload:"Upload Photo" },
-  tr: { shop:"Mağaza", new:"Yeni Gelenler", dresses:"Elbiseler", tops:"Üstler", accessories:"Aksesuarlar", sale:"İndirim", about:"Hakkımızda", hoodies:"KAPÜŞONLU", cargo:"KARGO", tees:"TİŞÖRT", heroTitle:"YENİ<br>SEZON", heroDesc:"Özenle seçilmiş kombinler.", shopBtn:"ALIŞVERİŞ YAP", pi:"Kişisel Bilgiler", orders:"Sipariş Geçmişi", loginSec:"Giriş ve Güvenlik", signin:"Giriş Yap", signup:"Kayıt Ol", signout:"Çıkış Yap", firstName:"Ad", lastName:"Soyad", street:"Sokak Adı", city:"Şehir", country:"Ülke", postcode:"Posta Kodu", phone:"Telefon", email:"E-posta", save:"KAYDET", upload:"Fotoğraf Yükle" },
-  de: { shop:"Shop", new:"Neuheiten", dresses:"Kleider", tops:"Tops", accessories:"Accessoires", sale:"Sale", about:"Über uns", hoodies:"HOODIES", cargo:"CARGO", tees:"T-SHIRTS", heroTitle:"NEUE<br>KOLLEKTION", heroDesc:"Kuratierte Looks.", shopBtn:"JETZT KAUFEN", pi:"Persönliche Daten", orders:"Bestellverlauf", loginSec:"Login & Sicherheit", signin:"Anmelden", signup:"Registrieren", signout:"Abmelden", firstName:"Vorname", lastName:"Nachname", street:"Straße", city:"Stadt", country:"Land", postcode:"PLZ", phone:"Telefon", email:"E-Mail", save:"SPEICHERN", upload:"Foto hochladen" },
-  fr: { shop:"Boutique", new:"Nouveautés", dresses:"Robes", tops:"Hauts", accessories:"Accessoires", sale:"Soldes", about:"À propos", hoodies:"HOODIES", cargo:"CARGO", tees:"T-SHIRTS", heroTitle:"NOUVELLE<br>COLLECTION", heroDesc:"Looks sélectionnés.", shopBtn:"ACHETER", pi:"Informations Personnelles", orders:"Historique des commandes", loginSec:"Connexion et sécurité", signin:"Se Connecter", signup:"S'inscrire", signout:"Déconnexion", firstName:"Prénom", lastName:"Nom", street:"Rue", city:"Ville", country:"Pays", postcode:"Code Postal", phone:"Téléphone", email:"E-mail", save:"ENREGISTRER", upload:"Photo" },
-  es: { shop:"Tienda", new:"Novedades", dresses:"Vestidos", tops:"Tops", accessories:"Accesorios", sale:"Ofertas", about:"Sobre", hoodies:"SUDADERAS", cargo:"CARGO", tees:"CAMISETAS", heroTitle:"NUEVA<br>COLECCIÓN", heroDesc:"Looks seleccionados.", shopBtn:"COMPRAR", pi:"Información Personal", orders:"Historial de pedidos", loginSec:"Inicio de sesión y seguridad", signin:"Iniciar Sesión", signup:"Registrarse", signout:"Cerrar Sesión", firstName:"Nombre", lastName:"Apellido", street:"Calle", city:"Ciudad", country:"País", postcode:"Código Postal", phone:"Teléfono", email:"Correo", save:"GUARDAR", upload:"Subir Foto" },
-  it: { shop:"Negozio", new:"Novità", dresses:"Vestiti", tops:"Top", accessories:"Accessori", sale:"Saldi", about:"Chi Siamo", hoodies:"FELPE", cargo:"CARGO", tees:"T-SHIRT", heroTitle:"NUOVA<br>COLLEZIONE", heroDesc:"Look curati.", shopBtn:"ACQUISTA", pi:"Informazioni Personali", orders:"Cronologia ordini", loginSec:"Accesso e sicurezza", signin:"Accedi", signup:"Registrati", signout:"Esci", firstName:"Nome", lastName:"Cognome", street:"Via", city:"Città", country:"Paese", postcode:"CAP", phone:"Telefono", email:"Email", save:"SALVA", upload:"Carica Foto" },
-  nl: { shop:"Winkel", new:"Nieuw", dresses:"Jurken", tops:"Tops", accessories:"Accessoires", sale:"Sale", about:"Over Ons", hoodies:"HOODIES", cargo:"CARGO", tees:"T-SHIRTS", heroTitle:"NIEUWE<br>DROP", heroDesc:"Gecureerde looks.", shopBtn:"SHOP NU", pi:"Persoonlijke Info", orders:"Bestelgeschiedenis", loginSec:"Inloggen en beveiliging", signin:"Inloggen", signup:"Registreren", signout:"Uitloggen", firstName:"Voornaam", lastName:"Achternaam", street:"Straat", city:"Stad", country:"Land", postcode:"Postcode", phone:"Telefoon", email:"E-mail", save:"OPSLAAN", upload:"Foto Uploaden" },
-  el: { shop:"Κατάστημα", new:"Νέες Αφίξεις", dresses:"Φορέματα", tops:"Τοπ", accessories:"Αξεσουάρ", sale:"Εκπτώσεις", about:"Σχετικά", hoodies:"ΦΟΥΤΕΡ", cargo:"CARGO", tees:"ΜΠΛΟΥΖΑΚΙΑ", heroTitle:"ΝΕΑ<br>ΣΥΛΛΟΓΗ", heroDesc:"Επιμελημένα looks.", shopBtn:"ΑΓΟΡΑΣΕ ΤΩΡΑ", pi:"Προσωπικές Πληροφορίες", orders:"Ιστορικό παραγγελιών", loginSec:"Σύνδεση και ασφάλεια", signin:"Σύνδεση", signup:"Εγγραφή", signout:"Αποσύνδεση", firstName:"Όνομα", lastName:"Επώνυμο", street:"Οδός", city:"Πόλη", country:"Χώρα", postcode:"ΤΚ", phone:"Τηλέφωνο", email:"Email", save:"ΑΠΟΘΗΚΕΥΣΗ", upload:"Ανέβασμα Φωτογραφίας" },
-  pl: { shop:"Sklep", new:"Nowości", dresses:"Sukienki", tops:"Topy", accessories:"Akcesoria", sale:"Wyprzedaż", about:"O nas", hoodies:"BLUZY", cargo:"CARGO", tees:"T-SHIRTY", heroTitle:"NOWA<br>KOLEKCJA", heroDesc:"Wybrane stylizacje.", shopBtn:"KUP TERAZ", pi:"Dane Osobowe", orders:"Historia zamówień", loginSec:"Logowanie i bezpieczeństwo", signin:"Zaloguj", signup:"Zarejestruj", signout:"Wyloguj", firstName:"Imię", lastName:"Nazwisko", street:"Ulica", city:"Miasto", country:"Kraj", postcode:"Kod", phone:"Telefon", email:"Email", save:"ZAPISZ", upload:"Prześlij Zdjęcie" },
-  pt: { shop:"Loja", new:"Novidades", dresses:"Vestidos", tops:"Tops", accessories:"Acessórios", sale:"Promoções", about:"Sobre", hoodies:"MOLETONS", cargo:"CARGO", tees:"CAMISETAS", heroTitle:"NOVA<br>COLEÇÃO", heroDesc:"Looks selecionados.", shopBtn:"COMPRAR AGORA", pi:"Informação Pessoal", orders:"Histórico de pedidos", loginSec:"Login e segurança", signin:"Entrar", signup:"Registrar", signout:"Sair", firstName:"Nome", lastName:"Sobrenome", street:"Rua", city:"Cidade", country:"País", postcode:"Código Postal", phone:"Telefone", email:"Email", save:"SALVAR", upload:"Carregar Foto" },
-  id: { shop:"Toko", new:"Baru", dresses:"Gaun", tops:"Atasan", accessories:"Aksesori", sale:"Obral", about:"Tentang", hoodies:"HOODIE", cargo:"KARGO", tees:"KAOS", heroTitle:"KOLEKSI<br>BARU", heroDesc:"Tampilan pilihan.", shopBtn:"BELANJA", pi:"Informasi Pribadi", orders:"Riwayat Pesanan", loginSec:"Login & Keamanan", signin:"Masuk", signup:"Daftar", signout:"Keluar", firstName:"Nama Depan", lastName:"Nama Belakang", street:"Jalan", city:"Kota", country:"Negara", postcode:"Kode Pos", phone:"Telepon", email:"Email", save:"SIMPAN", upload:"Unggah Foto" },
-  zh: { shop:"商店", new:"新品", dresses:"连衣裙", tops:"上衣", accessories:"配饰", sale:"特卖", about:"关于", hoodies:"连帽衫", cargo:"工装裤", tees:"T恤", heroTitle:"全新<br>系列", heroDesc:"精选穿搭。", shopBtn:"立即购买", pi:"个人信息", orders:"订单历史", loginSec:"登录与安全", signin:"登录", signup:"注册", signout:"退出", firstName:"名", lastName:"姓", street:"街道", city:"城市", country:"国家", postcode:"邮编", phone:"电话", email:"邮箱", save:"保存", upload:"上传照片" }
-};
-function applyLanguage(lang){ const t = translations[lang] || translations.en; document.querySelectorAll('[data-i18n]').forEach(el=>{ const key = el.getAttribute('data-i18n'); if(t[key]){ if(key==='heroTitle') el.innerHTML=t[key]; else el.textContent=t[key]; } }); localStorage.setItem('lang', lang); document.documentElement.lang=lang; }
-const langSel=document.getElementById('language'); const savedLang=localStorage.getItem('lang')||'en'; langSel.value=savedLang; applyLanguage(savedLang); langSel.addEventListener('change', e=> applyLanguage(e.target.value));
 </script>
 </body>
 </html>
