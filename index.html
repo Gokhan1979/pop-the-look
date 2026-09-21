@@ -209,6 +209,8 @@ const translations = {
   id: { searchPlaceholder:"Cari", shop:"Toko", new:"Baru", dresses:"Gaun", tops:"Atasan", accessories:"Aksesori", sale:"Obral", about:"Tentang", hoodies:"HOODIE", cargo:"KARGO", tees:"KAOS", heroTitle:"KOLEKSI<br>BARU", heroDesc:"Tampilan pilihan.", shopBtn:"BELANJA", pi:"Informasi Pribadi", orders:"Riwayat Pesanan", loginSec:"Login & Keamanan", signin:"Masuk", signup:"Daftar", signout:"Keluar", firstName:"Nama Depan", lastName:"Nama Belakang", street:"Jalan", city:"Kota", country:"Negara", postcode:"Kode Pos", phone:"Telepon", email:"Email", save:"SIMPAN", upload:"Unggah Foto" },
   zh: { searchPlaceholder:"搜索", shop:"商店", new:"新品", dresses:"连衣裙", tops:"上衣", accessories:"配饰", sale:"特卖", about:"关于", hoodies:"连帽衫", cargo:"工装裤", tees:"T恤", heroTitle:"全新<br>系列", heroDesc:"精选穿搭。", shopBtn:"立即购买", pi:"个人信息", orders:"订单历史", loginSec:"登录与安全", signin:"登录", signup:"注册", signout:"退出", firstName:"名", lastName:"姓", street:"街道", city:"城市", country:"国家", postcode:"邮编", phone:"电话", email:"邮箱", save:"保存", upload:"上传照片" }
 };
+
+// FIXED APPLY LANGUAGE - DO NOT REMOVE PLACEHOLDER PART
 function applyLanguage(lang){
   const t = translations[lang] || translations.en;
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -220,12 +222,95 @@ function applyLanguage(lang){
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
     const key = el.getAttribute('data-i18n-placeholder');
-    if(t[key]) el.placeholder = t[key];
+    if(t[key]) el.setAttribute('data-base-placeholder', t[key]);
   });
   localStorage.setItem('lang', lang);
   document.documentElement.lang=lang;
+  restartTyping(lang);
 }
-const langSel=document.getElementById('language'); const savedLang=localStorage.getItem('lang')||'en'; langSel.value=savedLang; applyLanguage(savedLang); langSel.addEventListener('change', e=> applyLanguage(e.target.value));
+
+const langSel=document.getElementById('language');
+const savedLang=localStorage.getItem('lang')||'en';
+langSel.value=savedLang;
+applyLanguage(savedLang);
+langSel.addEventListener('change', e=> applyLanguage(e.target.value));
+
+// ===== TYPING ANIMATION =====
+const searchWords = {
+  en: ["hoodies", "jeans", "bags", "shoes", "hats", "dresses"],
+  tr: ["kapüşonlu", "kot", "çanta", "ayakkabı", "şapka", "elbise"],
+  de: ["hoodies", "jeans", "taschen", "schuhe", "mützen"],
+  fr: ["hoodies", "jeans", "sacs", "chaussures", "chapeaux"],
+  es: ["sudaderas", "vaqueros", "bolsos", "zapatos"],
+  it: ["felpe", "jeans", "borse", "scarpe"],
+  nl: ["hoodies", "jeans", "tassen", "schoenen"],
+  el: ["φούτερ", "τζιν", "τσάντες"],
+  pl: ["bluzy", "jeansy", "torby", "buty"],
+  pt: ["moletons", "jeans", "bolsas", "sapatos"],
+  id: ["hoodie", "jeans", "tas", "sepatu"],
+  zh: ["连帽衫", "牛仔裤", "包", "鞋"]
+};
+
+let typingTimer = null;
+let wordIndex = 0;
+let charIndex = 0;
+let deleting = false;
+
+function restartTyping(lang){
+  clearTimeout(typingTimer);
+  wordIndex = 0;
+  charIndex = 0;
+  deleting = false;
+  const input = document.getElementById('searchInput');
+  if(input) input.placeholder = "";
+  setTimeout(()=> typeLoop(lang), 500);
+}
+
+function typeLoop(lang){
+  const input = document.getElementById('searchInput');
+  if(!input) return;
+  if(document.activeElement === input) { typingTimer = setTimeout(()=> typeLoop(lang), 300); return; }
+  if(input.value.length>0) { typingTimer = setTimeout(()=> typeLoop(lang), 300); return; }
+
+  const base = input.getAttribute('data-base-placeholder') || translations[lang]?.searchPlaceholder || translations[localStorage.getItem('lang')||'en'].searchPlaceholder || "Search";
+  const words = searchWords[lang] || searchWords.en;
+  const currentWord = words[wordIndex];
+  const fullText = base + " " + currentWord + "...";
+
+  if(!deleting){
+    charIndex++;
+    input.placeholder = fullText.substring(0, charIndex);
+    if(charIndex >= fullText.length){
+      deleting = true;
+      typingTimer = setTimeout(()=> typeLoop(lang), 1500);
+      return;
+    }
+  } else {
+    charIndex--;
+    input.placeholder = fullText.substring(0, charIndex);
+    if(charIndex <= base.length){
+      deleting = false;
+      wordIndex = (wordIndex+1) % words.length;
+      typingTimer = setTimeout(()=> typeLoop(lang), 400);
+      return;
+    }
+  }
+  typingTimer = setTimeout(()=> typeLoop(lang), deleting? 50 : 110);
+}
+
+// start
+restartTyping(savedLang);
+
+// stop when focus
+document.getElementById('searchInput').addEventListener('focus', function(){
+  clearTimeout(typingTimer);
+  const lang = localStorage.getItem('lang')||'en';
+  const base = this.getAttribute('data-base-placeholder') || translations[lang].searchPlaceholder;
+  this.placeholder = base;
+});
+document.getElementById('searchInput').addEventListener('blur', function(){
+  if(this.value==="") restartTyping(localStorage.getItem('lang')||'en');
+});
 </script>
 </body>
 </html>
