@@ -34,28 +34,28 @@ body{background:#fff}
 <div class="wrap">
 <div class="pref-row">
 <input type="checkbox" id="emailPref" checked>
-<label for="emailPref">Yes I would like to receive newsletters and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK) by email.</label>
+<label for="emailPref" data-i18n="prefEmail">Yes I would like to receive newsletters and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK) by email.</label>
 </div>
 
 <div class="pref-row">
 <input type="checkbox" id="smsPref" checked>
-<label for="smsPref">Yes I would like to receive SMS updates and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK).</label>
+<label for="smsPref" data-i18n="prefSms">Yes I would like to receive SMS updates and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK).</label>
 </div>
 
-<button class="save-btn" onclick="saveMyPrefs()">SAVE</button>
+<button class="save-btn" onclick="saveMyPrefs()" data-i18n="save">SAVE</button>
 
-<div class="privacy">
+<div class="privacy" data-i18n="privacy">
 We always treat your personal details with the utmost care. We will never sell your data onto other companies for marketing purposes. If you have chosen to receive emails from us you can unsubscribe at any time by clicking on the link in the email footer. Read our full <a href="#">PRIVACY POLICY</a> to find out how we use your data.
 </div>
 
 <div class="grid">
-<a href="index.html"><span class="ic">👤</span> My account</a>
-<a href="return-an-item.html"><span class="ic">↩️</span> Return an item</a>
-<a href="order-history.html"><span class="ic">📍</span> Track Your Order</a>
-<a href="#"><span class="ic">?</span> Help & Contact Us</a>
+<a href="index.html"><span class="ic">👤</span> <span data-i18n="myAcc">My account</span></a>
+<a href="return-an-item.html"><span class="ic">↩️</span> <span data-i18n="returnItem">Return an item</span></a>
+<a href="order-history.html"><span class="ic">📍</span> <span data-i18n="track">Track Your Order</span></a>
+<a href="#"><span class="ic">?</span> <span data-i18n="help">Help & Contact Us</span></a>
 </div>
 
-<div class="help">HELP LINKS <span>›</span></div>
+<div class="help"><span data-i18n="helpLinks">HELP LINKS</span> <span>›</span></div>
 </div>
 
 <script>
@@ -65,8 +65,8 @@ async function loadPrefs(){
   const {data:{session}} = await supabaseClient.auth.getSession();
   const local = JSON.parse(localStorage.getItem('my_preferences')||'{}');
   const meta = session?.user?.user_metadata || {};
-  document.getElementById('emailPref').checked = local.email ?? meta.newsletter ?? true;
-  document.getElementById('smsPref').checked = local.sms ?? meta.sms ?? true;
+  document.getElementById('emailPref').checked = local.email?? meta.newsletter?? true;
+  document.getElementById('smsPref').checked = local.sms?? meta.sms?? true;
 }
 loadPrefs();
 
@@ -77,9 +77,32 @@ async function saveMyPrefs(){
   };
   localStorage.setItem('my_preferences', JSON.stringify(data));
   try{ await supabaseClient.auth.updateUser({data:{newsletter:data.email, sms:data.sms}}); }catch(e){}
-  alert("Preferences saved!");
+  const lang = localStorage.getItem('lang')||'en';
+  alert((translations[lang]||translations.en).saved);
   location.href='index.html';
 }
+
+// TRANSLATIONS - ADDED, NOT DELETING YOUR CODE
+const translations={
+en:{prefEmail:"Yes I would like to receive newsletters and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK) by email.",prefSms:"Yes I would like to receive SMS updates and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK).",save:"SAVE",privacy:'We always treat your personal details with the utmost care. We will never sell your data onto other companies for marketing purposes. If you have chosen to receive emails from us you can unsubscribe at any time by clicking on the link in the email footer. Read our full <a href="#">PRIVACY POLICY</a> to find out how we use your data.',myAcc:"My account",returnItem:"Return an item",track:"Track Your Order",help:"Help & Contact Us",helpLinks:"HELP LINKS",saved:"Preferences saved!"},
+tr:{prefEmail:"POP THE LOOK'tan (sadece POP THE LOOK) e-posta ile bülten ve özel promosyon teklifleri almak istiyorum.",prefSms:"POP THE LOOK'tan SMS güncellemeleri ve özel promosyon teklifleri almak istiyorum.",save:"KAYDET",privacy:'Kişisel bilgilerinize her zaman en üst düzeyde özen gösteriyoruz. Verilerinizi asla başka şirketlere satmayız. E-postalarımızı almayı seçtiyseniz alt kısımdaki bağlantıya tıklayarak abonelikten çıkabilirsiniz. <a href="#">GİZLİLİK POLİTİKASI</a>',myAcc:"Hesabım",returnItem:"Ürün iade et",track:"Siparişimi Takip Et",help:"Yardım ve İletişim",helpLinks:"YARDIM BAĞLANTILARI",saved:"Tercihler kaydedildi!"},
+de:{prefEmail:"Ja, ich möchte Newsletter und exklusive Angebote von POP THE LOOK per E-Mail erhalten.",prefSms:"Ja, ich möchte SMS-Updates und exklusive Angebote von POP THE LOOK erhalten.",save:"SPEICHERN",privacy:'Wir behandeln Ihre Daten mit größter Sorgfalt. <a href="#">DATENSCHUTZRICHTLINIE</a>',myAcc:"Mein Konto",returnItem:"Artikel zurücksenden",track:"Bestellung verfolgen",help:"Hilfe & Kontakt",helpLinks:"HILFE-LINKS",saved:"Einstellungen gespeichert!"},
+fr:{prefEmail:"Oui, je souhaite recevoir des newsletters et offres exclusives de POP THE LOOK par e-mail.",prefSms:"Oui, je souhaite recevoir des mises à jour SMS et offres exclusives.",save:"ENREGISTRER",privacy:'Nous traitons vos données avec soin. <a href="#">POLITIQUE DE CONFIDENTIALITÉ</a>',myAcc:"Mon compte",returnItem:"Retourner un article",track:"Suivre ma commande",help:"Aide & Contact",helpLinks:"LIENS D'AIDE",saved:"Préférences enregistrées!"},
+es:{prefEmail:"Sí, quiero recibir boletines y ofertas exclusivas de POP THE LOOK por correo electrónico.",prefSms:"Sí, quiero recibir actualizaciones por SMS y ofertas exclusivas.",save:"GUARDAR",privacy:'Tratamos sus datos con el máximo cuidado. <a href="#">POLÍTICA DE PRIVACIDAD</a>',myAcc:"Mi cuenta",returnItem:"Devolver un artículo",track:"Rastrear mi pedido",help:"Ayuda y contacto",helpLinks:"ENLACES DE AYUDA",saved:"¡Preferencias guardadas!"},
+it:{prefEmail:"Sì, desidero ricevere newsletter e offerte esclusive da POP THE LOOK via email.",prefSms:"Sì, desidero ricevere aggiornamenti SMS e offerte esclusive.",save:"SALVA",privacy:'Trattiamo i tuoi dati con la massima cura. <a href="#">PRIVACY POLICY</a>',myAcc:"Il mio account",returnItem:"Restituisci un articolo",track:"Traccia il tuo ordine",help:"Aiuto e Contatti",helpLinks:"LINK DI AIUTO",saved:"Preferenze salvate!"},
+nl:{prefEmail:"Ja, ik wil nieuwsbrieven en exclusieve aanbiedingen van POP THE LOOK per e-mail ontvangen.",prefSms:"Ja, ik wil SMS-updates en exclusieve aanbiedingen ontvangen.",save:"OPSLAAN",privacy:'We gaan zorgvuldig om met je gegevens. <a href="#">PRIVACYBELEID</a>',myAcc:"Mijn account",returnItem:"Artikel retourneren",track:"Bestelling volgen",help:"Hulp & Contact",helpLinks:"HULP LINKS",saved:"Voorkeuren opgeslagen!"},
+el:{prefEmail:"Ναι, θα ήθελα να λαμβάνω ενημερωτικά δελτία και προσφορές από το POP THE LOOK μέσω email.",prefSms:"Ναι, θα ήθελα να λαμβάνω ενημερώσεις SMS και προσφορές.",save:"ΑΠΟΘΗΚΕΥΣΗ",privacy:'Φροντίζουμε τα δεδομένα σας. <a href="#">ΠΟΛΙΤΙΚΗ ΑΠΟΡΡΗΤΟΥ</a>',myAcc:"Ο λογαριασμός μου",returnItem:"Επιστροφή προϊόντος",track:"Παρακολούθηση παραγγελίας",help:"Βοήθεια & Επικοινωνία",helpLinks:"ΣΥΝΔΕΣΜΟΙ ΒΟΗΘΕΙΑΣ",saved:"Οι προτιμήσεις αποθηκεύτηκαν!"},
+pl:{prefEmail:"Tak, chcę otrzymywać newslettery i ekskluzywne oferty od POP THE LOOK e-mailem.",prefSms:"Tak, chcę otrzymywać aktualizacje SMS i oferty.",save:"ZAPISZ",privacy:'Dbamy o Twoje dane. <a href="#">POLITYKA PRYWATNOŚCI</a>',myAcc:"Moje konto",returnItem:"Zwróć przedmiot",track:"Śledź zamówienie",help:"Pomoc i kontakt",helpLinks:"LINKI POMOCY",saved:"Preferencje zapisane!"},
+pt:{prefEmail:"Sim, gostaria de receber newsletters e ofertas exclusivas da POP THE LOOK por e-mail.",prefSms:"Sim, gostaria de receber atualizações por SMS e ofertas exclusivas.",save:"SALVAR",privacy:'Tratamos seus dados com cuidado. <a href="#">POLÍTICA DE PRIVACIDADE</a>',myAcc:"Minha conta",returnItem:"Devolver um item",track:"Rastrear pedido",help:"Ajuda e contato",helpLinks:"LINKS DE AJUDA",saved:"Preferências salvas!"},
+id:{prefEmail:"Ya, saya ingin menerima newsletter dan penawaran eksklusif dari POP THE LOOK melalui email.",prefSms:"Ya, saya ingin menerima pembaruan SMS dan penawaran eksklusif.",save:"SIMPAN",privacy:'Kami menjaga data Anda dengan hati-hati. <a href="#">KEBIJAKAN PRIVASI</a>',myAcc:"Akun saya",returnItem:"Kembalikan barang",track:"Lacak Pesanan",help:"Bantuan & Kontak",helpLinks:"TAUTAN BANTUAN",saved:"Preferensi disimpan!"},
+zh:{prefEmail:"是的，我希望通过电子邮件接收 POP THE LOOK 的新闻通讯和独家优惠。",prefSms:"是的，我希望接收短信更新和独家优惠。",save:"保存",privacy:'我们会小心处理您的数据。<a href="#">隐私政策</a>',myAcc:"我的账户",returnItem:"退货",track:"跟踪订单",help:"帮助与联系",helpLinks:"帮助链接",saved:"偏好已保存！"}
+};
+const lang = localStorage.getItem('lang')||'en';
+const t = translations[lang]||translations.en;
+document.querySelectorAll('[data-i18n]').forEach(el=>{
+  const k=el.getAttribute('data-i18n');
+  if(t[k]){ if(k==='privacy') el.innerHTML=t[k]; else el.textContent=t[k]; }
+});
 </script>
 </body>
 </html>
