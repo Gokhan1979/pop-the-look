@@ -47,7 +47,7 @@ document.getElementById('btn').onclick=async()=>{
  const{error}=await supabaseClient.auth.signInWithPassword({email,password:pass});
  msg.style.display='block';
  if(error){msg.className='error';msg.innerText='❌ '+error.message;btn.innerText='SIGN IN';btn.disabled=false;}
- else{msg.className='success';msg.innerText='✅ Success!';setTimeout(()=>location.href='index.html',1000);}
+ else{location.href='index.html';}
 }
 </script>
 </body>
