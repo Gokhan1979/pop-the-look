@@ -11,8 +11,6 @@
 header{display:flex;flex-direction:column;align-items:center;background:white;position:sticky;top:0;z-index:50;width:100%}
 .logo-top{display:flex;justify-content:center;width:100%;padding:22px 10px 18px;background:white}
 .logo-top img{height:110px;width:auto;max-width:92vw;object-fit:contain;display:block}
-.signout-row{position:absolute;right:18px;top:105px;z-index:60}
-.signout-top{background:black;color:white;border:none;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer}
 .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 18px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;background:white;gap:10px;margin-top:-16px;position:relative}
 .nav-left{display:flex;align-items:center;gap:12px;flex:1}
 .burger-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:4px;z-index:1001}
@@ -74,7 +72,6 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 </div>
 </div>
 <div class="pi-field"><label data-i18n="postcode">Postcode</label><input id="postcode" placeholder="W1U 6TJ"></div>
-<!-- PHONE UNDERNEATH POSTCODE - CODE + NUMBER SIDE BY SIDE -->
 <div class="pi-field"><label data-i18n="phone">Phone Number</label>
 <div class="phone-group">
 <select id="phoneCode" class="phone-code">
@@ -90,7 +87,6 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 </div>
 <header style="position:relative;">
 <div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
-<div class="signout-row"><button id="signoutTop" class="signout-top" style="display:none;" onclick="handleSignout()" data-i18n="signout">Sign Out</button></div>
 <div class="nav-bar">
 <div class="nav-left">
 <button class="burger-btn" onclick="toggleBurger(event)"><span></span><span></span><span></span></button>
@@ -113,8 +109,9 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <button class="upload-btn" onclick="document.getElementById('photoInput').click()" data-i18n="upload">Upload Photo</button>
 </div>
 <a href="#" onclick="event.preventDefault(); openPI();" data-i18n="pi">Personal Information</a>
-<a id="signinLink" href="signin.html" data-i18n="signin">Sign In</a>
-<a id="signupLink" href="signup.html" data-i18n="signup">Sign Up</a>
+<a id="signoutDropdown" href="#" onclick="event.preventDefault(); handleSignout();" style="color:#ff0000!important;">Sign Out</a>
+<a id="signinLink" href="signin.html" data-i18n="signin" style="display:none;">Sign In</a>
+<a id="signupLink" href="signup.html" data-i18n="signup" style="display:none;">Sign Up</a>
 </div>
 </div>
 <button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
@@ -161,7 +158,16 @@ function updateHeaderUI(){
 }
 document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ document.getElementById('burgerDrawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ document.getElementById('profileDropdown').classList.remove('show'); } });
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
-async function checkUser(){ const{data}=await supabaseClient.auth.getSession(); const isLoggedIn=!!data.session; document.getElementById('signinLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signupLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signoutTop').style.display=isLoggedIn?'block':'none'; if(isLoggedIn){ document.getElementById('profileName').style.display='block'; } updateHeaderUI(); }
+async function checkUser(){
+  const{data}=await supabaseClient.auth.getSession();
+  const isLoggedIn=!!data.session;
+  document.getElementById('signinLink').style.display='none';
+  document.getElementById('signupLink').style.display='none';
+  const so = document.getElementById('signoutDropdown');
+  if(so) so.style.display = isLoggedIn? 'block' : 'none';
+  if(isLoggedIn){ document.getElementById('profileName').style.display='block'; }
+  updateHeaderUI();
+}
 async function handleSignout(){ await supabaseClient.auth.signOut(); location.href='signin.html'; }
 checkUser();
 const translations = {
