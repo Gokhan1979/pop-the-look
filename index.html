@@ -5,103 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="logo.png">
 <title>POP THE LOOK</title>
-<link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="overlay" id="overlay" onclick="toggleBurger(event)"></div>
-<div class="pi-modal" id="piModal" onclick="if(event.target===this) closePI()">
-<div class="pi-box">
-<div class="pi-head"><h2>Personal Information</h2><button class="pi-close" onclick="closePI()">✕</button></div>
-<div class="pi-form">
-<div class="pi-row">
-<div class="pi-field"><label>First Name</label><input id="firstName" placeholder="James"></div>
-<div class="pi-field"><label>Last Name</label><input id="lastName" placeholder="Smith"></div>
-</div>
-<div class="pi-field"><label>Street Name</label><input id="street" placeholder="221B Baker Street"></div>
-<div class="pi-row">
-<div class="pi-field"><label>City</label><input id="city" placeholder="London"></div>
-<div class="pi-field"><label>Country</label><select id="country"><option selected>United Kingdom</option><option>Turkey</option><option>Germany</option></select></div>
-</div>
-<div class="pi-field"><label>Postcode</label><input id="postcode" placeholder="W1U 6TJ"></div>
-<div class="pi-field"><label>Phone Number</label><div class="phone-group"><select id="phoneCode" class="phone-code"><option value="+44" selected>🇬🇧 +44</option><option value="+90">🇹🇷 +90</option></select><input id="phone" class="phone-number" type="tel" placeholder="7123 456789"></div></div>
-<div class="pi-field"><label>Email</label><input id="email" type="email" placeholder="james@email.co.uk" readonly></div>
-<button class="pi-save" onclick="savePI()">SAVE CHANGES</button>
-</div>
-</div>
-</div>
-<header>
-<div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="burger-btn" onclick="toggleBurger(event)"><span></span><span></span><span></span></button>
-<div class="lang-wrap"><select id="language" class="lang-select"><option value="en">EN</option><option value="tr">TR</option></select></div>
-</div>
-<div class="nav-right">
-<button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
-<div class="profile-wrap">
-<button class="icon-btn" id="profileBtn" onclick="toggleProfile(event)"><svg id="headIcon" class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg><img id="headAvatar" class="avatar-img" style="display:none;" src=""></button>
-<span id="profileName" class="profile-name"></span>
-<div class="dropdown" id="profileDropdown">
-<div class="profile-photo-box"><img id="dropdownAvatar" src="https://via.placeholder.com/100?text=Photo"><input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(event)" hidden><button class="upload-btn" onclick="document.getElementById('photoInput').click()">Upload</button></div>
-<a href="#" onclick="event.preventDefault(); openPI();">Personal Information</a><a href="order-history.html">Order History</a><a href="#" onclick="event.preventDefault(); handleSignout();" style="color:#f00">Sign Out</a><a id="signinLink" href="signin.html">Sign In</a><a id="signupLink" href="signup.html">Sign Up</a>
-</div>
-</div>
-<button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button>
-</div>
-</div>
-<div class="burger-drawer" id="burgerDrawer"><a href="shop.html">Shop</a><a href="#">New</a><a href="#">Dresses</a><a href="#">Tops</a></div>
-</header>
-<div class="hero"><h1>NEW<br>DROP</h1><p>Curated looks. Tap to shop.</p><a class="shop-btn" href="shop.html">SHOP NOW</a></div>
-<div class="grid"><div class="card">HOODIES</div><div class="card">CARGO</div><div class="card">TEES</div><div class="card">ACCESSORIES</div></div>
-
+<div class="pi-modal" id="piModal" onclick="if(event.target===this) closePI()"><div class="pi-box"><div class="pi-head"><h2>Personal Information</h2><button class="pi-close" onclick="closePI()">✕</button></div><div class="pi-form"><div class="pi-row"><div class="pi-field"><label>First Name</label><input id="firstName" placeholder="James"></div><div class="pi-field"><label>Last Name</label><input id="lastName" placeholder="Smith"></div></div><div class="pi-field"><label>Street</label><input id="street" placeholder="221B Baker Street"></div><div class="pi-row"><div class="pi-field"><label>City</label><input id="city" placeholder="London"></div><div class="pi-field"><label>Country</label><select id="country"><option selected>United Kingdom</option><option>Turkey</option><option>Germany</option><option>France</option></select></div></div><div class="pi-field"><label>Postcode</label><input id="postcode"></div><div class="pi-field"><label>Phone</label><div class="phone-group"><select id="phoneCode" class="phone-code"><option value="+44" selected>🇬🇧 +44</option><option value="+90">🇹🇷 +90</option></select><input id="phone" class="phone-number" type="tel"></div></div><div class="pi-field"><label>Email</label><input id="email" type="email" readonly></div><button class="pi-save" onclick="savePI()">SAVE CHANGES</button></div></div></div>
+<header><div class="logo-top"><img src="logo.png" alt="POP THE LOOK"></div><div class="nav-bar"><div class="nav-left"><button class="burger-btn" onclick="toggleBurger(event)"><span></span><span></span><span></span></button><select id="language" class="lang-select"><option value="en">EN</option><option value="tr">TR</option></select></div><div class="nav-right"><button class="icon-btn" onclick="location.href='shop.html'"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg></button><div class="profile-wrap"><button class="icon-btn" id="profileBtn" onclick="toggleProfile(event)"><svg id="headIcon" class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c0-3.5 3.5-6 7-6s7 2.5 7 6"></path></svg><img id="headAvatar" class="avatar-img" style="display:none;" src=""></button><span id="profileName" class="profile-name"></span><div class="dropdown" id="profileDropdown"><div class="profile-photo-box"><img id="dropdownAvatar" src="https://via.placeholder.com/100?text=Photo"><input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(event)" hidden><button class="upload-btn" onclick="document.getElementById('photoInput').click()">Upload Photo</button></div><a href="#" onclick="event.preventDefault(); openPI();">Personal Information</a><a href="order-history.html">Order History</a><a href="#" onclick="event.preventDefault(); handleSignout();" style="color:#f00">Sign Out</a><a id="signinLink" href="signin.html">Sign In</a><a id="signupLink" href="signup.html">Sign Up</a></div></div><button class="icon-btn" onclick="location.href='cart.html'"><svg class="icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></button></div></div><div class="burger-drawer" id="burgerDrawer"><a href="shop.html">Shop</a><a href="#">New</a><a href="#">Dresses</a><a href="#">Tops</a></div></header>
+<div class="hero"><h1>NEW<br>DROP</h1><p>Curated looks. Tap to shop.</p><a class="shop-btn" href="shop.html">SHOP NOW</a></div><div class="grid"><div class="card">HOODIES</div><div class="card">CARGO</div><div class="card">TEES</div><div class="card">ACCESSORIES</div></div>
 <script>
-// FIX: supabase now loaded BEFORE this runs (no defer)
-const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
-
+const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
-function toggleProfile(e){
-  if(e) e.stopPropagation();
-  const d=document.getElementById('profileDropdown');
-  d.classList.toggle('show');
-}
-function openPI(){ document.getElementById('profileDropdown').classList.remove('show'); document.getElementById('piModal').classList.add('show'); }
+function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
+function openPI(){ document.getElementById('profileDropdown').classList.remove('show'); const s=JSON.parse(localStorage.getItem('personalInfo')||'{}'); document.getElementById('firstName').value=s.firstName||''; document.getElementById('piModal').classList.add('show'); }
 function closePI(){ document.getElementById('piModal').classList.remove('show'); }
-function savePI(){
-  const data={firstName:document.getElementById('firstName').value};
-  localStorage.setItem('personalInfo', JSON.stringify(data));
-  closePI();
-}
-function uploadPhoto(e){
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    localStorage.setItem('personalInfo', JSON.stringify({profilePhoto:ev.target.result}));
-    const a=document.getElementById('headAvatar'); a.src=ev.target.result; a.style.display='block';
-    document.getElementById('headIcon').style.display='none';
-  };
-  r.readAsDataURL(f);
-}
-
-document.addEventListener('click',function(e){
-  if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){
-    const b=document.getElementById('burgerDrawer'); const o=document.getElementById('overlay');
-    if(b) b.classList.remove('show'); if(o) o.classList.remove('show');
-  }
-  if(!e.target.closest('.profile-wrap')){
-    const d=document.getElementById('profileDropdown'); if(d) d.classList.remove('show');
-  }
-});
-
-async function checkUser(){
-  try{
-    const{data}=await supabaseClient.auth.getSession();
-    const sL=document.getElementById('signinLink');
-    if(sL) sL.style.display=data.session?'none':'block';
-  }catch(e){}
-}
-checkUser();
+function savePI(){ const d={firstName:document.getElementById('firstName').value, lastName:document.getElementById('lastName').value}; const old=JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(old.profilePhoto) d.profilePhoto=old.profilePhoto; localStorage.setItem('personalInfo',JSON.stringify(d)); updateHeaderUI(); closePI(); }
+function uploadPhoto(e){ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=function(ev){ const base64=ev.target.result; const s=JSON.parse(localStorage.getItem('personalInfo')||'{}'); s.profilePhoto=base64; localStorage.setItem('personalInfo',JSON.stringify(s)); updateHeaderUI(); }; reader.readAsDataURL(file); }
+function updateHeaderUI(){ const s=JSON.parse(localStorage.getItem('personalInfo')||'{}'); const headIcon=document.getElementById('headIcon'); const headAvatar=document.getElementById('headAvatar'); const dropAvatar=document.getElementById('dropdownAvatar'); const photo=s.profilePhoto; if(photo){ dropAvatar.src=photo; headAvatar.src=photo; headAvatar.style.display='block'; headIcon.style.display='none'; } const nameEl=document.getElementById('profileName'); if(s.firstName){ nameEl.textContent=s.firstName; nameEl.style.display='block'; } }
+document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ const b=document.getElementById('burgerDrawer'); const o=document.getElementById('overlay'); if(b) b.classList.remove('show'); if(o) o.classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ const d=document.getElementById('profileDropdown'); if(d) d.classList.remove('show'); } });
+async function checkUser(){ try{ const{data}=await supabaseClient.auth.getSession(); const isLoggedIn=!!data.session; document.getElementById('signinLink').style.display=isLoggedIn?'none':'block'; document.getElementById('signupLink').style.display=isLoggedIn?'none':'block'; }catch(e){} updateHeaderUI(); }
 async function handleSignout(){ await supabaseClient.auth.signOut(); location.href='signin.html'; }
+checkUser();
 </script>
 </body>
 </html>
