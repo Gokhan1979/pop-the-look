@@ -132,6 +132,9 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="hero"><h1 data-i18n="heroTitle">NEW<br>DROP</h1><p data-i18n="heroDesc">Curated looks. Tap to shop the full fit.</p><a class="shop-btn" href="shop.html" data-i18n="shopBtn">SHOP NOW</a></div>
 <div class="grid"><div class="card" data-i18n="hoodies">HOODIES</div><div class="card" data-i18n="cargo">CARGO</div><div class="card" data-i18n="tees">TEES</div><div class="card" data-i18n="accessories">ACCESSORIES</div></div>
 <script>
+// FIXED: supabaseClient MUST be first
+const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
 const countryCodeMap = {"united kingdom":"+44","uk":"+44","england":"+44","turkey":"+90","türkiye":"+90","germany":"+49","deutschland":"+49","france":"+33","spain":"+34","españa":"+34","italy":"+39","italia":"+39","netherlands":"+31","holland":"+31","greece":"+30","poland":"+48","portugal":"+351","indonesia":"+62","china":"+86","usa":"+1","united states":"+1","canada":"+1","australia":"+61","india":"+91","japan":"+81"};
@@ -165,7 +168,7 @@ function updateHeaderUI(){
   else{ supabaseClient.auth.getSession().then(({data})=>{ const meta = data.session?.user?.user_metadata || {}; const fn = s.firstName || meta.first_name || meta.full_name?.split(' ')[0] || ''; if(fn){ nameEl.textContent=fn; nameEl.style.display='block'; } }); }
 }
 document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ document.getElementById('burgerDrawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ document.getElementById('profileDropdown').classList.remove('show'); } });
-const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
 async function checkUser(){
   const{data}=await supabaseClient.auth.getSession();
   const isLoggedIn=!!data.session;
@@ -178,6 +181,7 @@ async function checkUser(){
 }
 async function handleSignout(){ await supabaseClient.auth.signOut(); location.href='signin.html'; }
 checkUser();
+
 const translations = {
   en: { shop:"Shop", new:"New Arrivals", dresses:"Dresses", tops:"Tops", accessories:"Accessories", sale:"Sale", about:"About", hoodies:"HOODIES", cargo:"CARGO", tees:"TEES", heroTitle:"NEW<br>DROP", heroDesc:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", pi:"Personal Information", orders:"Order History", loginSec:"Login & Security", signin:"Sign In", signup:"Sign Up", signout:"Sign Out", firstName:"First Name", lastName:"Last Name", street:"Street Name", city:"City", country:"Country", postcode:"Postcode", phone:"Phone Number", email:"Email", save:"SAVE CHANGES", upload:"Upload Photo" },
   tr: { shop:"Mağaza", new:"Yeni Gelenler", dresses:"Elbiseler", tops:"Üstler", accessories:"Aksesuarlar", sale:"İndirim", about:"Hakkımızda", hoodies:"KAPÜŞONLU", cargo:"KARGO", tees:"TİŞÖRT", heroTitle:"YENİ<br>SEZON", heroDesc:"Özenle seçilmiş kombinler.", shopBtn:"ALIŞVERİŞ YAP", pi:"Kişisel Bilgiler", orders:"Sipariş Geçmişi", loginSec:"Giriş ve Güvenlik", signin:"Giriş Yap", signup:"Kayıt Ol", signout:"Çıkış Yap", firstName:"Ad", lastName:"Soyad", street:"Sokak Adı", city:"Şehir", country:"Ülke", postcode:"Posta Kodu", phone:"Telefon", email:"E-posta", save:"KAYDET", upload:"Fotoğraf Yükle" },
