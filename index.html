@@ -109,7 +109,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="search-center">
   <div class="search-box">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-    <input type="text" placeholder="Search" id="searchInput" data-i18n-placeholder="searchPlaceholder" onkeydown="if(event.key==='Enter'){window.location.href='shop.html?q='+encodeURIComponent(this.value)}">
+    <input type="text" placeholder="Search" id="searchInput" onkeydown="if(event.key==='Enter'){window.location.href='shop.html?q='+encodeURIComponent(this.value)}">
   </div>
 </div>
 <div class="nav-right">
@@ -195,6 +195,7 @@ async function checkUser(){
 }
 async function handleSignout(){ await supabaseClient.auth.signOut(); location.href='signin.html'; }
 checkUser();
+
 const translations = {
   en: { searchPlaceholder:"Search", shop:"Shop", new:"New Arrivals", dresses:"Dresses", tops:"Tops", accessories:"Accessories", sale:"Sale", about:"About", hoodies:"HOODIES", cargo:"CARGO", tees:"TEES", heroTitle:"NEW<br>DROP", heroDesc:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", pi:"Personal Information", orders:"Order History", loginSec:"Login & Security", signin:"Sign In", signup:"Sign Up", signout:"Sign Out", firstName:"First Name", lastName:"Last Name", street:"Street Name", city:"City", country:"Country", postcode:"Postcode", phone:"Phone Number", email:"Email", save:"SAVE CHANGES", upload:"Upload Photo" },
   tr: { searchPlaceholder:"Ara", shop:"Mağaza", new:"Yeni Gelenler", dresses:"Elbiseler", tops:"Üstler", accessories:"Aksesuarlar", sale:"İndirim", about:"Hakkımızda", hoodies:"KAPÜŞONLU", cargo:"KARGO", tees:"TİŞÖRT", heroTitle:"YENİ<br>SEZON", heroDesc:"Özenle seçilmiş kombinler.", shopBtn:"ALIŞVERİŞ YAP", pi:"Kişisel Bilgiler", orders:"Sipariş Geçmişi", loginSec:"Giriş ve Güvenlik", signin:"Giriş Yap", signup:"Kayıt Ol", signout:"Çıkış Yap", firstName:"Ad", lastName:"Soyad", street:"Sokak Adı", city:"Şehir", country:"Ülke", postcode:"Posta Kodu", phone:"Telefon", email:"E-posta", save:"KAYDET", upload:"Fotoğraf Yükle" },
@@ -210,7 +211,53 @@ const translations = {
   zh: { searchPlaceholder:"搜索", shop:"商店", new:"新品", dresses:"连衣裙", tops:"上衣", accessories:"配饰", sale:"特卖", about:"关于", hoodies:"连帽衫", cargo:"工装裤", tees:"T恤", heroTitle:"全新<br>系列", heroDesc:"精选穿搭。", shopBtn:"立即购买", pi:"个人信息", orders:"订单历史", loginSec:"登录与安全", signin:"登录", signup:"注册", signout:"退出", firstName:"名", lastName:"姓", street:"街道", city:"城市", country:"国家", postcode:"邮编", phone:"电话", email:"邮箱", save:"保存", upload:"上传照片" }
 };
 
-// FIXED APPLY LANGUAGE - DO NOT REMOVE PLACEHOLDER PART
+// --- SEARCH WORDS FOR ANIMATION ---
+const searchWords = {
+  en: ["hoodies", "jeans", "bags", "shoes", "hats", "dresses"],
+  tr: ["kapüşonlu", "kot", "çanta", "ayakkabı", "şapka", "elbise"],
+  de: ["hoodies", "jeans", "taschen", "schuhe"],
+  fr: ["hoodies", "jeans", "sacs", "chaussures"],
+  es: ["sudaderas", "vaqueros", "bolsos"],
+  it: ["felpe", "jeans", "borse"],
+  nl: ["hoodies", "jeans", "tassen"],
+  el: ["φούτερ", "τζιν", "τσάντες"],
+  pl: ["bluzy", "jeansy", "torby"],
+  pt: ["moletons", "jeans", "bolsas"],
+  id: ["hoodie", "jeans", "tas"],
+  zh: ["连帽衫", "牛仔裤", "包"]
+};
+
+let timer = null;
+let wIdx = 0;
+let cIdx = 0;
+let isDel = false;
+
+function startAnim(lang){
+  clearTimeout(timer);
+  wIdx = 0; cIdx = 0; isDel = false;
+  const inp = document.getElementById('searchInput');
+  if(!inp || inp.value!=="") return;
+  function loop(){
+    const inp = document.getElementById('searchInput');
+    if(!inp) return;
+    if(document.activeElement===inp || inp.value!==""){ timer=setTimeout(loop,500); return; }
+    const base = (translations[lang]||translations.en).searchPlaceholder;
+    const words = searchWords[lang]||searchWords.en;
+    const text = base + " " + words[wIdx];
+    if(!isDel){
+      cIdx++;
+      inp.placeholder = text.substring(0,cIdx);
+      if(cIdx>=text.length){ isDel=true; timer=setTimeout(loop,1500); return; }
+    }else{
+      cIdx--;
+      inp.placeholder = text.substring(0,cIdx);
+      if(cIdx<=base.length){ isDel=false; wIdx=(wIdx+1)%words.length; timer=setTimeout(loop,400); return; }
+    }
+    timer=setTimeout(loop, isDel?60:110);
+  }
+  loop();
+}
+
 function applyLanguage(lang){
   const t = translations[lang] || translations.en;
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -220,13 +267,9 @@ function applyLanguage(lang){
       else el.textContent=t[key];
     }
   });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-    const key = el.getAttribute('data-i18n-placeholder');
-    if(t[key]) el.setAttribute('data-base-placeholder', t[key]);
-  });
   localStorage.setItem('lang', lang);
   document.documentElement.lang=lang;
-  restartTyping(lang);
+  startAnim(lang);
 }
 
 const langSel=document.getElementById('language');
@@ -235,81 +278,14 @@ langSel.value=savedLang;
 applyLanguage(savedLang);
 langSel.addEventListener('change', e=> applyLanguage(e.target.value));
 
-// ===== TYPING ANIMATION =====
-const searchWords = {
-  en: ["hoodies", "jeans", "bags", "shoes", "hats", "dresses"],
-  tr: ["kapüşonlu", "kot", "çanta", "ayakkabı", "şapka", "elbise"],
-  de: ["hoodies", "jeans", "taschen", "schuhe", "mützen"],
-  fr: ["hoodies", "jeans", "sacs", "chaussures", "chapeaux"],
-  es: ["sudaderas", "vaqueros", "bolsos", "zapatos"],
-  it: ["felpe", "jeans", "borse", "scarpe"],
-  nl: ["hoodies", "jeans", "tassen", "schoenen"],
-  el: ["φούτερ", "τζιν", "τσάντες"],
-  pl: ["bluzy", "jeansy", "torby", "buty"],
-  pt: ["moletons", "jeans", "bolsas", "sapatos"],
-  id: ["hoodie", "jeans", "tas", "sepatu"],
-  zh: ["连帽衫", "牛仔裤", "包", "鞋"]
-};
-
-let typingTimer = null;
-let wordIndex = 0;
-let charIndex = 0;
-let deleting = false;
-
-function restartTyping(lang){
-  clearTimeout(typingTimer);
-  wordIndex = 0;
-  charIndex = 0;
-  deleting = false;
-  const input = document.getElementById('searchInput');
-  if(input) input.placeholder = "";
-  setTimeout(()=> typeLoop(lang), 500);
-}
-
-function typeLoop(lang){
-  const input = document.getElementById('searchInput');
-  if(!input) return;
-  if(document.activeElement === input) { typingTimer = setTimeout(()=> typeLoop(lang), 300); return; }
-  if(input.value.length>0) { typingTimer = setTimeout(()=> typeLoop(lang), 300); return; }
-
-  const base = input.getAttribute('data-base-placeholder') || translations[lang]?.searchPlaceholder || translations[localStorage.getItem('lang')||'en'].searchPlaceholder || "Search";
-  const words = searchWords[lang] || searchWords.en;
-  const currentWord = words[wordIndex];
-  const fullText = base + " " + currentWord + "...";
-
-  if(!deleting){
-    charIndex++;
-    input.placeholder = fullText.substring(0, charIndex);
-    if(charIndex >= fullText.length){
-      deleting = true;
-      typingTimer = setTimeout(()=> typeLoop(lang), 1500);
-      return;
-    }
-  } else {
-    charIndex--;
-    input.placeholder = fullText.substring(0, charIndex);
-    if(charIndex <= base.length){
-      deleting = false;
-      wordIndex = (wordIndex+1) % words.length;
-      typingTimer = setTimeout(()=> typeLoop(lang), 400);
-      return;
-    }
-  }
-  typingTimer = setTimeout(()=> typeLoop(lang), deleting? 50 : 110);
-}
-
-// start
-restartTyping(savedLang);
-
-// stop when focus
-document.getElementById('searchInput').addEventListener('focus', function(){
-  clearTimeout(typingTimer);
+const sInput = document.getElementById('searchInput');
+sInput.addEventListener('focus', function(){
+  clearTimeout(timer);
   const lang = localStorage.getItem('lang')||'en';
-  const base = this.getAttribute('data-base-placeholder') || translations[lang].searchPlaceholder;
-  this.placeholder = base;
+  this.placeholder = (translations[lang]||translations.en).searchPlaceholder;
 });
-document.getElementById('searchInput').addEventListener('blur', function(){
-  if(this.value==="") restartTyping(localStorage.getItem('lang')||'en');
+sInput.addEventListener('blur', function(){
+  if(this.value==="") startAnim(localStorage.getItem('lang')||'en');
 });
 </script>
 </body>
