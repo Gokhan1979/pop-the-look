@@ -22,7 +22,7 @@ label{font-size:10px;font-weight:800;color:#888;text-transform:uppercase;letter-
 .save{width:100%;margin-top:18px;background:black;color:white;border:none;padding:14px;border-radius:13px;font-weight:900;font-size:13px;cursor:pointer}
 .note{font-size:11px;color:#888;margin-top:10px;line-height:1.4;background:#f9f9f9;padding:10px 12px;border-radius:10px}
 .success{color:#0a7a2e;font-size:13px;margin-top:12px;display:none;background:#e6f9ec;padding:10px;border-radius:10px;font-weight:700}
-.error{color:#c00;font-size:13px;margin-top:12px;display:none;background:#ffe6e6;padding:10px;border-radius:10px;font-weight:700}
+.error{color:#c00;font-size:13px;margin-top:12px;display:none;background:#ffe6e6;padding:10px;border-radius:10px;font-weight:700;word-break:break-word}
 .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;background:#f2f2f2;border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px}
 </style>
 </head>
@@ -41,48 +41,35 @@ label{font-size:10px;font-weight:800;color:#888;text-transform:uppercase;letter-
 <label style="color:red">Current Password (to get fresh token)</label>
 <div class="input-wrap"><input id="currentPassForEmail" type="password" placeholder="enter current password"><button class="eye" type="button" onclick="toggleEye('currentPassForEmail', this)">👁️</button></div>
 <label>New Email</label>
-<div class="input-wrap"><input id="newEmail" type="email" placeholder="new@email.com"></div>
+<div class="input-wrap"><input id="newEmail" type="email" placeholder="new@email.com" value="michigokhan@gmail.com"></div>
 <label>Confirm New Email</label>
-<div class="input-wrap"><input id="confirmEmail" type="email" placeholder="confirm new email"></div>
+<div class="input-wrap"><input id="confirmEmail" type="email" placeholder="confirm new email" value="michigokhan@gmail.com"></div>
 <button class="save" id="emailBtn" onclick="changeEmail()">SEND CONFIRMATION EMAIL</button>
 <div id="emailSuccess" class="success"></div>
 <div id="emailError" class="error"></div>
-<p class="note">We will send a confirmation to your NEW email michigokhan@gmail.com. Click link inside to verify.</p>
-</div>
-<div class="card">
-<h2>Change Password</h2>
-<label>Current Password</label>
-<div class="input-wrap"><input id="currentPass" type="password" placeholder="••••••••"><button class="eye" type="button" onclick="toggleEye('currentPass', this)">👁️</button></div>
-<label>New Password</label>
-<div class="input-wrap"><input id="newPass" type="password" placeholder="new password"><button class="eye" type="button" onclick="toggleEye('newPass', this)">👁️</button></div>
-<label>Confirm New Password</label>
-<div class="input-wrap"><input id="confirmPass" type="password" placeholder="confirm new password"><button class="eye" type="button" onclick="toggleEye('confirmPass', this)">👁️</button></div>
-<button class="save" onclick="changePassword()">UPDATE PASSWORD</button>
-<div id="passSuccess" class="success"></div>
-<div id="passError" class="error"></div>
+<p class="note">We will send a confirmation to your NEW email. Check spam too.</p>
 </div>
 </div>
 <script>
-const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI", { auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage } });
+const SUPABASE_URL = "https://pslsuittihsaeeyrihgr.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI";
+const supabaseClient=supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: window.localStorage } });
 
 async function loadUser(){
   const {data:{session}} = await supabaseClient.auth.getSession();
-  console.log("SESSION AT LOAD:", session);
   if(!session){
-    document.getElementById('emailError').textContent="No session found. Please go to signin.html and login.";
+    document.getElementById('emailError').textContent="No session. Go to signin.html and login first.";
     document.getElementById('emailError').style.display='block';
     return;
   }
   document.getElementById('currentEmail').value = session.user.email;
 }
 loadUser();
-
 function toggleEye(id, btn){
   const input = document.getElementById(id);
   input.type = input.type==='password' ? 'text' : 'password';
   btn.textContent = input.type==='password' ? '👁️' : '🙈';
 }
-
 async function changeEmail(){
   const newEmail = document.getElementById('newEmail').value.trim();
   const confirmEmail = document.getElementById('confirmEmail').value.trim();
@@ -91,56 +78,26 @@ async function changeEmail(){
   const succ = document.getElementById('emailSuccess');
   const btn = document.getElementById('emailBtn');
   err.style.display='none'; succ.style.display='none';
-  
-  if(!currentPassword){ err.textContent="Enter current password to refresh token"; err.style.display='block'; return; }
-  if(!newEmail ||!confirmEmail){ err.textContent="Fill both email fields"; err.style.display='block'; return; }
+  if(!currentPassword){ err.textContent="Enter current password"; err.style.display='block'; return; }
   if(newEmail!==confirmEmail){ err.textContent="Emails do not match"; err.style.display='block'; return; }
-
   btn.textContent="SENDING..."; btn.disabled=true;
   try{
-    // STEP 1: Force fresh login to get valid Bearer token
     const {data:{session: oldSession}} = await supabaseClient.auth.getSession();
-    const email = oldSession?.user?.email || document.getElementById('currentEmail').value;
-    
-    console.log("Re-authenticating with", email);
-    const {data: signInData, error: signInErr} = await supabaseClient.auth.signInWithPassword({ email, password: currentPassword });
-    if(signInErr) throw new Error("Current password wrong: " + signInErr.message);
-    
-    console.log("NEW SESSION:", signInData.session.access_token.substring(0,20));
-    
-    // STEP 2: Now update email with fresh token
-    const {data, error} = await supabaseClient.auth.updateUser({ email: newEmail });
-    if(error) throw error;
-    
-    succ.textContent="Confirmation sent to " + newEmail + "! Check inbox and click link. You will be redirected to Sign In.";
+    const currentEmail = oldSession?.user?.email || document.getElementById('currentEmail').value;
+    const {data: signInData, error: signInErr} = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password: currentPassword });
+    if(signInErr) throw new Error("Wrong password: " + signInErr.message);
+    const freshToken = signInData.session.access_token;
+    const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${freshToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: newEmail })
+    });
+    const result = await response.json();
+    if(!response.ok) throw new Error(result.msg || result.message);
+    succ.textContent="✅ Confirmation sent to " + newEmail + "! Check inbox + SPAM. Click link.";
     succ.style.display='block';
-  }catch(e){
-    console.error(e);
-    err.textContent=e.message;
-    err.style.display='block';
-  } finally {
-    btn.textContent="SEND CONFIRMATION EMAIL"; btn.disabled=false;
-  }
-}
-
-async function changePassword(){
-  const currentPass = document.getElementById('currentPass').value;
-  const newPass = document.getElementById('newPass').value;
-  const confirmPass = document.getElementById('confirmPass').value;
-  const err = document.getElementById('passError');
-  const succ = document.getElementById('passSuccess');
-  err.style.display='none'; succ.style.display='none';
-  if(!currentPass ||!newPass ||!confirmPass){ err.textContent="Fill all"; err.style.display='block'; return; }
-  if(newPass!==confirmPass){ err.textContent="No match"; err.style.display='block'; return; }
-  try{
-    const {data:{session}} = await supabaseClient.auth.getSession();
-    const email = session.user.email;
-    const {error: signInError} = await supabaseClient.auth.signInWithPassword({ email, password: currentPass });
-    if(signInError){ err.textContent="Current password wrong"; err.style.display='block'; return; }
-    const {error} = await supabaseClient.auth.updateUser({ password: newPass });
-    if(error) throw error;
-    succ.textContent="Password updated!"; succ.style.display='block';
   }catch(e){ err.textContent=e.message; err.style.display='block'; }
+  finally { btn.textContent="SEND CONFIRMATION EMAIL"; btn.disabled=false; }
 }
 </script>
 </body>
