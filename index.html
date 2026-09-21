@@ -62,28 +62,28 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="pi-head"><h2 data-i18n="pi">Personal Information</h2><button class="pi-close" onclick="closePI()">✕</button></div>
 <div class="pi-form">
 <div class="pi-row">
-<div class="pi-field"><label data-i18n="firstName">First Name</label><input id="firstName" placeholder="James"></div>
-<div class="pi-field"><label data-i18n="lastName">Last Name</label><input id="lastName" placeholder="Smith"></div>
+<div class="pi-field"><label data-i18n="firstName">First Name</label><input id="firstName" placeholder="James" autocomplete="off"></div>
+<div class="pi-field"><label data-i18n="lastName">Last Name</label><input id="lastName" placeholder="Smith" autocomplete="off"></div>
 </div>
-<div class="pi-field"><label data-i18n="street">Street Name</label><input id="street" placeholder="221B Baker Street"></div>
+<div class="pi-field"><label data-i18n="street">Street Name</label><input id="street" placeholder="221B Baker Street" autocomplete="off"></div>
 <div class="pi-row">
-<div class="pi-field"><label data-i18n="city">City</label><input id="city" placeholder="London"></div>
+<div class="pi-field"><label data-i18n="city">City</label><input id="city" placeholder="London" autocomplete="off"></div>
 <div class="pi-field"><label data-i18n="country">Country</label>
 <select id="country" onchange="autoPhoneCode()">
 <option value="United Kingdom" selected>🇬🇧 United Kingdom</option><option value="Turkey">🇹🇷 Turkey</option><option value="Germany">🇩🇪 Germany</option><option value="France">🇫🇷 France</option><option value="Spain">🇪🇸 Spain</option><option value="Italy">🇮🇹 Italy</option><option value="Netherlands">🇳🇱 Netherlands</option><option value="Greece">🇬🇷 Greece</option><option value="Poland">🇵🇱 Poland</option><option value="Portugal">🇵🇹 Portugal</option><option value="Indonesia">🇮🇩 Indonesia</option><option value="China">🇨🇳 China</option><option value="United States">🇺🇸 United States</option><option value="Canada">🇨🇦 Canada</option><option value="Australia">🇦🇺 Australia</option><option value="Afghanistan">🇦🇫 Afghanistan</option><option value="Albania">🇦🇱 Albania</option><option value="Algeria">🇩🇿 Algeria</option><option value="Argentina">🇦🇷 Argentina</option><option value="Austria">🇦🇹 Austria</option><option value="Bangladesh">🇧🇩 Bangladesh</option><option value="Belgium">🇧🇪 Belgium</option><option value="Brazil">🇧🇷 Brazil</option><option value="Bulgaria">🇧🇬 Bulgaria</option><option value="Chile">🇨🇱 Chile</option><option value="Colombia">🇨🇴 Colombia</option><option value="Denmark">🇩🇰 Denmark</option><option value="Egypt">🇪🇬 Egypt</option><option value="Finland">🇫🇮 Finland</option><option value="India">🇮🇳 India</option><option value="Japan">🇯🇵 Japan</option><option value="Mexico">🇲🇽 Mexico</option><option value="Norway">🇳🇴 Norway</option><option value="Pakistan">🇵🇰 Pakistan</option><option value="Romania">🇷🇴 Romania</option><option value="Russia">🇷🇺 Russia</option><option value="Saudi Arabia">🇸🇦 Saudi Arabia</option><option value="Singapore">🇸🇬 Singapore</option><option value="South Africa">🇿🇦 South Africa</option><option value="Sweden">🇸🇪 Sweden</option><option value="Switzerland">🇨🇭 Switzerland</option><option value="Thailand">🇹🇭 Thailand</option><option value="Ukraine">🇺🇦 Ukraine</option><option value="UAE">🇦🇪 UAE</option>
 </select>
 </div>
 </div>
-<div class="pi-field"><label data-i18n="postcode">Postcode</label><input id="postcode" placeholder="W1U 6TJ"></div>
+<div class="pi-field"><label data-i18n="postcode">Postcode</label><input id="postcode" placeholder="W1U 6TJ" autocomplete="off"></div>
 <div class="pi-field"><label data-i18n="phone">Phone Number</label>
 <div class="phone-group">
 <select id="phoneCode" class="phone-code">
 <option value="+44" selected>🇬🇧 +44</option><option value="+90">🇹🇷 +90</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+30">🇬🇷 +30</option><option value="+48">🇵🇱 +48</option><option value="+351">🇵🇹 +351</option><option value="+62">🇮🇩 +62</option><option value="+86">🇨🇳 +86</option><option value="+1">🇺🇸 +1</option><option value="+61">🇦🇺 +61</option><option value="+91">🇮🇳 +91</option><option value="+81">🇯🇵 +81</option><option value="+971">🇦🇪 +971</option><option value="+27">🇿🇦 +27</option>
 </select>
-<input id="phone" class="phone-number" type="tel" placeholder="7123 456789">
+<input id="phone" class="phone-number" type="tel" placeholder="7123 456789" autocomplete="off">
 </div>
 </div>
-<div class="pi-field"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="james@email.co.uk"></div>
+<div class="pi-field"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="james@email.co.uk" autocomplete="off" readonly></div>
 <button class="pi-save" onclick="savePI()" data-i18n="save">SAVE CHANGES</button>
 </div>
 </div>
@@ -134,6 +134,24 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <script>
 // FIXED: supabaseClient MUST be first
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
+// === FIX FOR TOKEN LOOP ===
+// This handles the #access_token=... from email confirmation and removes it
+(async ()=>{
+  if(window.location.hash && window.location.hash.includes('access_token')){
+    console.log('Found access_token in URL, processing...');
+    // Supabase automatically detects it, we just need to clean URL after
+    const { data, error } = await supabaseClient.auth.getSession();
+    setTimeout(()=>{
+      // remove hash so it doesn't ask again
+      history.replaceState(null, null, window.location.pathname);
+      if(data.session){
+        console.log('Session restored!');
+        checkUser();
+      }
+    }, 800);
+  }
+})();
 
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
