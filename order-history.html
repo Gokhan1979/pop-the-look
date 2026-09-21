@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order History - POP THE LOOK</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:white}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid #e5e5e5;position:sticky;top:0;background:white;z-index:10}
+header a{text-decoration:none;color:black;font-weight:800;font-size:14px}
+.logo{height:40px}
+.container{max-width:800px;margin:0 auto;padding:20px}
+h1{font-size:24px;font-weight:900;margin-bottom:6px}
+.sub{color:#777;font-size:13px;margin-bottom:20px}
+.order-card{border:1.5px solid #eee;border-radius:16px;padding:16px;margin-bottom:14px;background:white}
+.order-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.order-id{font-weight:900;font-size:14px}
+.order-date{font-size:12px;color:#888}
+.status{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:800}
+.s-pending{background:#fff3cd;color:#856404}
+.s-shipped{background:#cce5ff;color:#004085}
+.s-delivered{background:#d4edda;color:#155724}
+.items{font-size:13px;color:#333;margin:10px 0}
+.track-btn{background:black;color:white;border:none;padding:10px 16px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;margin-top:8px}
+.track-box{margin-top:12px;display:none;border-top:1px dashed #eee;padding-top:12px}
+.track-step{display:flex;gap:10px;margin-bottom:10px}
+.dot{width:10px;height:10px;border-radius:50%;background:#ddd;margin-top:4px}
+.dot.active{background:black}
+.step-text{font-size:13px}
+.empty{text-align:center;padding:60px 20px;color:#888}
+</style>
+</head>
+<body>
+<header>
+<a href="index.html">← Back</a>
+<img src="logo.png" class="logo">
+<a href="shop.html">Shop</a>
+</header>
+
+<div class="container">
+<h1 data-i18n="myOrders">My Orders</h1>
+<p class="sub">View and track your old and new orders</p>
+<div id="ordersList"></div>
+</div>
+
+<script>
+const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
+// DEMO ORDERS - later we will connect to Supabase orders table
+function getOrders(){
+  const localOrders = JSON.parse(localStorage.getItem('orders')||'[]');
+  if(localOrders.length>0) return localOrders;
+  // demo if empty
+  return [
+    {id:"PTL-10234", date:"2026-05-10", status:"shipped", total:"£89.00", items:"Hoodie x1, Cargo x1"},
+    {id:"PTL-10021", date:"2026-03-22", status:"delivered", total:"£45.00", items:"Tee x2"},
+    {id:"PTL-09812", date:"2026-02-05", status:"delivered", total:"£120.00", items:"Dress x1"}
+  ];
+}
+
+function render(){
+  const orders = getOrders();
+  const list = document.getElementById('ordersList');
+  if(orders.length===0){
+    list.innerHTML = `<div class="empty">No orders yet. <br><a href="shop.html">Start shopping</a></div>`;
+    return;
+  }
+  list.innerHTML = orders.map(o=>`
+    <div class="order-card">
+      <div class="order-top">
+        <div>
+          <div class="order-id">${o.id}</div>
+          <div class="order-date">${o.date} • ${o.total}</div>
+        </div>
+        <span class="status s-${o.status}">${o.status.toUpperCase()}</span>
+      </div>
+      <div class="items">${o.items}</div>
+      <button class="track-btn" onclick="toggleTrack('${o.id}')">Track Order</button>
+      <div class="track-box" id="track-${o.id}">
+        <div class="track-step"><div class="dot active"></div><div class="step-text"><b>Order Placed</b><br>${o.date}</div></div>
+        <div class="track-step"><div class="dot ${o.status!='pending'?'active':''}"></div><div class="step-text"><b>Shipped</b><br>On the way</div></div>
+        <div class="track-step"><div class="dot ${o.status=='delivered'?'active':''}"></div><div class="step-text"><b>Delivered</b><br>${o.status=='delivered'?'Delivered':'Pending'}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTrack(id){
+  const el=document.getElementById('track-'+id);
+  el.style.display = el.style.display==='block'?'none':'block';
+}
+
+render();
+</script>
+</body>
+</html>
