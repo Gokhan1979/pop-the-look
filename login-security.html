@@ -28,58 +28,58 @@ label{font-size:10px;font-weight:800;color:#888;text-transform:uppercase;letter-
 </head>
 <body>
 <header>
-<a href="index.html">← Back</a>
+<a href="index.html" data-i18n="back">← Back</a>
 <img src="logo.png" class="logo">
-<a href="shop.html">Shop</a>
+<a href="shop.html" data-i18n="shop">Shop</a>
 </header>
 <div class="container">
-<h1>Login & Security</h1>
+<h1 data-i18n="title">Login & Security</h1>
 
 <div class="card">
-<h2>Change Email</h2>
-<label>Current Email</label>
+<h2 data-i18n="changeEmail">Change Email</h2>
+<label data-i18n="currentEmail">Current Email</label>
 <div class="input-wrap"><input id="currentEmail" type="email" disabled style="background:#f5f5f5" autocomplete="off"></div>
 
-<label>Current Password (to confirm it's you)</label>
+<label data-i18n="currentPassConfirm">Current Password (to confirm it's you)</label>
 <div class="input-wrap">
-<input id="currentPassForEmail" type="password" placeholder="enter current password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+<input id="currentPassForEmail" type="password" data-i18n-placeholder="enterCurrentPass" placeholder="enter current password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
 <button class="eye" type="button" onclick="toggleEye('currentPassForEmail', this)">👁️</button>
 </div>
 
-<label>New Email</label>
-<div class="input-wrap"><input id="newEmail" type="email" placeholder="new@email.com" autocomplete="off"></div>
+<label data-i18n="newEmail">New Email</label>
+<div class="input-wrap"><input id="newEmail" type="email" data-i18n-placeholder="newEmailPh" placeholder="new@email.com" autocomplete="off"></div>
 
-<label>Confirm New Email</label>
-<div class="input-wrap"><input id="confirmEmail" type="email" placeholder="confirm new email" autocomplete="off"></div>
+<label data-i18n="confirmNewEmail">Confirm New Email</label>
+<div class="input-wrap"><input id="confirmEmail" type="email" data-i18n-placeholder="confirmNewEmailPh" placeholder="confirm new email" autocomplete="off"></div>
 
-<button class="save" id="emailBtn" onclick="changeEmail()">SEND CONFIRMATION EMAIL</button>
+<button class="save" id="emailBtn" onclick="changeEmail()" data-i18n="sendConfirm">SEND CONFIRMATION EMAIL</button>
 <div id="emailSuccess" class="success"></div>
 <div id="emailError" class="error"></div>
-<p class="note">We will send a confirmation to your NEW email. Check spam too. Only after clicking link, email changes.</p>
+<p class="note" data-i18n="emailNote">We will send a confirmation to your NEW email. Check spam too. Only after clicking link, email changes.</p>
 </div>
 
 <div class="card">
-<h2>Change Password</h2>
+<h2 data-i18n="changePass">Change Password</h2>
 
-<label>Current Password</label>
+<label data-i18n="currentPass">Current Password</label>
 <div class="input-wrap">
-<input id="currentPassForPassword" type="password" placeholder="current password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+<input id="currentPassForPassword" type="password" data-i18n-placeholder="currentPassPh" placeholder="current password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
 <button class="eye" type="button" onclick="toggleEye('currentPassForPassword', this)">👁️</button>
 </div>
 
-<label>New Password</label>
+<label data-i18n="newPass">New Password</label>
 <div class="input-wrap">
-<input id="newPassword" type="password" placeholder="new password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+<input id="newPassword" type="password" data-i18n-placeholder="newPassPh" placeholder="new password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
 <button class="eye" type="button" onclick="toggleEye('newPassword', this)">👁️</button>
 </div>
 
-<label>Confirm New Password</label>
+<label data-i18n="confirmNewPass">Confirm New Password</label>
 <div class="input-wrap">
-<input id="confirmPassword" type="password" placeholder="confirm new password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+<input id="confirmPassword" type="password" data-i18n-placeholder="confirmNewPassPh" placeholder="confirm new password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
 <button class="eye" type="button" onclick="toggleEye('confirmPassword', this)">👁️</button>
 </div>
 
-<button class="save" id="passBtn" onclick="changePassword()">CHANGE PASSWORD</button>
+<button class="save" id="passBtn" onclick="changePassword()" data-i18n="changePassBtn">CHANGE PASSWORD</button>
 <div id="passSuccess" class="success"></div>
 <div id="passError" class="error"></div>
 </div>
@@ -93,8 +93,10 @@ const supabaseClient=supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { au
 async function loadUser(){
   const {data:{session}} = await supabaseClient.auth.getSession();
   if(!session){
-    document.getElementById('emailError').textContent="No session. Go to signin.html and login first.";
-    document.getElementById('emailError').style.display='block';
+    const errEl=document.getElementById('emailError');
+    const lang=localStorage.getItem('lang')||'en';
+    errEl.textContent=(translations[lang]||translations.en).noSession;
+    errEl.style.display='block';
     return;
   }
   document.getElementById('currentEmail').value = session.user.email;
@@ -103,8 +105,8 @@ loadUser();
 
 function toggleEye(id, btn){
   const input = document.getElementById(id);
-  input.type = input.type==='password' ? 'text' : 'password';
-  btn.textContent = input.type==='password' ? '👁️' : '🙈';
+  input.type = input.type==='password'? 'text' : 'password';
+  btn.textContent = input.type==='password'? '👁️' : '🙈';
 }
 
 async function changeEmail(){
@@ -114,23 +116,25 @@ async function changeEmail(){
   const err = document.getElementById('emailError');
   const succ = document.getElementById('emailSuccess');
   const btn = document.getElementById('emailBtn');
+  const lang=localStorage.getItem('lang')||'en';
+  const t=translations[lang]||translations.en;
   err.style.display='none'; succ.style.display='none';
-  if(!currentPassword){ err.textContent="Enter current password"; err.style.display='block'; return; }
-  if(!newEmail || newEmail!==confirmEmail){ err.textContent="Emails do not match"; err.style.display='block'; return; }
-  btn.textContent="SENDING..."; btn.disabled=true;
+  if(!currentPassword){ err.textContent=t.enterCurrentPass; err.style.display='block'; return; }
+  if(!newEmail || newEmail!==confirmEmail){ err.textContent=t.emailsNoMatch; err.style.display='block'; return; }
+  btn.textContent=t.sending; btn.disabled=true;
   try{
     const {data:{session: oldSession}} = await supabaseClient.auth.getSession();
     const currentEmail = oldSession?.user?.email || document.getElementById('currentEmail').value;
     const {error: signInErr} = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password: currentPassword });
-    if(signInErr) throw new Error("Wrong current password");
-    
+    if(signInErr) throw new Error(t.wrongPass);
+
     const {error} = await supabaseClient.auth.updateUser({ email: newEmail });
     if(error) throw error;
 
-    succ.textContent="✅ Confirmation sent to " + newEmail + "! Check inbox + SPAM.";
+    succ.textContent="✅ "+t.confirmSentTo+" " + newEmail + "! "+t.checkSpam;
     succ.style.display='block';
   }catch(e){ err.textContent=e.message; err.style.display='block'; }
-  finally { btn.textContent="SEND CONFIRMATION EMAIL"; btn.disabled=false; }
+  finally { btn.textContent=t.sendConfirm; btn.disabled=false; }
 }
 
 async function changePassword(){
@@ -140,30 +144,58 @@ async function changePassword(){
   const err = document.getElementById('passError');
   const succ = document.getElementById('passSuccess');
   const btn = document.getElementById('passBtn');
+  const lang=localStorage.getItem('lang')||'en';
+  const t=translations[lang]||translations.en;
   err.style.display='none'; succ.style.display='none';
 
-  if(!currentPass){ err.textContent="Enter current password"; err.style.display='block'; return; }
-  if(newPass.length < 6){ err.textContent="New password must be at least 6 characters"; err.style.display='block'; return; }
-  if(newPass !== confirmPass){ err.textContent="New passwords do not match"; err.style.display='block'; return; }
+  if(!currentPass){ err.textContent=t.enterCurrentPass; err.style.display='block'; return; }
+  if(newPass.length < 6){ err.textContent=t.passMin; err.style.display='block'; return; }
+  if(newPass!== confirmPass){ err.textContent=t.passNoMatch; err.style.display='block'; return; }
 
-  btn.textContent="UPDATING..."; btn.disabled=true;
+  btn.textContent=t.updating; btn.disabled=true;
   try{
     const {data:{session}} = await supabaseClient.auth.getSession();
     const currentEmail = session.user.email;
     const {error: signInErr} = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password: currentPass });
-    if(signInErr) throw new Error("Wrong current password");
+    if(signInErr) throw new Error(t.wrongPass);
 
     const {error} = await supabaseClient.auth.updateUser({ password: newPass });
     if(error) throw error;
 
-    succ.textContent="✅ Password changed successfully!";
+    succ.textContent="✅ "+t.passChanged;
     succ.style.display='block';
     document.getElementById('currentPassForPassword').value='';
     document.getElementById('newPassword').value='';
     document.getElementById('confirmPassword').value='';
   }catch(e){ err.textContent=e.message; err.style.display='block'; }
-  finally{ btn.textContent="CHANGE PASSWORD"; btn.disabled=false; }
+  finally{ btn.textContent=t.changePassBtn; btn.disabled=false; }
 }
+
+// TRANSLATIONS ADDED - NOT DELETING YOUR CODE
+const translations={
+en:{back:"← Back",shop:"Shop",title:"Login & Security",changeEmail:"Change Email",currentEmail:"Current Email",currentPassConfirm:"Current Password (to confirm it's you)",newEmail:"New Email",confirmNewEmail:"Confirm New Email",sendConfirm:"SEND CONFIRMATION EMAIL",emailNote:"We will send a confirmation to your NEW email. Check spam too. Only after clicking link, email changes.",changePass:"Change Password",currentPass:"Current Password",newPass:"New Password",confirmNewPass:"Confirm New Password",changePassBtn:"CHANGE PASSWORD",enterCurrentPass:"enter current password",newEmailPh:"new@email.com",confirmNewEmailPh:"confirm new email",currentPassPh:"current password",newPassPh:"new password",confirmNewPassPh:"confirm new password",noSession:"No session. Go to signin.html and login first.",enterCurrentPass:"Enter current password",emailsNoMatch:"Emails do not match",sending:"SENDING...",wrongPass:"Wrong current password",confirmSentTo:"Confirmation sent to",checkSpam:"Check inbox + SPAM.",updating:"UPDATING...",passMin:"New password must be at least 6 characters",passNoMatch:"New passwords do not match",passChanged:"Password changed successfully!"},
+tr:{back:"← Geri",shop:"Mağaza",title:"Giriş ve Güvenlik",changeEmail:"E-posta Değiştir",currentEmail:"Mevcut E-posta",currentPassConfirm:"Mevcut Şifre (doğrulamak için)",newEmail:"Yeni E-posta",confirmNewEmail:"Yeni E-postayı Onayla",sendConfirm:"ONAY E-POSTASI GÖNDER",emailNote:"YENİ e-postanıza onay göndereceğiz. Spam'i de kontrol edin. Bağlantıya tıkladıktan sonra e-posta değişir.",changePass:"Şifre Değiştir",currentPass:"Mevcut Şifre",newPass:"Yeni Şifre",confirmNewPass:"Yeni Şifreyi Onayla",changePassBtn:"ŞİFREYİ DEĞİŞTİR",enterCurrentPass:"mevcut şifreyi girin",newEmailPh:"yeni@eposta.com",confirmNewEmailPh:"yeni e-postayı onayla",currentPassPh:"mevcut şifre",newPassPh:"yeni şifre",confirmNewPassPh:"yeni şifreyi onayla",noSession:"Oturum yok. Önce signin.html'e gidip giriş yapın.",enterCurrentPass:"Mevcut şifreyi girin",emailsNoMatch:"E-postalar eşleşmiyor",sending:"GÖNDERİLİYOR...",wrongPass:"Yanlış mevcut şifre",confirmSentTo:"Onay gönderildi:",checkSpam:"Gelen kutusu + SPAM kontrol edin.",updating:"GÜNCELLENİYOR...",passMin:"Yeni şifre en az 6 karakter olmalı",passNoMatch:"Yeni şifreler eşleşmiyor",passChanged:"Şifre başarıyla değiştirildi!"},
+de:{back:"← Zurück",shop:"Shop",title:"Login & Sicherheit",changeEmail:"E-Mail ändern",currentEmail:"Aktuelle E-Mail",currentPassConfirm:"Aktuelles Passwort (zur Bestätigung)",newEmail:"Neue E-Mail",confirmNewEmail:"Neue E-Mail bestätigen",sendConfirm:"BESTÄTIGUNG SENDEN",emailNote:"Wir senden eine Bestätigung an Ihre NEUE E-Mail. Prüfen Sie auch Spam.",changePass:"Passwort ändern",currentPass:"Aktuelles Passwort",newPass:"Neues Passwort",confirmNewPass:"Neues Passwort bestätigen",changePassBtn:"PASSWORT ÄNDERN",enterCurrentPass:"aktuelles Passwort eingeben",newEmailPh:"neue@email.com",confirmNewEmailPh:"neue E-Mail bestätigen",currentPassPh:"aktuelles Passwort",newPassPh:"neues Passwort",confirmNewPassPh:"neues Passwort bestätigen",noSession:"Keine Sitzung. Bitte einloggen.",enterCurrentPass:"Aktuelles Passwort eingeben",emailsNoMatch:"E-Mails stimmen nicht überein",sending:"SENDEN...",wrongPass:"Falsches aktuelles Passwort",confirmSentTo:"Bestätigung gesendet an",checkSpam:"Inbox + SPAM prüfen.",updating:"AKTUALISIEREN...",passMin:"Neues Passwort muss mindestens 6 Zeichen haben",passNoMatch:"Neue Passwörter stimmen nicht überein",passChanged:"Passwort erfolgreich geändert!"},
+fr:{back:"← Retour",shop:"Boutique",title:"Connexion et sécurité",changeEmail:"Changer l'e-mail",currentEmail:"E-mail actuel",currentPassConfirm:"Mot de passe actuel (pour confirmer)",newEmail:"Nouvel e-mail",confirmNewEmail:"Confirmer nouvel e-mail",sendConfirm:"ENVOYER E-MAIL DE CONFIRMATION",emailNote:"Nous enverrons une confirmation à votre NOUVEL e-mail. Vérifiez spam.",changePass:"Changer mot de passe",currentPass:"Mot de passe actuel",newPass:"Nouveau mot de passe",confirmNewPass:"Confirmer nouveau mot de passe",changePassBtn:"CHANGER MOT DE PASSE",enterCurrentPass:"entrez mot de passe actuel",newEmailPh:"nouvel@email.com",confirmNewEmailPh:"confirmer nouvel e-mail",currentPassPh:"mot de passe actuel",newPassPh:"nouveau mot de passe",confirmNewPassPh:"confirmer nouveau mot de passe",noSession:"Pas de session. Connectez-vous.",enterCurrentPass:"Entrez mot de passe actuel",emailsNoMatch:"Les e-mails ne correspondent pas",sending:"ENVOI...",wrongPass:"Mauvais mot de passe actuel",confirmSentTo:"Confirmation envoyée à",checkSpam:"Vérifiez inbox + SPAM.",updating:"MISE À JOUR...",passMin:"Le nouveau mot de passe doit avoir au moins 6 caractères",passNoMatch:"Les nouveaux mots de passe ne correspondent pas",passChanged:"Mot de passe changé avec succès!"},
+es:{back:"← Volver",shop:"Tienda",title:"Inicio de sesión y seguridad",changeEmail:"Cambiar correo",currentEmail:"Correo actual",currentPassConfirm:"Contraseña actual (para confirmar)",newEmail:"Nuevo correo",confirmNewEmail:"Confirmar nuevo correo",sendConfirm:"ENVIAR CORREO DE CONFIRMACIÓN",emailNote:"Enviaremos confirmación a tu NUEVO correo. Revisa spam.",changePass:"Cambiar contraseña",currentPass:"Contraseña actual",newPass:"Nueva contraseña",confirmNewPass:"Confirmar nueva contraseña",changePassBtn:"CAMBIAR CONTRASEÑA",enterCurrentPass:"ingrese contraseña actual",newEmailPh:"nuevo@correo.com",confirmNewEmailPh:"confirmar nuevo correo",currentPassPh:"contraseña actual",newPassPh:"nueva contraseña",confirmNewPassPh:"confirmar nueva contraseña",noSession:"Sin sesión. Inicia sesión.",enterCurrentPass:"Ingrese contraseña actual",emailsNoMatch:"Correos no coinciden",sending:"ENVIANDO...",wrongPass:"Contraseña actual incorrecta",confirmSentTo:"Confirmación enviada a",checkSpam:"Revisa inbox + SPAM.",updating:"ACTUALIZANDO...",passMin:"Nueva contraseña debe tener al menos 6 caracteres",passNoMatch:"Nuevas contraseñas no coinciden",passChanged:"¡Contraseña cambiada con éxito!"},
+it:{back:"← Indietro",shop:"Negozio",title:"Accesso e sicurezza",changeEmail:"Cambia Email",currentEmail:"Email attuale",currentPassConfirm:"Password attuale (per confermare)",newEmail:"Nuova Email",confirmNewEmail:"Conferma nuova Email",sendConfirm:"INVIA EMAIL DI CONFERMA",emailNote:"Invieremo conferma alla tua NUOVA email. Controlla spam.",changePass:"Cambia Password",currentPass:"Password attuale",newPass:"Nuova Password",confirmNewPass:"Conferma nuova Password",changePassBtn:"CAMBIA PASSWORD",enterCurrentPass:"inserisci password attuale",newEmailPh:"nuova@email.com",confirmNewEmailPh:"conferma nuova email",currentPassPh:"password attuale",newPassPh:"nuova password",confirmNewPassPh:"conferma nuova password",noSession:"Nessuna sessione. Effettua login.",enterCurrentPass:"Inserisci password attuale",emailsNoMatch:"Email non corrispondono",sending:"INVIO...",wrongPass:"Password attuale errata",confirmSentTo:"Conferma inviata a",checkSpam:"Controlla inbox + SPAM.",updating:"AGGIORNAMENTO...",passMin:"Nuova password deve avere almeno 6 caratteri",passNoMatch:"Le nuove password non corrispondono",passChanged:"Password cambiata con successo!"},
+nl:{back:"← Terug",shop:"Winkel",title:"Inloggen en beveiliging",changeEmail:"E-mail wijzigen",currentEmail:"Huidige e-mail",currentPassConfirm:"Huidig wachtwoord (ter bevestiging)",newEmail:"Nieuwe e-mail",confirmNewEmail:"Bevestig nieuwe e-mail",sendConfirm:"BEVESTIGING VERZENDEN",emailNote:"We sturen bevestiging naar je NIEUWE e-mail. Check ook spam.",changePass:"Wachtwoord wijzigen",currentPass:"Huidig wachtwoord",newPass:"Nieuw wachtwoord",confirmNewPass:"Bevestig nieuw wachtwoord",changePassBtn:"WACHTWOORD WIJZIGEN",enterCurrentPass:"voer huidig wachtwoord in",newEmailPh:"nieuwe@email.com",confirmNewEmailPh:"bevestig nieuwe e-mail",currentPassPh:"huidig wachtwoord",newPassPh:"nieuw wachtwoord",confirmNewPassPh:"bevestig nieuw wachtwoord",noSession:"Geen sessie. Log eerst in.",enterCurrentPass:"Voer huidig wachtwoord in",emailsNoMatch:"E-mails komen niet overeen",sending:"VERZENDEN...",wrongPass:"Verkeerd huidig wachtwoord",confirmSentTo:"Bevestiging verzonden naar",checkSpam:"Check inbox + SPAM.",updating:"BIJWERKEN...",passMin:"Nieuw wachtwoord moet minimaal 6 tekens zijn",passNoMatch:"Nieuwe wachtwoorden komen niet overeen",passChanged:"Wachtwoord succesvol gewijzigd!"},
+el:{back:"← Πίσω",shop:"Κατάστημα",title:"Σύνδεση και ασφάλεια",changeEmail:"Αλλαγή Email",currentEmail:"Τρέχον Email",currentPassConfirm:"Τρέχων κωδικός (για επιβεβαίωση)",newEmail:"Νέο Email",confirmNewEmail:"Επιβεβαίωση νέου Email",sendConfirm:"ΑΠΟΣΤΟΛΗ ΕΠΙΒΕΒΑΙΩΣΗΣ",emailNote:"Θα στείλουμε επιβεβαίωση στο ΝΕΟ email σας. Ελέγξτε spam.",changePass:"Αλλαγή κωδικού",currentPass:"Τρέχων κωδικός",newPass:"Νέος κωδικός",confirmNewPass:"Επιβεβαίωση νέου κωδικού",changePassBtn:"ΑΛΛΑΓΗ ΚΩΔΙΚΟΥ",enterCurrentPass:"εισαγάγετε τρέχοντα κωδικό",newEmailPh:"νεο@email.com",confirmNewEmailPh:"επιβεβαίωση νέου email",currentPassPh:"τρέχων κωδικός",newPassPh:"νέος κωδικός",confirmNewPassPh:"επιβεβαίωση νέου κωδικού",noSession:"Καμία συνεδρία. Συνδεθείτε.",enterCurrentPass:"Εισάγετε τρέχοντα κωδικό",emailsNoMatch:"Τα email δεν ταιριάζουν",sending:"ΑΠΟΣΤΟΛΗ...",wrongPass:"Λάθος τρέχων κωδικός",confirmSentTo:"Επιβεβαίωση στάλθηκε σε",checkSpam:"Ελέγξτε inbox + SPAM.",updating:"ΕΝΗΜΕΡΩΣΗ...",passMin:"Νέος κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες",passNoMatch:"Οι νέοι κωδικοί δεν ταιριάζουν",passChanged:"Ο κωδικός άλλαξε επιτυχώς!"},
+pl:{back:"← Wstecz",shop:"Sklep",title:"Logowanie i bezpieczeństwo",changeEmail:"Zmień e-mail",currentEmail:"Aktualny e-mail",currentPassConfirm:"Aktualne hasło (aby potwierdzić)",newEmail:"Nowy e-mail",confirmNewEmail:"Potwierdź nowy e-mail",sendConfirm:"WYŚLIJ POTWIERDZENIE",emailNote:"Wyślemy potwierdzenie na Twój NOWY e-mail. Sprawdź spam.",changePass:"Zmień hasło",currentPass:"Aktualne hasło",newPass:"Nowe hasło",confirmNewPass:"Potwierdź nowe hasło",changePassBtn:"ZMIEŃ HASŁO",enterCurrentPass:"wpisz aktualne hasło",newEmailPh:"nowy@email.com",confirmNewEmailPh:"potwierdź nowy e-mail",currentPassPh:"aktualne hasło",newPassPh:"nowe hasło",confirmNewPassPh:"potwierdź nowe hasło",noSession:"Brak sesji. Zaloguj się.",enterCurrentPass:"Wpisz aktualne hasło",emailsNoMatch:"E-maile nie pasują",sending:"WYSYŁANIE...",wrongPass:"Błędne aktualne hasło",confirmSentTo:"Potwierdzenie wysłane do",checkSpam:"Sprawdź inbox + SPAM.",updating:"AKTUALIZOWANIE...",passMin:"Nowe hasło musi mieć co najmniej 6 znaków",passNoMatch:"Nowe hasła nie pasują",passChanged:"Hasło zmienione pomyślnie!"},
+pt:{back:"← Voltar",shop:"Loja",title:"Login e segurança",changeEmail:"Alterar e-mail",currentEmail:"E-mail atual",currentPassConfirm:"Senha atual (para confirmar)",newEmail:"Novo e-mail",confirmNewEmail:"Confirmar novo e-mail",sendConfirm:"ENVIAR CONFIRMAÇÃO",emailNote:"Enviaremos confirmação para seu NOVO e-mail. Verifique spam.",changePass:"Alterar senha",currentPass:"Senha atual",newPass:"Nova senha",confirmNewPass:"Confirmar nova senha",changePassBtn:"ALTERAR SENHA",enterCurrentPass:"digite senha atual",newEmailPh:"novo@email.com",confirmNewEmailPh:"confirmar novo e-mail",currentPassPh:"senha atual",newPassPh:"nova senha",confirmNewPassPh:"confirmar nova senha",noSession:"Sem sessão. Faça login.",enterCurrentPass:"Digite senha atual",emailsNoMatch:"E-mails não coincidem",sending:"ENVIANDO...",wrongPass:"Senha atual incorreta",confirmSentTo:"Confirmação enviada para",checkSpam:"Verifique inbox + SPAM.",updating:"ATUALIZANDO...",passMin:"Nova senha deve ter pelo menos 6 caracteres",passNoMatch:"Novas senhas não coincidem",passChanged:"Senha alterada com sucesso!"},
+id:{back:"← Kembali",shop:"Toko",title:"Login & Keamanan",changeEmail:"Ubah Email",currentEmail:"Email saat ini",currentPassConfirm:"Kata sandi saat ini (untuk konfirmasi)",newEmail:"Email baru",confirmNewEmail:"Konfirmasi email baru",sendConfirm:"KIRIM KONFIRMASI",emailNote:"Kami akan kirim konfirmasi ke email BARU Anda. Cek spam juga.",changePass:"Ubah Kata Sandi",currentPass:"Kata sandi saat ini",newPass:"Kata sandi baru",confirmNewPass:"Konfirmasi kata sandi baru",changePassBtn:"UBAH KATA SANDI",enterCurrentPass:"masukkan kata sandi saat ini",newEmailPh:"baru@email.com",confirmNewEmailPh:"konfirmasi email baru",currentPassPh:"kata sandi saat ini",newPassPh:"kata sandi baru",confirmNewPassPh:"konfirmasi kata sandi baru",noSession:"Tidak ada sesi. Login dulu.",enterCurrentPass:"Masukkan kata sandi saat ini",emailsNoMatch:"Email tidak cocok",sending:"MENGIRIM...",wrongPass:"Kata sandi saat ini salah",confirmSentTo:"Konfirmasi dikirim ke",checkSpam:"Cek inbox + SPAM.",updating:"MEMPERBARUI...",passMin:"Kata sandi baru minimal 6 karakter",passNoMatch:"Kata sandi baru tidak cocok",passChanged:"Kata sandi berhasil diubah!"},
+zh:{back:"← 返回",shop:"商店",title:"登录与安全",changeEmail:"更改邮箱",currentEmail:"当前邮箱",currentPassConfirm:"当前密码（确认身份）",newEmail:"新邮箱",confirmNewEmail:"确认新邮箱",sendConfirm:"发送确认邮件",emailNote:"我们将向您的新邮箱发送确认邮件。也请检查垃圾邮件。点击链接后邮箱才会更改。",changePass:"更改密码",currentPass:"当前密码",newPass:"新密码",confirmNewPass:"确认新密码",changePassBtn:"更改密码",enterCurrentPass:"输入当前密码",newEmailPh:"新邮箱",confirmNewEmailPh:"确认新邮箱",currentPassPh:"当前密码",newPassPh:"新密码",confirmNewPassPh:"确认新密码",noSession:"无会话。请先登录。",enterCurrentPass:"输入当前密码",emailsNoMatch:"邮箱不匹配",sending:"发送中...",wrongPass:"当前密码错误",confirmSentTo:"确认已发送至",checkSpam:"请检查收件箱+垃圾邮件。",updating:"更新中...",passMin:"新密码至少6个字符",passNoMatch:"新密码不匹配",passChanged:"密码更改成功！"}
+};
+const lang=localStorage.getItem('lang')||'en';
+const t=translations[lang]||translations.en;
+document.querySelectorAll('[data-i18n]').forEach(el=>{
+  const k=el.getAttribute('data-i18n');
+  if(t[k]) el.textContent=t[k];
+});
+document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+  const k=el.getAttribute('data-i18n-placeholder');
+  if(t[k]) el.placeholder=t[k];
+});
 </script>
 </body>
 </html>
