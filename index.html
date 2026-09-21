@@ -50,8 +50,8 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 .hero{padding:50px 20px;text-align:center}.hero h1{font-size:42px;font-weight:900;line-height:.9}.hero p{color:#777;margin:15px 0 25px;font-size:14px}.shop-btn{background:black;color:white;padding:14px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.card{background:#f5f5f5;border-radius:12px;height:200px;display:flex;align-items:flex-end;padding:12px;font-weight:bold;font-size:13px}
 .overlay{position:fixed;inset:0;background:transparent;display:none;z-index:1000}.overlay.show{display:block}
 .phone-group{display:flex;gap:8px;width:100%}
-.phone-code{width:135px;flex-shrink:0}
-.phone-number{flex:1;min-width:0}
+.phone-code{width:130px!important;flex-shrink:0}
+.phone-number{flex:1!important;min-width:0}
 </style>
 </head>
 <body>
@@ -67,15 +67,18 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="pi-field"><label data-i18n="street">Street Name</label><input id="street" placeholder="221B Baker Street"></div>
 <div class="pi-row">
 <div class="pi-field"><label data-i18n="city">City</label><input id="city" placeholder="London"></div>
-<div class="pi-field"><label data-i18n="country">Country</label><input id="country" value="United Kingdom" oninput="autoPhoneCode()"></div>
+<div class="pi-field"><label data-i18n="country">Country</label>
+<select id="country" onchange="autoPhoneCode()">
+<option value="United Kingdom" selected>🇬🇧 United Kingdom</option><option value="Turkey">🇹🇷 Turkey</option><option value="Germany">🇩🇪 Germany</option><option value="France">🇫🇷 France</option><option value="Spain">🇪🇸 Spain</option><option value="Italy">🇮🇹 Italy</option><option value="Netherlands">🇳🇱 Netherlands</option><option value="Greece">🇬🇷 Greece</option><option value="Poland">🇵🇱 Poland</option><option value="Portugal">🇵🇹 Portugal</option><option value="Indonesia">🇮🇩 Indonesia</option><option value="China">🇨🇳 China</option><option value="United States">🇺🇸 United States</option><option value="Canada">🇨🇦 Canada</option><option value="Australia">🇦🇺 Australia</option><option value="Afghanistan">🇦🇫 Afghanistan</option><option value="Albania">🇦🇱 Albania</option><option value="Algeria">🇩🇿 Algeria</option><option value="Argentina">🇦🇷 Argentina</option><option value="Austria">🇦🇹 Austria</option><option value="Bangladesh">🇧🇩 Bangladesh</option><option value="Belgium">🇧🇪 Belgium</option><option value="Brazil">🇧🇷 Brazil</option><option value="Bulgaria">🇧🇬 Bulgaria</option><option value="Chile">🇨🇱 Chile</option><option value="Colombia">🇨🇴 Colombia</option><option value="Denmark">🇩🇰 Denmark</option><option value="Egypt">🇪🇬 Egypt</option><option value="Finland">🇫🇮 Finland</option><option value="India">🇮🇳 India</option><option value="Japan">🇯🇵 Japan</option><option value="Mexico">🇲🇽 Mexico</option><option value="Norway">🇳🇴 Norway</option><option value="Pakistan">🇵🇰 Pakistan</option><option value="Romania">🇷🇴 Romania</option><option value="Russia">🇷🇺 Russia</option><option value="Saudi Arabia">🇸🇦 Saudi Arabia</option><option value="Singapore">🇸🇬 Singapore</option><option value="South Africa">🇿🇦 South Africa</option><option value="Sweden">🇸🇪 Sweden</option><option value="Switzerland">🇨🇭 Switzerland</option><option value="Thailand">🇹🇭 Thailand</option><option value="Ukraine">🇺🇦 Ukraine</option><option value="UAE">🇦🇪 UAE</option>
+</select>
 </div>
-<!-- POSTCODE FULL WIDTH -->
+</div>
 <div class="pi-field"><label data-i18n="postcode">Postcode</label><input id="postcode" placeholder="W1U 6TJ"></div>
-<!-- COUNTRY CODE + PHONE NUMBER UNDERNEATH POSTCODE -->
+<!-- PHONE UNDERNEATH POSTCODE - CODE + NUMBER SIDE BY SIDE -->
 <div class="pi-field"><label data-i18n="phone">Phone Number</label>
 <div class="phone-group">
 <select id="phoneCode" class="phone-code">
-<option value="+44" selected>🇬🇧 +44 UK</option><option value="+90">🇹🇷 +90</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+30">🇬🇷 +30</option><option value="+48">🇵🇱 +48</option><option value="+351">🇵🇹 +351</option><option value="+62">🇮🇩 +62</option><option value="+86">🇨🇳 +86</option><option value="+1">🇺🇸 +1</option><option value="+93">🇦🇫 +93</option><option value="+355">🇦🇱 +355</option><option value="+213">🇩🇿 +213</option><option value="+61">🇦🇺 +61</option><option value="+43">🇦🇹 +43</option><option value="+32">🇧🇪 +32</option><option value="+55">🇧🇷 +55</option><option value="+359">🇧🇬 +359</option><option value="+1">🇨🇦 +1</option><option value="+45">🇩🇰 +45</option><option value="+20">🇪🇬 +20</option><option value="+358">🇫🇮 +358</option><option value="+91">🇮🇳 +91</option><option value="+81">🇯🇵 +81</option><option value="+52">🇲🇽 +52</option><option value="+47">🇳🇴 +47</option><option value="+92">🇵🇰 +92</option><option value="+40">🇷🇴 +40</option><option value="+7">🇷🇺 +7</option><option value="+966">🇸🇦 +966</option><option value="+65">🇸🇬 +65</option><option value="+27">🇿🇦 +27</option><option value="+82">🇰🇷 +82</option><option value="+34">🇪🇸 +34</option><option value="+46">🇸🇪 +46</option><option value="+41">🇨🇭 +41</option><option value="+66">🇹🇭 +66</option><option value="+380">🇺🇦 +380</option><option value="+971">🇦🇪 +971</option>
+<option value="+44" selected>🇬🇧 +44</option><option value="+90">🇹🇷 +90</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+30">🇬🇷 +30</option><option value="+48">🇵🇱 +48</option><option value="+351">🇵🇹 +351</option><option value="+62">🇮🇩 +62</option><option value="+86">🇨🇳 +86</option><option value="+1">🇺🇸 +1</option><option value="+61">🇦🇺 +61</option><option value="+91">🇮🇳 +91</option><option value="+81">🇯🇵 +81</option><option value="+971">🇦🇪 +971</option><option value="+27">🇿🇦 +27</option>
 </select>
 <input id="phone" class="phone-number" type="tel" placeholder="7123 456789">
 </div>
@@ -126,7 +129,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <script>
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
-const countryCodeMap = {"united kingdom":"+44","uk":"+44","england":"+44","turkey":"+90","türkiye":"+90","germany":"+49","deutschland":"+49","france":"+33","spain":"+34","españa":"+34","italy":"+39","italia":"+39","netherlands":"+31","holland":"+31","greece":"+30","poland":"+48","portugal":"+351","indonesia":"+62","china":"+86","usa":"+1","united states":"+1"};
+const countryCodeMap = {"united kingdom":"+44","uk":"+44","england":"+44","turkey":"+90","türkiye":"+90","germany":"+49","deutschland":"+49","france":"+33","spain":"+34","españa":"+34","italy":"+39","italia":"+39","netherlands":"+31","holland":"+31","greece":"+30","poland":"+48","portugal":"+351","indonesia":"+62","china":"+86","usa":"+1","united states":"+1","canada":"+1","australia":"+61","india":"+91","japan":"+81"};
 function autoPhoneCode(){ const c=document.getElementById('country').value.toLowerCase().trim(); if(countryCodeMap[c]) document.getElementById('phoneCode').value=countryCodeMap[c]; }
 async function openPI(){
   document.getElementById('profileDropdown').classList.remove('show');
@@ -142,7 +145,7 @@ async function savePI(){
   const old = JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(old.profilePhoto) data.profilePhoto = old.profilePhoto;
   localStorage.setItem('personalInfo',JSON.stringify(data));
   try{ await supabaseClient.auth.updateUser({ data:{ first_name:data.firstName, last_name:data.lastName, full_name:data.firstName+' '+data.lastName, phone:fullPhone, phone_code:phoneCode, street:data.street, city:data.city, country:data.country, postcode:data.postcode } }); }catch(e){ console.log(e); }
-  updateHeaderUI(); alert('Saved! Will stay after signout'); closePI();
+  updateHeaderUI(); alert('Saved!'); closePI();
 }
 function uploadPhoto(e){
   const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
