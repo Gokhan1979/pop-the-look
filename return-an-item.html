@@ -42,15 +42,15 @@ h1{font-size:22px;font-weight:900;margin:14px 0}
 </div>
 
 <div class="wrap">
-<h1>Return an Item</h1>
-<div class="sub">Select items you want to return from your received orders. You have 28 days to return.</div>
+<h1 data-i18n="title">Return an Item</h1>
+<div class="sub" data-i18n="sub">Select items you want to return from your received orders. You have 28 days to return.</div>
 
 <div id="ordersList"></div>
 </div>
 
 <div class="return-bar" id="returnBar" style="display:none">
-<div><b id="count">0</b> items to return</div>
-<button onclick="submitReturn()">CONFIRM RETURN</button>
+<div><b id="count">0</b> <span data-i18n="itemsToReturn">items to return</span></div>
+<button onclick="submitReturn()" data-i18n="confirm">CONFIRM RETURN</button>
 </div>
 
 <script>
@@ -85,36 +85,61 @@ function getOrders(){
 
 let toReturn = {}; // itemId -> reason
 
+const translations={
+en:{title:"Return an Item",sub:"Select items you want to return from your received orders. You have 28 days to return.",keep:"KEEP",ret:"RETURN",confirm:"CONFIRM RETURN",itemsToReturn:"items to return",delivered:"Delivered",size:"Size",noOrders:"No delivered orders to return.<br><br>Orders marked as Delivered will appear here.",selectReason:"Select reason",tooBig:"Too big",tooSmall:"Too small",style:"Did not like style",desc:"Not as described",damaged:"Damaged",mind:"Changed mind"},
+tr:{title:"Ürün İade Et",sub:"Teslim alınan siparişlerinizden iade etmek istediklerinizi seçin. 28 gün iade süreniz var.",keep:"TUT",ret:"İADE ET",confirm:"İADEYİ ONAYLA",itemsToReturn:"ürün iade edilecek",delivered:"Teslim Edildi",size:"Beden",noOrders:"İade edilecek teslim edilmiş sipariş yok.<br><br>Teslim Edildi olarak işaretlenen siparişler burada görünecek.",selectReason:"Sebep seçin",tooBig:"Çok büyük",tooSmall:"Çok küçük",style:"Stili beğenmedim",desc:"Açıklamadaki gibi değil",damaged:"Hasarlı",mind:"Vazgeçtim"},
+de:{title:"Artikel zurücksenden",sub:"Wählen Sie Artikel aus gelieferten Bestellungen. 28 Tage Rückgabe.",keep:"BEHALTEN",ret:"ZURÜCKSENDEN",confirm:"RÜCKSENDUNG BESTÄTIGEN",itemsToReturn:"Artikel zum Zurücksenden",delivered:"Geliefert",size:"Größe",noOrders:"Keine gelieferten Bestellungen.",selectReason:"Grund wählen",tooBig:"Zu groß",tooSmall:"Zu klein",style:"Gefällt nicht",desc:"Nicht wie beschrieben",damaged:"Beschädigt",mind:"Meinung geändert"},
+fr:{title:"Artikel zurücksenden",sub:"Sélectionnez les articles à retourner. Vous avez 28 jours.",keep:"GARDER",ret:"RETOURNER",confirm:"CONFIRMER LE RETOUR",itemsToReturn:"articles à retourner",delivered:"Livré",size:"Taille",noOrders:"Aucune commande livrée.",selectReason:"Choisir raison",tooBig:"Trop grand",tooSmall:"Trop petit",style:"Style non aimé",desc:"Non conforme",damaged:"Endommagé",mind:"Changement d'avis"},
+es:{title:"Devolver un artículo",sub:"Selecciona artículos de tus pedidos entregados. 28 días para devolución.",keep:"CONSERVAR",ret:"DEVOLVER",confirm:"CONFIRMAR DEVOLUCIÓN",itemsToReturn:"artículos para devolver",delivered:"Entregado",size:"Talla",noOrders:"No hay pedidos entregados.",selectReason:"Seleccionar motivo",tooBig:"Muy grande",tooSmall:"Muy pequeño",style:"No me gustó",desc:"No como descrito",damaged:"Dañado",mind:"Cambié de opinión"},
+it:{title:"Restituisci un articolo",sub:"Seleziona articoli dagli ordini ricevuti. 28 giorni per reso.",keep:"TIENI",ret:"RESTITUISCI",confirm:"CONFERMA RESO",itemsToReturn:"articoli da restituire",delivered:"Consegnato",size:"Taglia",noOrders:"Nessun ordine consegnato.",selectReason:"Seleziona motivo",tooBig:"Troppo grande",tooSmall:"Troppo piccolo",style:"Stile non piaciuto",desc:"Non come descritto",damaged:"Danneggiato",mind:"Ho cambiato idea"},
+nl:{title:"Artikel retourneren",sub:"Selecteer items uit geleverde bestellingen. 28 dagen retour.",keep:"HOUDEN",ret:"RETOURNEREN",confirm:"RETOUR BEVESTIGEN",itemsToReturn:"items om te retourneren",delivered:"Geleverd",size:"Maat",noOrders:"Geen geleverde bestellingen.",selectReason:"Reden selecteren",tooBig:"Te groot",tooSmall:"Te klein",style:"Stijl bevalt niet",desc:"Niet zoals beschreven",damaged:"Beschadigd",mind:"Van gedachten veranderd"},
+el:{title:"Επιστροφή προϊόντος",sub:"Επιλέξτε είδη από παραδομένες παραγγελίες. 28 ημέρες.",keep:"ΚΡΑΤΗΣΗ",ret:"ΕΠΙΣΤΡΟΦΗ",confirm:"ΕΠΙΒΕΒΑΙΩΣΗ",itemsToReturn:"είδη για επιστροφή",delivered:"Παραδόθηκε",size:"Μέγεθος",noOrders:"Καμία παραδομένη παραγγελία.",selectReason:"Επιλογή λόγου",tooBig:"Πολύ μεγάλο",tooSmall:"Πολύ μικρό",style:"Δεν μου άρεσε",desc:"Όχι όπως περιγράφεται",damaged:"Κατεστραμμένο",mind:"Άλλαξα γνώμη"},
+pl:{title:"Zwróć przedmiot",sub:"Wybierz przedmioty z dostarczonych zamówień. 28 dni na zwrot.",keep:"ZATRZYMAJ",ret:"ZWRÓĆ",confirm:"POTWIERDŹ ZWROT",itemsToReturn:"przedmiotów do zwrotu",delivered:"Dostarczono",size:"Rozmiar",noOrders:"Brak dostarczonych zamówień.",selectReason:"Wybierz powód",tooBig:"Za duże",tooSmall:"Za małe",style:"Nie podoba się styl",desc:"Nie jak opisano",damaged:"Uszkodzone",mind:"Zmieniłem zdanie"},
+pt:{title:"Devolver um item",sub:"Selecione itens de pedidos entregues. 28 dias para devolução.",keep:"MANTER",ret:"DEVOLVER",confirm:"CONFIRMAR DEVOLUÇÃO",itemsToReturn:"itens para devolver",delivered:"Entregue",size:"Tamanho",noOrders:"Nenhum pedido entregue.",selectReason:"Selecione motivo",tooBig:"Muito grande",tooSmall:"Muito pequeno",style:"Não gostei",desc:"Não como descrito",damaged:"Danificado",mind:"Mudei de ideia"},
+id:{title:"Kembalikan barang",sub:"Pilih item dari pesanan diterima. 28 hari retur.",keep:"SIMPAN",ret:"KEMBALIKAN",confirm:"KONFIRMASI RETUR",itemsToReturn:"item untuk dikembalikan",delivered:"Dikirim",size:"Ukuran",noOrders:"Tidak ada pesanan terkirim.",selectReason:"Pilih alasan",tooBig:"Terlalu besar",tooSmall:"Terlalu kecil",style:"Tidak suka gaya",desc:"Tidak sesuai deskripsi",damaged:"Rusak",mind:"Berubah pikiran"},
+zh:{title:"退货",sub:"从已收到的订单中选择要退回的商品。28天退货期。",keep:"保留",ret:"退货",confirm:"确认退货",itemsToReturn:"件商品要退",delivered:"已送达",size:"尺码",noOrders:"没有已送达的订单。",selectReason:"选择原因",tooBig:"太大",tooSmall:"太小",style:"不喜欢款式",desc:"与描述不符",damaged:"损坏",mind:"改变主意"}
+};
+
+function getLang(){ return localStorage.getItem('lang')||'en'; }
+function tr(key){ const lang=getLang(); return (translations[lang]||translations.en)[key]||key; }
+
 function render(){
+  const lang = getLang();
+  // static texts
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if((translations[lang]||translations.en)[k]) el.textContent=(translations[lang]||translations.en)[k];
+  });
+
   const orders = getOrders();
   const list = document.getElementById('ordersList');
   if(orders.length===0){
-    list.innerHTML = `<div class="empty">No delivered orders to return.<br><br>Orders marked as Delivered will appear here.</div>`;
+    list.innerHTML = `<div class="empty">${tr('noOrders')}</div>`;
     return;
   }
   list.innerHTML = orders.map(order=>`
     <div class="order-card">
-      <div class="order-head"><span>Order ${order.id}</span><span>${order.date} • Delivered</span></div>
+      <div class="order-head"><span>Order ${order.id}</span><span>${order.date} • ${tr('delivered')}</span></div>
       ${order.items.map(item=>`
         <div class="item-row" id="row-${item.id}">
           <img class="item-img" src="${item.img}">
           <div class="item-info">
             <div class="item-name">${item.name}</div>
-            <div class="item-meta">Size: ${item.size}</div>
+            <div class="item-meta">${tr('size')}: ${item.size}</div>
             <div class="item-price">${item.price}</div>
             <div class="action-row">
-              <button class="btn btn-keep active" id="keep-${item.id}" onclick="keepItem('${item.id}')">KEEP</button>
-              <button class="btn btn-return" id="ret-${item.id}" onclick="returnItem('${item.id}')">RETURN</button>
+              <button class="btn btn-keep ${toReturn[item.id]? '' : 'active'}" id="keep-${item.id}" onclick="keepItem('${item.id}')">${tr('keep')}</button>
+              <button class="btn btn-return ${toReturn[item.id]? 'active' : ''}" id="ret-${item.id}" onclick="returnItem('${item.id}')">${tr('ret')}</button>
             </div>
-            <div class="reason-box" id="reason-${item.id}">
+            <div class="reason-box" id="reason-${item.id}" style="display:${toReturn[item.id]? 'block' : 'none'}">
               <select onchange="setReason('${item.id}', this.value)">
-                <option value="">Select reason</option>
-                <option>Too big</option>
-                <option>Too small</option>
-                <option>Did not like style</option>
-                <option>Not as described</option>
-                <option>Damaged</option>
-                <option>Changed mind</option>
+                <option value="">${tr('selectReason')}</option>
+                <option ${toReturn[item.id]===tr('tooBig')?'selected':''}>${tr('tooBig')}</option>
+                <option ${toReturn[item.id]===tr('tooSmall')?'selected':''}>${tr('tooSmall')}</option>
+                <option>${tr('style')}</option>
+                <option>${tr('desc')}</option>
+                <option>${tr('damaged')}</option>
+                <option>${tr('mind')}</option>
               </select>
             </div>
           </div>
@@ -132,7 +157,7 @@ function keepItem(id){
   updateBar();
 }
 function returnItem(id){
-  toReturn[id] = toReturn[id] || 'Changed mind';
+  toReturn[id] = toReturn[id] || tr('mind');
   document.getElementById(`ret-${id}`).classList.add('active');
   document.getElementById(`keep-${id}`).classList.remove('active');
   document.getElementById(`reason-${id}`).style.display='block';
@@ -152,14 +177,13 @@ function submitReturn(){
   requests.push({date:new Date().toISOString(), items:toReturn});
   localStorage.setItem('return_requests', JSON.stringify(requests));
 
-  // Save to Supabase if logged in
   supabaseClient.auth.getUser().then(({data})=>{
     if(data.user){
       supabaseClient.from('returns').insert({user_id:data.user.id, items:toReturn}).then(()=>{});
     }
   });
 
-  alert(`Return request for ${Object.keys(toReturn).length} item(s) submitted! You will receive a QR code by email.`);
+  alert(`Return request for ${Object.keys(toReturn).length} ${tr('itemsToReturn')} submitted! You will receive a QR code by email.`);
   toReturn={};
   render();
   updateBar();
