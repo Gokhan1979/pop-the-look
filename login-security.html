@@ -33,98 +33,92 @@ label{font-size:10px;font-weight:800;color:#888;text-transform:uppercase;letter-
 <img src="logo.png" class="logo">
 <a href="shop.html" data-i18n="shop">Shop</a>
 </header>
-
 <div class="container">
 <h1 data-i18n="loginSec">Login & Security</h1>
-
-<!-- EMAIL SECTION -->
 <div class="card">
 <h2 data-i18n="changeEmail">Change Email</h2>
-
 <label data-i18n="currentEmail">Current Email</label>
 <div class="input-wrap"><input id="currentEmail" type="email" disabled style="background:#f5f5f5"></div>
-
 <label data-i18n="newEmail">New Email</label>
 <div class="input-wrap"><input id="newEmail" type="email" placeholder="new@email.com"></div>
-
 <label data-i18n="confirmNewEmail">Confirm New Email</label>
 <div class="input-wrap"><input id="confirmEmail" type="email" placeholder="confirm new email"></div>
-
-<button class="save" onclick="changeEmail()" data-i18n="sendConfirm">SEND CONFIRMATION EMAIL</button>
+<button class="save" id="emailBtn" onclick="changeEmail()" data-i18n="sendConfirm">SEND CONFIRMATION EMAIL</button>
 <div id="emailSuccess" class="success"></div>
 <div id="emailError" class="error"></div>
 <p class="note" data-i18n="emailNote">We will send a confirmation to your new email. Click inside email to verify, then signin page will open.</p>
 </div>
-
-<!-- PASSWORD SECTION -->
 <div class="card">
 <h2 data-i18n="changePass">Change Password</h2>
-
 <label data-i18n="currentPass">Current Password</label>
-<div class="input-wrap">
-<input id="currentPass" type="password" placeholder="••••••••">
-<button class="eye" type="button" onclick="toggleEye('currentPass', this)">👁️</button>
-</div>
-
+<div class="input-wrap"><input id="currentPass" type="password" placeholder="••••••••"><button class="eye" type="button" onclick="toggleEye('currentPass', this)">👁️</button></div>
 <label data-i18n="newPass">New Password</label>
-<div class="input-wrap">
-<input id="newPass" type="password" placeholder="new password">
-<button class="eye" type="button" onclick="toggleEye('newPass', this)">👁️</button>
-</div>
-
+<div class="input-wrap"><input id="newPass" type="password" placeholder="new password"><button class="eye" type="button" onclick="toggleEye('newPass', this)">👁️</button></div>
 <label data-i18n="confirmNewPass">Confirm New Password</label>
-<div class="input-wrap">
-<input id="confirmPass" type="password" placeholder="confirm new password">
-<button class="eye" type="button" onclick="toggleEye('confirmPass', this)">👁️</button>
-</div>
-
+<div class="input-wrap"><input id="confirmPass" type="password" placeholder="confirm new password"><button class="eye" type="button" onclick="toggleEye('confirmPass', this)">👁️</button></div>
 <button class="save" onclick="changePassword()" data-i18n="updatePass">UPDATE PASSWORD</button>
 <div id="passSuccess" class="success"></div>
 <div id="passError" class="error"></div>
 </div>
-
 </div>
-
 <script>
-const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI", { auth: { persistSession: true, autoRefreshToken: true } });
 
 async function loadUser(){
-  const {data} = await supabaseClient.auth.getSession();
-  if(data.session){
-    document.getElementById('currentEmail').value = data.session.user.email;
-  } else {
-    location.href='signin.html';
-  }
+  const {data:{session}} = await supabaseClient.auth.getSession();
+  if(!session){ location.href='signin.html'; return; }
+  document.getElementById('currentEmail').value = session.user.email;
 }
 loadUser();
 
 function toggleEye(id, btn){
   const input = document.getElementById(id);
-  if(input.type==='password'){
-    input.type='text';
-    btn.textContent='🙈';
-  } else {
-    input.type='password';
-    btn.textContent='👁️';
-  }
+  if(input.type==='password'){ input.type='text'; btn.textContent='🙈'; }
+  else { input.type='password'; btn.textContent='👁️'; }
 }
 
 async function changeEmail(){
-  const t = translations[localStorage.getItem('lang')||'en']||translations.en;
+  const lang = localStorage.getItem('lang')||'en';
+  const t = translations[lang]||translations.en;
   const newEmail = document.getElementById('newEmail').value.trim();
   const confirmEmail = document.getElementById('confirmEmail').value.trim();
   const err = document.getElementById('emailError');
   const succ = document.getElementById('emailSuccess');
+  const btn = document.getElementById('emailBtn');
   err.style.display='none'; succ.style.display='none';
   if(!newEmail ||!confirmEmail){ err.textContent=t.fillBoth; err.style.display='block'; return; }
   if(newEmail!==confirmEmail){ err.textContent=t.emailsNoMatch; err.style.display='block'; return; }
-  const {error} = await supabaseClient.auth.updateUser({ email: newEmail }, { emailRedirectTo: window.location.origin + '/signin.html' });
-  if(error){ err.textContent=error.message; err.style.display='block'; }
-  else { succ.textContent=t.emailSent; succ.style.display='block'; }
+
+  btn.textContent="SENDING..."; btn.disabled=true;
+
+  try{
+    // THIS FIXES BEARER TOKEN ERROR - refresh first
+    await supabaseClient.auth.refreshSession();
+    const {data:{session}, error: sessErr} = await supabaseClient.auth.getSession();
+    if(sessErr ||!session){ throw new Error("Session expired. Please sign in again."); }
+
+    // CORRECT V2 syntax - ONLY ONE object, no second param【1186510152219298174†L128-L132】
+    const {data, error} = await supabaseClient.auth.updateUser({
+      email: newEmail
+    });
+
+    if(error) throw error;
+    succ.textContent=t.emailSent; succ.style.display='block';
+  }catch(e){
+    if(e.message.includes("Bearer") || e.message.includes("session") || e.message.includes("token")){
+      err.textContent="Session expired. Please go to Sign In page and login again, then try.";
+    } else {
+      err.textContent=e.message;
+    }
+    err.style.display='block';
+  } finally {
+    btn.textContent=t.sendConfirm; btn.disabled=false;
+  }
 }
 
 async function changePassword(){
-  const t = translations[localStorage.getItem('lang')||'en']||translations.en;
+  const lang = localStorage.getItem('lang')||'en';
+  const t = translations[lang]||translations.en;
   const currentPass = document.getElementById('currentPass').value;
   const newPass = document.getElementById('newPass').value;
   const confirmPass = document.getElementById('confirmPass').value;
@@ -133,33 +127,35 @@ async function changePassword(){
   err.style.display='none'; succ.style.display='none';
   if(!currentPass ||!newPass ||!confirmPass){ err.textContent=t.fillAllPass; err.style.display='block'; return; }
   if(newPass!==confirmPass){ err.textContent=t.passNoMatch; err.style.display='block'; return; }
-  if(newPass.length < 6){ err.textContent=t.pass6Char; err.style.display='block'; return; }
+  if(newPass.length<6){ err.textContent=t.pass6Char; err.style.display='block'; return; }
   try{
-    const {data: sessionData} = await supabaseClient.auth.getSession();
-    const email = sessionData.session.user.email;
+    await supabaseClient.auth.refreshSession();
+    const {data:{session}} = await supabaseClient.auth.getSession();
+    if(!session) throw new Error("Session expired");
+    const email = session.user.email;
     const {error: signInError} = await supabaseClient.auth.signInWithPassword({ email, password: currentPass });
     if(signInError){ err.textContent=t.currentPassWrong; err.style.display='block'; return; }
     const {error} = await supabaseClient.auth.updateUser({ password: newPass });
-    if(error){ err.textContent=error.message; err.style.display='block'; }
-    else { succ.textContent=t.passUpdated; succ.style.display='block'; document.getElementById('currentPass').value=''; document.getElementById('newPass').value=''; document.getElementById('confirmPass').value=''; }
-  } catch(e){ err.textContent=e.message; err.style.display='block'; }
+    if(error) throw error;
+    succ.textContent=t.passUpdated; succ.style.display='block';
+    document.getElementById('currentPass').value=''; document.getElementById('newPass').value=''; document.getElementById('confirmPass').value='';
+  }catch(e){ err.textContent=e.message; err.style.display='block'; }
 }
 
 const translations = {
-  en: { back:"← Back", shop:"Shop", loginSec:"Login & Security", changeEmail:"Change Email", currentEmail:"Current Email", newEmail:"New Email", confirmNewEmail:"Confirm New Email", sendConfirm:"SEND CONFIRMATION EMAIL", emailNote:"We will send a confirmation to your new email. Click inside email to verify, then signin page will open.", changePass:"Change Password", currentPass:"Current Password", newPass:"New Password", confirmNewPass:"Confirm New Password", updatePass:"UPDATE PASSWORD", fillBoth:"Fill both fields", emailsNoMatch:"Emails do not match", emailSent:"Confirmation email sent! Check inbox and click link to confirm. You will be redirected to Sign In.", fillAllPass:"Fill all password fields", passNoMatch:"New passwords do not match", pass6Char:"Password must be at least 6 characters", currentPassWrong:"Current password is incorrect", passUpdated:"Password updated successfully!" },
-  tr: { back:"← Geri", shop:"Mağaza", loginSec:"Giriş ve Güvenlik", changeEmail:"E-posta Değiştir", currentEmail:"Mevcut E-posta", newEmail:"Yeni E-posta", confirmNewEmail:"Yeni E-postayı Onayla", sendConfirm:"ONAY E-POSTASI GÖNDER", emailNote:"Yeni e-postanıza onay göndereceğiz. E-postanın içindeki linke tıklayın, ardından giriş sayfası açılacak.", changePass:"Şifre Değiştir", currentPass:"Mevcut Şifre", newPass:"Yeni Şifre", confirmNewPass:"Yeni Şifreyi Onayla", updatePass:"ŞİFREYİ GÜNCELLE", fillBoth:"Her iki alanı doldurun", emailsNoMatch:"E-postalar eşleşmiyor", emailSent:"Onay e-postası gönderildi! Gelen kutunuzu kontrol edin ve linke tıklayın.", fillAllPass:"Tüm şifre alanlarını doldurun", passNoMatch:"Yeni şifreler eşleşmiyor", pass6Char:"Şifre en az 6 karakter olmalı", currentPassWrong:"Mevcut şifre yanlış", passUpdated:"Şifre başarıyla güncellendi!" },
-  de: { back:"← Zurück", shop:"Shop", loginSec:"Login & Sicherheit", changeEmail:"E-Mail ändern", currentEmail:"Aktuelle E-Mail", newEmail:"Neue E-Mail", confirmNewEmail:"Neue E-Mail bestätigen", sendConfirm:"BESTÄTIGUNGS-E-MAIL SENDEN", emailNote:"Wir senden eine Bestätigung an Ihre neue E-Mail. Klicken Sie in der E-Mail und die Anmeldeseite öffnet sich.", changePass:"Passwort ändern", currentPass:"Aktuelles Passwort", newPass:"Neues Passwort", confirmNewPass:"Neues Passwort bestätigen", updatePass:"PASSWORT AKTUALISIEREN", fillBoth:"Beide Felder ausfüllen", emailsNoMatch:"E-Mails stimmen nicht überein", emailSent:"Bestätigungs-E-Mail gesendet! Posteingang prüfen.", fillAllPass:"Alle Passwortfelder ausfüllen", passNoMatch:"Neue Passwörter stimmen nicht überein", pass6Char:"Passwort muss mindestens 6 Zeichen haben", currentPassWrong:"Aktuelles Passwort ist falsch", passUpdated:"Passwort erfolgreich aktualisiert!" },
-  fr: { back:"← Retour", shop:"Boutique", loginSec:"Connexion et sécurité", changeEmail:"Changer l'e-mail", currentEmail:"E-mail actuel", newEmail:"Nouvel e-mail", confirmNewEmail:"Confirmer le nouvel e-mail", sendConfirm:"ENVOYER L'E-MAIL DE CONFIRMATION", emailNote:"Nous enverrons une confirmation à votre nouvel e-mail. Cliquez dans l'e-mail, puis la page de connexion s'ouvrira.", changePass:"Changer le mot de passe", currentPass:"Mot de passe actuel", newPass:"Nouveau mot de passe", confirmNewPass:"Confirmer le nouveau mot de passe", updatePass:"METTRE À JOUR LE MOT DE PASSE", fillBoth:"Remplissez les deux champs", emailsNoMatch:"Les e-mails ne correspondent pas", emailSent:"E-mail de confirmation envoyé! Vérifiez votre boîte.", fillAllPass:"Remplissez tous les champs mot de passe", passNoMatch:"Les nouveaux mots de passe ne correspondent pas", pass6Char:"Le mot de passe doit avoir au moins 6 caractères", currentPassWrong:"Le mot de passe actuel est incorrect", passUpdated:"Mot de passe mis à jour avec succès!" },
-  es: { back:"← Atrás", shop:"Tienda", loginSec:"Inicio de sesión y seguridad", changeEmail:"Cambiar correo", currentEmail:"Correo actual", newEmail:"Nuevo correo", confirmNewEmail:"Confirmar nuevo correo", sendConfirm:"ENVIAR CORREO DE CONFIRMACIÓN", emailNote:"Enviaremos una confirmación a tu nuevo correo. Haz clic dentro del correo y se abrirá la página de inicio de sesión.", changePass:"Cambiar contraseña", currentPass:"Contraseña actual", newPass:"Nueva contraseña", confirmNewPass:"Confirmar nueva contraseña", updatePass:"ACTUALIZAR CONTRASEÑA", fillBoth:"Completa ambos campos", emailsNoMatch:"Los correos no coinciden", emailSent:"¡Correo de confirmación enviado! Revisa tu bandeja.", fillAllPass:"Completa todos los campos de contraseña", passNoMatch:"Las nuevas contraseñas no coinciden", pass6Char:"La contraseña debe tener al menos 6 caracteres", currentPassWrong:"La contraseña actual es incorrecta", passUpdated:"¡Contraseña actualizada con éxito!" },
-  it: { back:"← Indietro", shop:"Negozio", loginSec:"Accesso e sicurezza", changeEmail:"Cambia Email", currentEmail:"Email Attuale", newEmail:"Nuova Email", confirmNewEmail:"Conferma Nuova Email", sendConfirm:"INVIA EMAIL DI CONFERMA", emailNote:"Invieremo una conferma alla tua nuova email. Clicca dentro l'email e si aprirà la pagina di accesso.", changePass:"Cambia Password", currentPass:"Password Attuale", newPass:"Nuova Password", confirmNewPass:"Conferma Nuova Password", updatePass:"AGGIORNA PASSWORD", fillBoth:"Compila entrambi i campi", emailsNoMatch:"Le email non corrispondono", emailSent:"Email di conferma inviata! Controlla la posta.", fillAllPass:"Compila tutti i campi password", passNoMatch:"Le nuove password non corrispondono", pass6Char:"La password deve avere almeno 6 caratteri", currentPassWrong:"La password attuale è errata", passUpdated:"Password aggiornata con successo!" },
-  nl: { back:"← Terug", shop:"Winkel", loginSec:"Inloggen en beveiliging", changeEmail:"E-mail wijzigen", currentEmail:"Huidige e-mail", newEmail:"Nieuwe e-mail", confirmNewEmail:"Bevestig nieuwe e-mail", sendConfirm:"BEVESTIGINGSMAIL VERZENDEN", emailNote:"We sturen een bevestiging naar je nieuwe e-mail. Klik in de e-mail, dan opent de inlogpagina.", changePass:"Wachtwoord wijzigen", currentPass:"Huidig wachtwoord", newPass:"Nieuw wachtwoord", confirmNewPass:"Bevestig nieuw wachtwoord", updatePass:"WACHTWOORD BIJWERKEN", fillBoth:"Vul beide velden in", emailsNoMatch:"E-mails komen niet overeen", emailSent:"Bevestigingsmail verzonden! Check je inbox.", fillAllPass:"Vul alle wachtwoordvelden in", passNoMatch:"Nieuwe wachtwoorden komen niet overeen", pass6Char:"Wachtwoord moet minimaal 6 tekens zijn", currentPassWrong:"Huidig wachtwoord is onjuist", passUpdated:"Wachtwoord succesvol bijgewerkt!" },
-  el: { back:"← Πίσω", shop:"Κατάστημα", loginSec:"Σύνδεση και ασφάλεια", changeEmail:"Αλλαγή Email", currentEmail:"Τρέχον Email", newEmail:"Νέο Email", confirmNewEmail:"Επιβεβαίωση Νέου Email", sendConfirm:"ΑΠΟΣΤΟΛΗ EMAIL ΕΠΙΒΕΒΑΙΩΣΗΣ", emailNote:"Θα στείλουμε επιβεβαίωση στο νέο σας email. Κάντε κλικ μέσα στο email και θα ανοίξει η σελίδα σύνδεσης.", changePass:"Αλλαγή Κωδικού", currentPass:"Τρέχων Κωδικός", newPass:"Νέος Κωδικός", confirmNewPass:"Επιβεβαίωση Νέου Κωδικού", updatePass:"ΕΝΗΜΕΡΩΣΗ ΚΩΔΙΚΟΥ", fillBoth:"Συμπληρώστε και τα δύο πεδία", emailsNoMatch:"Τα email δεν ταιριάζουν", emailSent:"Το email επιβεβαίωσης στάλθηκε! Ελέγξτε τα εισερχόμενα.", fillAllPass:"Συμπληρώστε όλα τα πεδία κωδικού", passNoMatch:"Οι νέοι κωδικοί δεν ταιριάζουν", pass6Char:"Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες", currentPassWrong:"Ο τρέχων κωδικός είναι λάθος", passUpdated:"Ο κωδικός ενημερώθηκε με επιτυχία!" },
-  pl: { back:"← Wróć", shop:"Sklep", loginSec:"Logowanie i bezpieczeństwo", changeEmail:"Zmień e-mail", currentEmail:"Obecny e-mail", newEmail:"Nowy e-mail", confirmNewEmail:"Potwierdź nowy e-mail", sendConfirm:"WYŚLIJ E-MAIL POTWIERDZAJĄCY", emailNote:"Wyślemy potwierdzenie na nowy e-mail. Kliknij w e-mailu, a otworzy się strona logowania.", changePass:"Zmień hasło", currentPass:"Obecne hasło", newPass:"Nowe hasło", confirmNewPass:"Potwierdź nowe hasło", updatePass:"AKTUALIZUJ HASŁO", fillBoth:"Wypełnij oba pola", emailsNoMatch:"E-maile nie pasują", emailSent:"E-mail potwierdzający wysłany! Sprawdź skrzynkę.", fillAllPass:"Wypełnij wszystkie pola hasła", passNoMatch:"Nowe hasła nie pasują", pass6Char:"Hasło musi mieć co najmniej 6 znaków", currentPassWrong:"Obecne hasło jest nieprawidłowe", passUpdated:"Hasło zaktualizowane pomyślnie!" },
-  pt: { back:"← Voltar", shop:"Loja", loginSec:"Login e segurança", changeEmail:"Alterar e-mail", currentEmail:"E-mail atual", newEmail:"Novo e-mail", confirmNewEmail:"Confirmar novo e-mail", sendConfirm:"ENVIAR E-MAIL DE CONFIRMAÇÃO", emailNote:"Enviaremos uma confirmação para seu novo e-mail. Clique dentro do e-mail e a página de login será aberta.", changePass:"Alterar senha", currentPass:"Senha atual", newPass:"Nova senha", confirmNewPass:"Confirmar nova senha", updatePass:"ATUALIZAR SENHA", fillBoth:"Preencha ambos os campos", emailsNoMatch:"Os e-mails não correspondem", emailSent:"E-mail de confirmação enviado! Verifique sua caixa.", fillAllPass:"Preencha todos os campos de senha", passNoMatch:"As novas senhas não correspondem", pass6Char:"A senha deve ter pelo menos 6 caracteres", currentPassWrong:"A senha atual está incorreta", passUpdated:"Senha atualizada com sucesso!" },
-  id: { back:"← Kembali", shop:"Toko", loginSec:"Login & Keamanan", changeEmail:"Ubah Email", currentEmail:"Email Saat Ini", newEmail:"Email Baru", confirmNewEmail:"Konfirmasi Email Baru", sendConfirm:"KIRIM EMAIL KONFIRMASI", emailNote:"Kami akan mengirim konfirmasi ke email baru Anda. Klik di dalam email, lalu halaman masuk akan terbuka.", changePass:"Ubah Kata Sandi", currentPass:"Kata Sandi Saat Ini", newPass:"Kata Sandi Baru", confirmNewPass:"Konfirmasi Kata Sandi Baru", updatePass:"PERBARUI KATA SANDI", fillBoth:"Isi kedua bidang", emailsNoMatch:"Email tidak cocok", emailSent:"Email konfirmasi terkirim! Periksa inbox.", fillAllPass:"Isi semua bidang kata sandi", passNoMatch:"Kata sandi baru tidak cocok", pass6Char:"Kata sandi minimal 6 karakter", currentPassWrong:"Kata sandi saat ini salah", passUpdated:"Kata sandi berhasil diperbarui!" },
-  zh: { back:"← 返回", shop:"商店", loginSec:"登录与安全", changeEmail:"更改邮箱", currentEmail:"当前邮箱", newEmail:"新邮箱", confirmNewEmail:"确认新邮箱", sendConfirm:"发送确认邮件", emailNote:"我们将向您的新邮箱发送确认信息。点击邮件内的链接，然后登录页面将打开。", changePass:"更改密码", currentPass:"当前密码", newPass:"新密码", confirmNewPass:"确认新密码", updatePass:"更新密码", fillBoth:"请填写两个字段", emailsNoMatch:"邮箱不匹配", emailSent:"确认邮件已发送！请检查收件箱。", fillAllPass:"请填写所有密码字段", passNoMatch:"新密码不匹配", pass6Char:"密码至少需要6个字符", currentPassWrong:"当前密码不正确", passUpdated:"密码更新成功！" }
+  en: { back:"← Back", shop:"Shop", loginSec:"Login & Security", changeEmail:"Change Email", currentEmail:"Current Email", newEmail:"New Email", confirmNewEmail:"Confirm New Email", sendConfirm:"SEND CONFIRMATION EMAIL", emailNote:"We will send a confirmation to your new email. Click inside email to verify, then signin page will open.", changePass:"Change Password", currentPass:"Current Password", newPass:"New Password", confirmNewPass:"Confirm New Password", updatePass:"UPDATE PASSWORD", fillBoth:"Fill both fields", emailsNoMatch:"Emails do not match", emailSent:"Confirmation email sent! Check inbox at your NEW email and click link. You will be redirected to Sign In.", fillAllPass:"Fill all password fields", passNoMatch:"New passwords do not match", pass6Char:"Password must be at least 6 characters", currentPassWrong:"Current password is incorrect", passUpdated:"Password updated successfully!" },
+  tr: { back:"← Geri", shop:"Mağaza", loginSec:"Giriş ve Güvenlik", changeEmail:"E-posta Değiştir", currentEmail:"Mevcut E-posta", newEmail:"Yeni E-posta", confirmNewEmail:"Yeni E-postayı Onayla", sendConfirm:"ONAY E-POSTASI GÖNDER", emailNote:"Yeni e-postanıza onay göndereceğiz.", changePass:"Şifre Değiştir", currentPass:"Mevcut Şifre", newPass:"Yeni Şifre", confirmNewPass:"Yeni Şifreyi Onayla", updatePass:"ŞİFREYİ GÜNCELLE", fillBoth:"Her iki alanı doldurun", emailsNoMatch:"E-postalar eşleşmiyor", emailSent:"Onay e-postası gönderildi!", fillAllPass:"Tüm alanları doldurun", passNoMatch:"Eşleşmiyor", pass6Char:"En az 6 karakter", currentPassWrong:"Mevcut şifre yanlış", passUpdated:"Güncellendi!" },
+  de: { back:"← Zurück", shop:"Shop", loginSec:"Login & Sicherheit", changeEmail:"E-Mail ändern", currentEmail:"Aktuelle E-Mail", newEmail:"Neue E-Mail", confirmNewEmail:"Bestätigen", sendConfirm:"BESTÄTIGUNGS-E-MAIL SENDEN", emailNote:"Wir senden eine Bestätigung.", changePass:"Passwort ändern", currentPass:"Aktuelles Passwort", newPass:"Neues Passwort", confirmNewPass:"Bestätigen", updatePass:"AKTUALISIEREN", fillBoth:"Beide ausfüllen", emailsNoMatch:"Stimmen nicht überein", emailSent:"E-Mail gesendet!", fillAllPass:"Alle ausfüllen", passNoMatch:"Stimmen nicht überein", pass6Char:"Mind. 6 Zeichen", currentPassWrong:"Falsch", passUpdated:"Aktualisiert!" },
+  fr: { back:"← Retour", shop:"Boutique", loginSec:"Connexion et sécurité", changeEmail:"Changer l'e-mail", currentEmail:"Actuel", newEmail:"Nouveau", confirmNewEmail:"Confirmer", sendConfirm:"ENVOYER", emailNote:"Nous enverrons une confirmation.", changePass:"Changer mot de passe", currentPass:"Actuel", newPass:"Nouveau", confirmNewPass:"Confirmer", updatePass:"METTRE À JOUR", fillBoth:"Remplissez", emailsNoMatch:"Ne correspondent pas", emailSent:"Envoyé!", fillAllPass:"Remplissez", passNoMatch:"Ne correspondent pas", pass6Char:"Min 6", currentPassWrong:"Incorrect", passUpdated:"Mis à jour!" },
+  es: { back:"← Atrás", shop:"Tienda", loginSec:"Inicio de sesión y seguridad", changeEmail:"Cambiar correo", currentEmail:"Actual", newEmail:"Nuevo", confirmNewEmail:"Confirmar", sendConfirm:"ENVIAR", emailNote:"Enviaremos confirmación.", changePass:"Cambiar contraseña", currentPass:"Actual", newPass:"Nueva", confirmNewPass:"Confirmar", updatePass:"ACTUALIZAR", fillBoth:"Completa ambos", emailsNoMatch:"No coinciden", emailSent:"¡Enviado!", fillAllPass:"Completa todos", passNoMatch:"No coinciden", pass6Char:"Mín. 6", currentPassWrong:"Incorrecta", passUpdated:"¡Actualizada!" },
+  it: { back:"← Indietro", shop:"Negozio", loginSec:"Accesso e sicurezza", changeEmail:"Cambia Email", currentEmail:"Attuale", newEmail:"Nuova", confirmNewEmail:"Conferma", sendConfirm:"INVIA", emailNote:"Invieremo conferma.", changePass:"Cambia Password", currentPass:"Attuale", newPass:"Nuova", confirmNewPass:"Conferma", updatePass:"AGGIORNA", fillBoth:"Compila", emailsNoMatch:"Non corrispondono", emailSent:"Inviata!", fillAllPass:"Compila tutti", passNoMatch:"Non corrispondono", pass6Char:"Min 6", currentPassWrong:"Errata", passUpdated:"Aggiornata!" },
+  nl: { back:"← Terug", shop:"Winkel", loginSec:"Inloggen en beveiliging", changeEmail:"E-mail wijzigen", currentEmail:"Huidig", newEmail:"Nieuw", confirmNewEmail:"Bevestig", sendConfirm:"VERZENDEN", emailNote:"We sturen bevestiging.", changePass:"Wachtwoord wijzigen", currentPass:"Huidig", newPass:"Nieuw", confirmNewPass:"Bevestig", updatePass:"BIJWERKEN", fillBoth:"Vul in", emailsNoMatch:"Komen niet overeen", emailSent:"Verzonden!", fillAllPass:"Vul in", passNoMatch:"Komen niet overeen", pass6Char:"Min 6", currentPassWrong:"Onjuist", passUpdated:"Bijgewerkt!" },
+  el: { back:"← Πίσω", shop:"Κατάστημα", loginSec:"Σύνδεση και ασφάλεια", changeEmail:"Αλλαγή Email", currentEmail:"Τρέχον", newEmail:"Νέο", confirmNewEmail:"Επιβεβαίωση", sendConfirm:"ΑΠΟΣΤΟΛΗ", emailNote:"Θα στείλουμε επιβεβαίωση.", changePass:"Αλλαγή Κωδικού", currentPass:"Τρέχων", newPass:"Νέος", confirmNewPass:"Επιβεβαίωση", updatePass:"ΕΝΗΜΕΡΩΣΗ", fillBoth:"Συμπληρώστε", emailsNoMatch:"Δεν ταιριάζουν", emailSent:"Στάλθηκε!", fillAllPass:"Συμπληρώστε", passNoMatch:"Δεν ταιριάζουν", pass6Char:"Min 6", currentPassWrong:"Λάθος", passUpdated:"Ενημερώθηκε!" },
+  pl: { back:"← Wróć", shop:"Sklep", loginSec:"Logowanie i bezpieczeństwo", changeEmail:"Zmień e-mail", currentEmail:"Obecny", newEmail:"Nowy", confirmNewEmail:"Potwierdź", sendConfirm:"WYŚLIJ", emailNote:"Wyślemy potwierdzenie.", changePass:"Zmień hasło", currentPass:"Obecne", newPass:"Nowe", confirmNewPass:"Potwierdź", updatePass:"AKTUALIZUJ", fillBoth:"Wypełnij", emailsNoMatch:"Nie pasują", emailSent:"Wysłany!", fillAllPass:"Wypełnij", passNoMatch:"Nie pasują", pass6Char:"Min 6", currentPassWrong:"Nieprawidłowe", passUpdated:"Zaktualizowane!" },
+  pt: { back:"← Voltar", shop:"Loja", loginSec:"Login e segurança", changeEmail:"Alterar e-mail", currentEmail:"Atual", newEmail:"Novo", confirmNewEmail:"Confirmar", sendConfirm:"ENVIAR", emailNote:"Enviaremos confirmação.", changePass:"Alterar senha", currentPass:"Atual", newPass:"Nova", confirmNewPass:"Confirmar", updatePass:"ATUALIZAR", fillBoth:"Preencha", emailsNoMatch:"Não correspondem", emailSent:"Enviado!", fillAllPass:"Preencha", passNoMatch:"Não correspondem", pass6Char:"Mín 6", currentPassWrong:"Incorreta", passUpdated:"Atualizada!" },
+  id: { back:"← Kembali", shop:"Toko", loginSec:"Login & Keamanan", changeEmail:"Ubah Email", currentEmail:"Saat Ini", newEmail:"Baru", confirmNewEmail:"Konfirmasi", sendConfirm:"KIRIM", emailNote:"Kami akan mengirim konfirmasi.", changePass:"Ubah Kata Sandi", currentPass:"Saat Ini", newPass:"Baru", confirmNewPass:"Konfirmasi", updatePass:"PERBARUI", fillBoth:"Isi", emailsNoMatch:"Tidak cocok", emailSent:"Terkirim!", fillAllPass:"Isi semua", passNoMatch:"Tidak cocok", pass6Char:"Min 6", currentPassWrong:"Salah", passUpdated:"Diperbarui!" },
+  zh: { back:"← 返回", shop:"商店", loginSec:"登录与安全", changeEmail:"更改邮箱", currentEmail:"当前", newEmail:"新邮箱", confirmNewEmail:"确认", sendConfirm:"发送确认邮件", emailNote:"我们将发送确认信息。", changePass:"更改密码", currentPass:"当前", newPass:"新密码", confirmNewPass:"确认", updatePass:"更新密码", fillBoth:"请填写", emailsNoMatch:"不匹配", emailSent:"已发送！", fillAllPass:"请填写", passNoMatch:"不匹配", pass6Char:"至少6个字符", currentPassWrong:"不正确", passUpdated:"更新成功！" }
 };
-
 function applyLanguage(lang){
   const t = translations[lang] || translations.en;
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -168,8 +164,7 @@ function applyLanguage(lang){
   });
   document.documentElement.lang=lang;
 }
-const savedLang=localStorage.getItem('lang')||'en';
-applyLanguage(savedLang);
+applyLanguage(localStorage.getItem('lang')||'en');
 </script>
 </body>
 </html>
