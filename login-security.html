@@ -34,21 +34,56 @@ label{font-size:10px;font-weight:800;color:#888;text-transform:uppercase;letter-
 </header>
 <div class="container">
 <h1>Login & Security</h1>
+
 <div class="card">
 <h2>Change Email</h2>
 <label>Current Email</label>
-<div class="input-wrap"><input id="currentEmail" type="email" disabled style="background:#f5f5f5"></div>
-<label style="color:red">Current Password (to get fresh token)</label>
-<div class="input-wrap"><input id="currentPassForEmail" type="password" placeholder="enter current password"><button class="eye" type="button" onclick="toggleEye('currentPassForEmail', this)">👁️</button></div>
+<div class="input-wrap"><input id="currentEmail" type="email" disabled style="background:#f5f5f5" autocomplete="off"></div>
+
+<label>Current Password (to confirm it's you)</label>
+<div class="input-wrap">
+<input id="currentPassForEmail" type="password" placeholder="enter current password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+<button class="eye" type="button" onclick="toggleEye('currentPassForEmail', this)">👁️</button>
+</div>
+
 <label>New Email</label>
-<div class="input-wrap"><input id="newEmail" type="email" placeholder="new@email.com" value="michigokhan@gmail.com"></div>
+<div class="input-wrap"><input id="newEmail" type="email" placeholder="new@email.com" autocomplete="off"></div>
+
 <label>Confirm New Email</label>
-<div class="input-wrap"><input id="confirmEmail" type="email" placeholder="confirm new email" value="michigokhan@gmail.com"></div>
+<div class="input-wrap"><input id="confirmEmail" type="email" placeholder="confirm new email" autocomplete="off"></div>
+
 <button class="save" id="emailBtn" onclick="changeEmail()">SEND CONFIRMATION EMAIL</button>
 <div id="emailSuccess" class="success"></div>
 <div id="emailError" class="error"></div>
-<p class="note">We will send a confirmation to your NEW email. Check spam too.</p>
+<p class="note">We will send a confirmation to your NEW email. Check spam too. Only after clicking link, email changes.</p>
 </div>
+
+<div class="card">
+<h2>Change Password</h2>
+
+<label>Current Password</label>
+<div class="input-wrap">
+<input id="currentPassForPassword" type="password" placeholder="current password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+<button class="eye" type="button" onclick="toggleEye('currentPassForPassword', this)">👁️</button>
+</div>
+
+<label>New Password</label>
+<div class="input-wrap">
+<input id="newPassword" type="password" placeholder="new password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+<button class="eye" type="button" onclick="toggleEye('newPassword', this)">👁️</button>
+</div>
+
+<label>Confirm New Password</label>
+<div class="input-wrap">
+<input id="confirmPassword" type="password" placeholder="confirm new password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+<button class="eye" type="button" onclick="toggleEye('confirmPassword', this)">👁️</button>
+</div>
+
+<button class="save" id="passBtn" onclick="changePassword()">CHANGE PASSWORD</button>
+<div id="passSuccess" class="success"></div>
+<div id="passError" class="error"></div>
+</div>
+
 </div>
 <script>
 const SUPABASE_URL = "https://pslsuittihsaeeyrihgr.supabase.co";
@@ -65,11 +100,13 @@ async function loadUser(){
   document.getElementById('currentEmail').value = session.user.email;
 }
 loadUser();
+
 function toggleEye(id, btn){
   const input = document.getElementById(id);
   input.type = input.type==='password' ? 'text' : 'password';
   btn.textContent = input.type==='password' ? '👁️' : '🙈';
 }
+
 async function changeEmail(){
   const newEmail = document.getElementById('newEmail').value.trim();
   const confirmEmail = document.getElementById('confirmEmail').value.trim();
@@ -79,25 +116,53 @@ async function changeEmail(){
   const btn = document.getElementById('emailBtn');
   err.style.display='none'; succ.style.display='none';
   if(!currentPassword){ err.textContent="Enter current password"; err.style.display='block'; return; }
-  if(newEmail!==confirmEmail){ err.textContent="Emails do not match"; err.style.display='block'; return; }
+  if(!newEmail || newEmail!==confirmEmail){ err.textContent="Emails do not match"; err.style.display='block'; return; }
   btn.textContent="SENDING..."; btn.disabled=true;
   try{
     const {data:{session: oldSession}} = await supabaseClient.auth.getSession();
     const currentEmail = oldSession?.user?.email || document.getElementById('currentEmail').value;
-    const {data: signInData, error: signInErr} = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password: currentPassword });
-    if(signInErr) throw new Error("Wrong password: " + signInErr.message);
-    const freshToken = signInData.session.access_token;
-    const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      method: 'PUT',
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${freshToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: newEmail })
-    });
-    const result = await response.json();
-    if(!response.ok) throw new Error(result.msg || result.message);
-    succ.textContent="✅ Confirmation sent to " + newEmail + "! Check inbox + SPAM. Click link.";
+    const {error: signInErr} = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password: currentPassword });
+    if(signInErr) throw new Error("Wrong current password");
+    
+    const {error} = await supabaseClient.auth.updateUser({ email: newEmail });
+    if(error) throw error;
+
+    succ.textContent="✅ Confirmation sent to " + newEmail + "! Check inbox + SPAM.";
     succ.style.display='block';
   }catch(e){ err.textContent=e.message; err.style.display='block'; }
   finally { btn.textContent="SEND CONFIRMATION EMAIL"; btn.disabled=false; }
+}
+
+async function changePassword(){
+  const currentPass = document.getElementById('currentPassForPassword').value;
+  const newPass = document.getElementById('newPassword').value;
+  const confirmPass = document.getElementById('confirmPassword').value;
+  const err = document.getElementById('passError');
+  const succ = document.getElementById('passSuccess');
+  const btn = document.getElementById('passBtn');
+  err.style.display='none'; succ.style.display='none';
+
+  if(!currentPass){ err.textContent="Enter current password"; err.style.display='block'; return; }
+  if(newPass.length < 6){ err.textContent="New password must be at least 6 characters"; err.style.display='block'; return; }
+  if(newPass !== confirmPass){ err.textContent="New passwords do not match"; err.style.display='block'; return; }
+
+  btn.textContent="UPDATING..."; btn.disabled=true;
+  try{
+    const {data:{session}} = await supabaseClient.auth.getSession();
+    const currentEmail = session.user.email;
+    const {error: signInErr} = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password: currentPass });
+    if(signInErr) throw new Error("Wrong current password");
+
+    const {error} = await supabaseClient.auth.updateUser({ password: newPass });
+    if(error) throw error;
+
+    succ.textContent="✅ Password changed successfully!";
+    succ.style.display='block';
+    document.getElementById('currentPassForPassword').value='';
+    document.getElementById('newPassword').value='';
+    document.getElementById('confirmPassword').value='';
+  }catch(e){ err.textContent=e.message; err.style.display='block'; }
+  finally{ btn.textContent="CHANGE PASSWORD"; btn.disabled=false; }
 }
 </script>
 </body>
