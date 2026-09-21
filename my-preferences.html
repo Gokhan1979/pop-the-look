@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Preferences - POP THE LOOK</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#fff}
+.header{padding:14px 18px;border-bottom:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10}
+.logo{font-weight:900;font-size:18px}
+.back{border:none;background:none;font-weight:700;cursor:pointer}
+.wrap{max-width:520px;margin:0 auto;padding:22px 18px 60px}
+.pref-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:24px}
+.pref-row input{width:22px;height:22px;accent-color:#000;margin-top:2px;flex-shrink:0}
+.pref-row label{font-size:15px;line-height:1.4;color:#222}
+.save-btn{width:100%;background:#0f7a2a;color:#fff;border:none;padding:16px;border-radius:4px;font-weight:900;letter-spacing:1px;font-size:14px;cursor:pointer;margin-top:10px}
+.save-btn:hover{background:#0c5f22}
+.privacy{font-size:13px;line-height:1.6;color:#555;margin-top:24px}
+.privacy a{font-weight:800;color:#000;text-decoration:underline}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px;border-top:1px solid #eee;padding-top:22px}
+.grid a{text-decoration:none;color:#000;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px}
+.ic{width:30px;height:30px;background:#000;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px}
+.help{margin-top:34px;font-weight:900;font-size:16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:18px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">POP THE LOOK</div>
+<button class="back" onclick="location.href='index.html'">← Back</button>
+</div>
+
+<div class="wrap">
+<div class="pref-row">
+<input type="checkbox" id="emailPref" checked>
+<label for="emailPref">Yes I would like to receive newsletters and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK) by email.</label>
+</div>
+
+<div class="pref-row">
+<input type="checkbox" id="smsPref" checked>
+<label for="smsPref">Yes I would like to receive SMS updates and exclusive promotional offers from POP THE LOOK (and only POP THE LOOK).</label>
+</div>
+
+<button class="save-btn" onclick="saveMyPrefs()">SAVE</button>
+
+<div class="privacy">
+We always treat your personal details with the utmost care. We will never sell your data onto other companies for marketing purposes. If you have chosen to receive emails from us you can unsubscribe at any time by clicking on the link in the email footer. Read our full <a href="#">PRIVACY POLICY</a> to find out how we use your data.
+</div>
+
+<div class="grid">
+<a href="index.html"><span class="ic">👤</span> My account</a>
+<a href="#"><span class="ic">↩️</span> Return an item</a>
+<a href="order-history.html"><span class="ic">📍</span> Track Your Order</a>
+<a href="#"><span class="ic">?</span> Help & Contact Us</a>
+</div>
+
+<div class="help">HELP LINKS <span>›</span></div>
+</div>
+
+<script>
+const supabaseClient = supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
+
+async function loadPrefs(){
+  const {data:{session}} = await supabaseClient.auth.getSession();
+  const local = JSON.parse(localStorage.getItem('my_preferences')||'{}');
+  const meta = session?.user?.user_metadata || {};
+  document.getElementById('emailPref').checked = local.email ?? meta.newsletter ?? true;
+  document.getElementById('smsPref').checked = local.sms ?? meta.sms ?? true;
+}
+loadPrefs();
+
+async function saveMyPrefs(){
+  const data = {
+    email: document.getElementById('emailPref').checked,
+    sms: document.getElementById('smsPref').checked
+  };
+  localStorage.setItem('my_preferences', JSON.stringify(data));
+  try{ await supabaseClient.auth.updateUser({data:{newsletter:data.email, sms:data.sms}}); }catch(e){}
+  alert("Preferences saved!");
+  location.href='index.html';
+}
+</script>
+</body>
+</html>
