@@ -1,3 +1,5 @@
+Wait i will send you my index.html check gor me without deleting and changing my important codes
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -152,7 +154,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="hero"><h1 data-i18n="heroTitle">NEW<br>DROP</h1><p data-i18n="heroDesc">Curated looks. Tap to shop the full fit.</p><a class="shop-btn" href="shop.html" data-i18n="shopBtn">SHOP NOW</a></div>
 <div class="grid"><div class="card" data-i18n="hoodies">HOODIES</div><div class="card" data-i18n="cargo">CARGO</div><div class="card" data-i18n="tees">TEES</div><div class="card" data-i18n="accessories">ACCESSORIES</div></div>
 <script>
-const SITE_URL = "https://gokhan1979.github.io/pop-the-look/";
+const SITE_URL = "https://gokhan1979.github.io/pop-the-look/index.html";
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
 (async ()=>{
   if(window.location.hash && window.location.hash.includes('access_token')){
@@ -168,9 +170,8 @@ const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabas
     const { data, error } = await supabaseClient.auth.exchangeCodeForSession(window.location.href);
     if(!error){
       history.replaceState(null, null, window.location.pathname);
-      alert("Email changed successfully. Please sign in with your new email.");
-      await supabaseClient.auth.signOut();
-      window.location.href="signin.html";
+      alert("Email change confirmed!");
+      checkUser();
     }
   }
 })();
