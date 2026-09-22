@@ -168,8 +168,9 @@ const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabas
     const { data, error } = await supabaseClient.auth.exchangeCodeForSession(window.location.href);
     if(!error){
       history.replaceState(null, null, window.location.pathname);
-      alert("Email change confirmed!");
-      checkUser();
+      alert("Email changed successfully. Please sign in with your new email.");
+      await supabaseClient.auth.signOut();
+      window.location.href="signin.html";
     }
   }
 })();
