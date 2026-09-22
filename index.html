@@ -89,7 +89,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <input id="phone" class="phone-number" type="tel" placeholder="7123 456789" autocomplete="off">
 </div>
 </div>
-<div class="pi-field"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="james@email.co.uk" autocomplete="off"></div>
+<div class="pi-field"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="james@email.co.uk" autocomplete="off" readonly></div>
 <button class="pi-save" onclick="savePI()" data-i18n="save">SAVE CHANGES</button>
 </div>
 </div>
@@ -109,7 +109,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 <div class="search-center">
   <div class="search-box">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-    <input type="text" id="searchInput" onkeydown="if(event.key==='Enter'){window.location.href='shop.html?q='+encodeURIComponent(this.value)}">
+    <input type="text" placeholder="Search" id="searchInput" onkeydown="if(event.key==='Enter'){window.location.href='shop.html?q='+encodeURIComponent(this.value)}">
   </div>
 </div>
 <div class="nav-right">
@@ -127,9 +127,7 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 </div>
 <a href="#" onclick="event.preventDefault(); openPI();" data-i18n="pi">Personal Information</a>
 <a href="order-history.html" data-i18n="orders">Order History</a>
-<a href="return-an-item.html">Return an item</a>
 <a href="login-security.html" data-i18n="loginSec">Login & Security</a>
-<a href="my-preferences.html">My Preferences</a>
 <a id="signoutDropdown" href="#" onclick="event.preventDefault(); handleSignout();" data-i18n="signout" style="color:#ff0000!important;">Sign Out</a>
 <a id="signinLink" href="signin.html" data-i18n="signin" style="display:none;">Sign In</a>
 <a id="signupLink" href="signup.html" data-i18n="signup" style="display:none;">Sign Up</a>
@@ -139,37 +137,19 @@ header{display:flex;flex-direction:column;align-items:center;background:white;po
 </div>
 </div>
 <div class="burger-drawer" id="burgerDrawer">
-<a href="#"newin.html" data-i18n="newin">New In</a><a href="#" data-i18n="clothing">Clothing</a><a href="#" data-i18n="dresses">Dresses</a><a href="#" data-i18n="tops">Tops</a><a href="#" data-i18n="accessories">Accessories</a><a href="#" data-i18n="sale">Sale</a><a href="#" data-i18n="shoes">Shoes</a><a href="#" data-i18n="about">About</a>
+<a href="shop.html" data-i18n="shop">Shop</a><a href="#" data-i18n="new">New Arrivals</a><a href="#" data-i18n="dresses">Dresses</a><a href="#" data-i18n="tops">Tops</a><a href="#" data-i18n="accessories">Accessories</a><a href="#" data-i18n="sale">Sale</a><a href="#" data-i18n="about">About</a>
 </div>
 </header>
 <div class="hero"><h1 data-i18n="heroTitle">NEW<br>DROP</h1><p data-i18n="heroDesc">Curated looks. Tap to shop the full fit.</p><a class="shop-btn" href="shop.html" data-i18n="shopBtn">SHOP NOW</a></div>
 <div class="grid"><div class="card" data-i18n="hoodies">HOODIES</div><div class="card" data-i18n="cargo">CARGO</div><div class="card" data-i18n="tees">TEES</div><div class="card" data-i18n="accessories">ACCESSORIES</div></div>
 <script>
-const SITE_URL = "https://gokhan1979.github.io/pop-the-look/index.html";
 const supabaseClient=supabase.createClient("https://pslsuittihsaeeyrihgr.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbHN1aXR0aWhzYWVleXJpaGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDE4MjYsImV4cCI6MjEwNTQxNzgyNn0.dZEAEHzbOgaPHzQWWzk1whjPFmmME8G2kuvAc4b72mI");
-
-// FIX EMAIL CONFIRM 404 - handle Supabase redirect
 (async ()=>{
   if(window.location.hash && window.location.hash.includes('access_token')){
-    const { data, error } = await supabaseClient.auth.getSession();
-    if(data.session){
-      history.replaceState(null, null, window.location.pathname);
-      alert("Email confirmed! Logged in.");
-      checkUser();
-    }
-  }
-  // also handle?code= for email change
-  const params = new URLSearchParams(window.location.search);
-  if(params.get('code')){
-    const { data, error } = await supabaseClient.auth.exchangeCodeForSession(window.location.href);
-    if(!error){
-      history.replaceState(null, null, window.location.pathname);
-      alert("Email change confirmed!");
-      checkUser();
-    }
+    const { data } = await supabaseClient.auth.getSession();
+    setTimeout(()=>{ history.replaceState(null, null, window.location.pathname); if(data.session){ checkUser(); } }, 800);
   }
 })();
-
 function toggleBurger(e){ if(e) e.stopPropagation(); document.getElementById('burgerDrawer').classList.toggle('show'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleProfile(e){ if(e) e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('show'); }
 const countryCodeMap = {"united kingdom":"+44","uk":"+44","england":"+44","turkey":"+90","türkiye":"+90","germany":"+49","deutschland":"+49","france":"+33","spain":"+34","españa":"+34","italy":"+39","italia":"+39","netherlands":"+31","holland":"+31","greece":"+30","poland":"+48","portugal":"+351","indonesia":"+62","china":"+86","usa":"+1","united states":"+1","canada":"+1","australia":"+61","india":"+91","japan":"+81"};
@@ -182,41 +162,14 @@ async function openPI(){
   document.getElementById('firstName').value = s.firstName || supaFirst || ''; document.getElementById('lastName').value = s.lastName || supaLast || ''; document.getElementById('street').value = s.street || supaStreet || ''; document.getElementById('city').value = s.city || supaCity || ''; document.getElementById('country').value = s.country || supaCountry || 'United Kingdom'; document.getElementById('postcode').value = s.postcode || supaPostcode || ''; document.getElementById('email').value = s.email || supaEmail || ''; document.getElementById('phoneCode').value = s.phoneCode || supaCode || '+44'; let ph = s.phone || supaPhone || ''; if(ph.startsWith('+')){ const m=ph.match(/^(\+\d{1,4})\s*(.*)$/); if(m){ document.getElementById('phoneCode').value=m[1]; ph=m[2]; } } document.getElementById('phone').value = ph; document.getElementById('piModal').classList.add('show');
 }
 function closePI(){ document.getElementById('piModal').classList.remove('show'); }
-
-let currentEmailBeforeEdit = "";
-document.getElementById('email').addEventListener('focus', async ()=>{
-  try{ const {data:{session}} = await supabaseClient.auth.getSession(); currentEmailBeforeEdit = session?.user?.email || document.getElementById('email').value; }catch(e){ currentEmailBeforeEdit = document.getElementById('email').value; }
-});
-
 async function savePI(){
-  const phoneCode = document.getElementById('phoneCode').value;
-  const phoneNum = document.getElementById('phone').value.trim();
-  const fullPhone = phoneCode + ' ' + phoneNum;
-  const newEmail = document.getElementById('email').value.trim();
-
-  // IF EMAIL CHANGED - use correct redirect to fix 404
-  if(newEmail && currentEmailBeforeEdit && newEmail.toLowerCase()!== currentEmailBeforeEdit.toLowerCase()){
-    try{
-      const { data, error } = await supabaseClient.auth.updateUser(
-        { email: newEmail },
-        { emailRedirectTo: SITE_URL }
-      );
-      if(error) throw error;
-      alert("Confirmation sent to " + newEmail + ". Click link in email - it will now work and return to your site.");
-      return;
-    }catch(err){
-      alert("Email change error: " + err.message + "\n\nMake sure you set Site URL in Supabase to: " + SITE_URL);
-      return;
-    }
-  }
-
-  const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:newEmail,phone:fullPhone,phoneCode:phoneCode,phoneNumber:phoneNum};
+  const phoneCode = document.getElementById('phoneCode').value; const phoneNum = document.getElementById('phone').value.trim(); const fullPhone = phoneCode + ' ' + phoneNum;
+  const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:document.getElementById('email').value,phone:fullPhone,phoneCode:phoneCode,phoneNumber:phoneNum};
   const old = JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(old.profilePhoto) data.profilePhoto = old.profilePhoto;
   localStorage.setItem('personalInfo',JSON.stringify(data));
   try{ await supabaseClient.auth.updateUser({ data:{ first_name:data.firstName, last_name:data.lastName, full_name:data.firstName+' '+data.lastName, phone:fullPhone, phone_code:phoneCode, street:data.street, city:data.city, country:data.country, postcode:data.postcode } }); }catch(e){ console.log(e); }
   updateHeaderUI(); alert('Saved!'); closePI();
 }
-
 function uploadPhoto(e){
   const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
   reader.onload = function(ev){ const base64 = ev.target.result; const s = JSON.parse(localStorage.getItem('personalInfo')||'{}'); s.profilePhoto = base64; localStorage.setItem('personalInfo', JSON.stringify(s)); try{ supabaseClient.auth.updateUser({ data:{ avatar_base64: base64 } }); }catch(err){} updateHeaderUI(); };
@@ -258,6 +211,7 @@ const translations = {
   zh: { searchPlaceholder:"搜索", shop:"商店", new:"新品", dresses:"连衣裙", tops:"上衣", accessories:"配饰", sale:"特卖", about:"关于", hoodies:"连帽衫", cargo:"工装裤", tees:"T恤", heroTitle:"全新<br>系列", heroDesc:"精选穿搭。", shopBtn:"立即购买", pi:"个人信息", orders:"订单历史", loginSec:"登录与安全", signin:"登录", signup:"注册", signout:"退出", firstName:"名", lastName:"姓", street:"街道", city:"城市", country:"国家", postcode:"邮编", phone:"电话", email:"邮箱", save:"保存", upload:"上传照片" }
 };
 
+// --- SEARCH WORDS FOR ANIMATION ---
 const searchWords = {
   en: ["hoodies", "jeans", "bags", "shoes", "hats", "dresses"],
   tr: ["kapüşonlu", "kot", "çanta", "ayakkabı", "şapka", "elbise"],
@@ -282,8 +236,7 @@ function startAnim(lang){
   clearTimeout(timer);
   wIdx = 0; cIdx = 0; isDel = false;
   const inp = document.getElementById('searchInput');
-  if(!inp) return;
-  if(inp.value!=="") return;
+  if(!inp || inp.value!=="") return;
   function loop(){
     const inp = document.getElementById('searchInput');
     if(!inp) return;
@@ -336,5 +289,6 @@ sInput.addEventListener('blur', function(){
 });
 </script>
 </body>
+</html>
 
-I have changed burger menu littlebit
+
