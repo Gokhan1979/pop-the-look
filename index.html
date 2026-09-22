@@ -206,7 +206,7 @@ async function savePI(){
       return;
     }
   }
-  const data={firstName:document.getElementById('firstName').value,lastName:document.getElementById('lastName').value,street:document.getElementById('street').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:newEmail,phone:fullPhone,phoneCode:phoneCode,phoneNumber:phoneNum};
+  const data={firstName:document.getElementById('firstName').value.trim().split(' ')[0],lastName:document.getElementById('lastName').value,city:document.getElementById('city').value,country:document.getElementById('country').value,postcode:document.getElementById('postcode').value,email:newEmail,phone:fullPhone,phoneCode:phoneCode,phoneNumber:phoneNum,street:document.getElementById('street').value};
   const old = JSON.parse(localStorage.getItem('personalInfo')||'{}'); if(old.profilePhoto) data.profilePhoto = old.profilePhoto;
   localStorage.setItem('personalInfo',JSON.stringify(data));
   try{ await supabaseClient.auth.updateUser({ data:{ first_name:data.firstName, last_name:data.lastName, full_name:data.firstName+' '+data.lastName, phone:fullPhone, phone_code:phoneCode, street:data.street, city:data.city, country:data.country, postcode:data.postcode } }); }catch(e){}
@@ -218,11 +218,48 @@ function uploadPhoto(e){
   reader.readAsDataURL(file);
 }
 function updateHeaderUI(){
-  const s = JSON.parse(localStorage.getItem('personalInfo')||'{}'); const nameEl = document.getElementById('profileName'); const headIcon = document.getElementById('headIcon'); const headAvatar = document.getElementById('headAvatar'); const dropAvatar = document.getElementById('dropdownAvatar');
-  const photo = s.profilePhoto; if(photo){ dropAvatar.src = photo; headAvatar.src = photo; headAvatar.style.display='block'; headIcon.style.display='none'; }
-  else{ supabaseClient.auth.getSession().then(({data})=>{ const meta = data.session?.user?.user_metadata || {}; if(meta.avatar_base64){ dropAvatar.src = meta.avatar_base64; headAvatar.src = meta.avatar_base64; headAvatar.style.display='block'; headIcon.style.display='none'; s.profilePhoto = meta.avatar_base64; localStorage.setItem('personalInfo', JSON.stringify(s)); } else { headAvatar.style.display='none'; headIcon.style.display='block'; } }); }
-  if(s.firstName){ nameEl.textContent = s.firstName; nameEl.style.display='block'; }
-  else{ supabaseClient.auth.getSession().then(({data})=>{ const meta = data.session?.user?.user_metadata || {}; const fn = s.firstName || meta.first_name || meta.full_name?.split(' ')[0] || ''; if(fn){ nameEl.textContent=fn; nameEl.style.display='block'; } }); }
+  const s = JSON.parse(localStorage.getItem('personalInfo')||'{}');
+  const nameEl = document.getElementById('profileName');
+  const headIcon = document.getElementById('headIcon');
+  const headAvatar = document.getElementById('headAvatar');
+  const dropAvatar = document.getElementById('dropdownAvatar');
+  const photo = s.profilePhoto;
+  if(photo){ dropAvatar.src = photo; headAvatar.src = photo; headAvatar.style.display='block'; headIcon.style.display='none'; }
+  else{
+    supabaseClient.auth.getSession().then(({data})=>{
+      const meta = data.session?.user?.user_metadata || {};
+      if(meta.avatar_base64){
+        dropAvatar.src = meta.avatar_base64;
+        headAvatar.src = meta.avatar_base64;
+        headAvatar.style.display='block';
+        headIcon.style.display='none';
+        s.profilePhoto = meta.avatar_base64;
+        localStorage.setItem('personalInfo', JSON.stringify(s));
+      } else {
+        headAvatar.style.display='none';
+        headIcon.style.display='block';
+      }
+    });
+  }
+  // FIX: ONLY FIRST NAME
+  let firstNameOnly = '';
+  if(s.firstName){
+    firstNameOnly = s.firstName.trim().split(' ')[0];
+  }
+  if(firstNameOnly){
+    nameEl.textContent = firstNameOnly;
+    nameEl.style.display='block';
+  } else {
+    supabaseClient.auth.getSession().then(({data})=>{
+      const meta = data.session?.user?.user_metadata || {};
+      let fn = meta.first_name || meta.firstName || meta.full_name || '';
+      fn = fn.trim().split(' ')[0]; // only first word
+      if(fn){
+        nameEl.textContent = fn;
+        nameEl.style.display='block';
+      }
+    });
+  }
 }
 document.addEventListener('click',function(e){ if(!e.target.closest('#burgerDrawer') &&!e.target.closest('.burger-btn')){ document.getElementById('burgerDrawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); } if(!e.target.closest('.profile-wrap')){ document.getElementById('profileDropdown').classList.remove('show'); } });
 async function checkUser(){
@@ -235,7 +272,7 @@ async function checkUser(){
   if(isLoggedIn){ document.getElementById('profileName').style.display='block'; }
   updateHeaderUI();
 }
-async function handleSignout(){ await supabaseClient.auth.signOut(); location.href='signin.html'; }
+async function handleSignout(){ await supabaseClient.auth.signOut(); localStorage.removeItem('personalInfo'); location.href='signin.html'; }
 checkUser();
 const translations = {
   en: { searchPlaceholder:"Search", shop:"Shop", new:"New Arrivals", dresses:"Dresses", tops:"Tops", accessories:"Accessories", sale:"Sale", about:"About", hoodies:"HOODIES", cargo:"CARGO", tees:"TEES", heroTitle:"NEW<br>DROP", heroDesc:"Curated looks. Tap to shop the full fit.", shopBtn:"SHOP NOW", pi:"Personal Information", orders:"Order History", loginSec:"Login & Security", returnItem:"Return an item", myPref:"My Preferences", signin:"Sign In", signup:"Sign Up", signout:"Sign Out", firstName:"First Name", lastName:"Last Name", street:"Street Name", city:"City", country:"Country", postcode:"Postcode", phone:"Phone Number", email:"Email", save:"SAVE CHANGES", upload:"Upload Photo", newin:"New In", clothing:"Clothing", shoes:"Shoes" },
