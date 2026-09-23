@@ -252,7 +252,7 @@ function updateHeaderUI(){
   } else {
     supabaseClient.auth.getSession().then(({data})=>{
       const meta = data.session?.user?.user_metadata || {};
-      let fn = meta.first_name || meta.firstName || meta.full_name || '';
+      let fn = meta.first_name || meta.firstName || meta.firstname || '';
       fn = fn.trim().split(' ')[0]; // only first word
       if(fn){
         nameEl.textContent = fn;
